@@ -1,0 +1,36 @@
+.table-header {
+  background-color: #3E475A;
+  color: white;
+}
+
+.cell {
+  border: 1px rgba(0,0,0,.12) solid;
+  padding: 3px;
+}
+
+.cell + .cell {
+  border-left: none;
+}
+
+.row .cell {
+  border-top: none;
+}
+
+.cell > button {
+  min-width: 1px !important;
+  padding: 0 !important;
+}
+
+.vote-button-flex {
+  flex: 1 1 1e-09px;
+}
+
+.row:nth-child(2n) {
+  background-color: rgba(0,0,0,.02);
+}
+
+.add-button {
+  color: #3E475A;
+  font-size: 30px;
+  margin: 0 8px 8px 0;
+}

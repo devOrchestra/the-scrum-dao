@@ -1,0 +1,43 @@
+<div fxLayout="row" fxLayoutAlign="center" fxFlexFill>
+  <div fxLayout="column" fxLayoutAlign="center center" fxFlexFill>
+    <div fxLayout="column" fxLayoutAlign="center center">
+      <md-card class="auth-card">
+        <md-card-header fxLayoutAlign="center center">
+          <h2>Войти</h2>
+        </md-card-header>
+        <form fxLayout="column" [formGroup]="SignInForm" novalidate (ngSubmit)="signIn(SignInForm.value,
+        SignInForm.valid)">
+          <div class="form-group">
+            <md-input-container fxFlex>
+              <input mdInput placeholder="Email" type="email" class="form-control" id="username" required formControlName="username">
+            </md-input-container>
+          </div>
+
+          <div class="form-group">
+            <md-input-container fxFlex>
+              <input mdInput placeholder="Пароль" type="password" class="form-control" id="password" required formControlName="password">
+            </md-input-container>
+          </div>
+
+          <div>
+            <button md-raised-button fxFlex type="submit" color="primary" class="submit-button">Ok</button>
+          </div>
+        </form>
+      </md-card>
+
+      <section class="section-under-auth-card" fxLayout="column" fxFlexAlign="center center">
+        <div fxLayout="row" fxFlexAlign="center">
+          <p class="text-under-auth-card">Забыли пароль?</p>
+          <a class="link text-under-auth-card" routerLink="../password-recovery">Восстановить</a>
+        </div>
+
+        <div fxLayout="row" fxFlexAlign="center">
+          <p class="text-under-auth-card">
+            Еще не завели аккаунт?
+          </p>
+          <a class="link text-under-auth-card" routerLink="../sign-up">Зарегистрироваться</a>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>

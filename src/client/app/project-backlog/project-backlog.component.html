@@ -1,0 +1,35 @@
+<div fxLayout="column" fxFill>
+  <div fxLayout="row" fxLayoutAlign="space-between" class="table-header">
+    <div fxFlex="7" class="break-long-words text-left cell">Track</div>
+    <div fxFlex="20" class="break-long-words text-left cell">Story description</div>
+    <div fxFlex="25" class="break-long-words text-left cell">Requestor address</div>
+    <div fxFlex="12" class="break-long-words text-left cell">Date</div>
+    <div fxFlex="4" class="break-long-words text-left cell">Votes</div>
+    <div fxFlex="7" class="break-long-words text-center cell">Vote</div>
+    <div fxFlex="10" class="break-long-words text-center cell">Estimated time</div>
+    <div fxFlex="15" class="break-long-words text-center cell">Vote estimated time</div>
+  </div>
+  <div *ngFor="let item of items;" class="row">
+    <div fxLayout="row" fxLayoutAlign="space-between">
+      <div fxFlex="7" class="break-long-words cell">{{item.track}}</div>
+      <div fxFlex="20" class="break-long-words cell">{{item.story}}</div>
+      <div fxFlex="25" class="break-long-words cell">{{item.requestor}}</div>
+      <div fxFlex="12" class="break-long-words cell">{{item.date}}</div>
+      <div fxFlex="4" class="break-long-words cell">{{item.votes}}</div>
+      <div fxFlex="7" fxLayout="row" fxLayoutAlign="center" class="cell">
+        <button md-button (click)="voteFor(item.id)" fxFlex>Vote</button>
+      </div>
+      <div fxFlex="10" class="cell">{{item.avgEstimatedTime}}</div>
+      <div fxLayout="row" fxFlex="15" fxLayout.lt-lg="column" class="cell">
+        <md-input-container fxFlex>
+          <input mdInput placeholder="Time" [(ngModel)]="item.myEstimatedTime">
+        </md-input-container>
+        <button md-button (click)="voteEstimatedTime(item.id,item.myEstimatedTime)" class.gt-md="vote-button-flex">Vote</button>
+      </div>
+    </div>
+  </div>
+
+  <div fxFlex fxLayoutAlign="end end">
+    <button md-mini-fab (click)="openDialog()" class="add-button">+</button>
+  </div>
+</div>

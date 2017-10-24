@@ -1,0 +1,40 @@
+<h2 class="title">Investors</h2>
+<div *ngFor="let investor of investors;">
+  {{investor}}
+</div>
+
+<div fxLayout="row">
+  <div fxLayout="row" fxFlex="30">
+    <md-input-container>
+      <input mdInput placeholder="Add investor address" [(ngModel)]="investor">
+    </md-input-container>
+    <button md-button (click)="addInvestor()">Add</button>
+  </div>
+</div>
+
+
+<h2 class="title">Workers</h2>
+<div *ngFor="let worker of workers;">
+  {{worker}}
+</div>
+
+<div fxLayout="row">
+  <div fxLayout="row" fxFlex="30">
+    <md-input-container>
+      <input mdInput placeholder="Add worker address" [(ngModel)]="worker">
+    </md-input-container>
+    <button md-button (click)="addWorker()">Add</button>
+  </div>
+</div>
+
+
+<h2 class="title">Master</h2>
+<div>{{master}}</div>
+<div fxLayout="row">
+  <div fxLayout="row" fxFlex="30">
+    <md-input-container>
+      <input mdInput placeholder="Add worker address" [(ngModel)]="masterNew">
+    </md-input-container>
+    <button md-button (click)="setMaster()">Set</button>
+  </div>
+</div>

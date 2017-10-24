@@ -1,0 +1,12 @@
+<md-toolbar color="primary">
+  <h1>Logo</h1>
+  <span class="spacer"></span>
+  <img src="../../../assets/images/avatar-default.png" class="avatar pointer" [mdMenuTriggerFor]="userMenu" />
+
+  <md-menu #userMenu="mdMenu">
+    <div class="username-wrapper" fxLayout="row" fxFlexAlign="center" fxFlex="">
+      <span class="username" fxFlexAlign="center">{{username}}</span>
+    </div>
+    <button md-menu-item (click)="signOut()">Выйти</button>
+  </md-menu>
+</md-toolbar>

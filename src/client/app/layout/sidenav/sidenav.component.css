@@ -1,0 +1,60 @@
+.sidenav {
+  width: 320px;
+}
+
+.main-title-container {
+  height: 178px;
+}
+
+.main-title {
+  max-width: 245px;
+  width: 245px;
+  content: url(../../../assets/images/paycrypto-logo-sm.png);
+}
+
+.group-header {
+  height: 32px;
+}
+
+.group-header-text {
+  margin: 0 0 0 20px;
+  color: white;
+  font-size: 12px;
+}
+
+.group-content {
+  padding: 20px;
+}
+
+.group-content-item {
+  padding: 16px 12px !important;
+}
+
+.group-content-item + .group-content-item {
+  margin-top: 20px;
+}
+
+.item-data {
+  padding: 0 10px;
+}
+
+.course-info {
+  font-family: Roboto-Thin, Roboto-Light, Roboto, 'Helvetica Neue', sans-serif !important;
+}
+
+.course-info + .course-info {
+  margin-left: 3px;
+}
+
+.item-title {
+  font-family: Roboto-Thin, Roboto-Light, Roboto, 'Helvetica Neue', sans-serif !important;
+}
+
+.nav-button {
+  font-size: 16px;
+}
+
+.active-nav-button {
+  background-color: #8bc34a;
+  color: white;
+}

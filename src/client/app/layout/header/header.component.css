@@ -1,0 +1,18 @@
+.avatar {
+  height: 48px;
+  width: 48px;
+  border-radius: 50%;
+}
+
+.username-wrapper {
+  height: 48px;
+  margin: 0;
+}
+
+.username {
+  padding: 0 16px;
+}
+
+/deep/ .mat-menu-content {
+  padding: 0 !important;
+}

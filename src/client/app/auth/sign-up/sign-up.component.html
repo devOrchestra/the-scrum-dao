@@ -1,0 +1,62 @@
+<div fxLayout="row" fxLayoutAlign="center" fxFlexFill>
+  <div fxLayout="column" fxLayoutAlign="center center" fxFlexFill>
+    <div fxLayout="column" fxLayoutAlign="center center">
+      <md-card class="auth-card">
+        <md-card-header fxLayoutAlign="center center">
+          <h2>Регистрация</h2>
+        </md-card-header>
+        <form fxLayout="column" [formGroup]="registerForm" novalidate (ngSubmit)="registerNewUser(registerForm.value,
+        registerForm.valid)">
+          <div class="form-group">
+            <md-input-container fxFlex>
+              <input mdInput placeholder="Email" type="email" class="form-control" id="email" required formControlName="email">
+
+              <md-error *ngIf="registerForm.controls.email.hasError('required')">
+                Заполните поле
+              </md-error>
+              <md-error *ngIf="registerForm.controls.email.hasError('pattern')">
+                Введите корректный email
+              </md-error>
+            </md-input-container>
+          </div>
+
+          <div class="form-group">
+            <md-input-container fxFlex>
+              <input mdInput placeholder="Пароль" type="password" minlength="6" maxlength="32" class="form-control"
+                     id="password" required formControlName="password">
+              <md-error *ngIf="registerForm.controls.password.value.length < 6 || registerForm.controls.password.value.length > 32 ||
+              registerForm.controls.password.hasError('required')">
+                Пароль должен содержать от 6 до 32 символов
+              </md-error>
+            </md-input-container>
+          </div>
+
+          <div class="form-group">
+            <md-input-container fxFlex>
+              <input mdInput placeholder="Подтверждение пароля" type="password" class="form-control"
+                     id="passwordConfirmation" required formControlName="passwordConfirmation">
+              <md-error *ngIf="registerForm.controls.passwordConfirmation.hasError('required')">
+                Заполните поле
+              </md-error>
+            </md-input-container>
+          </div>
+
+          <div>
+            <button md-raised-button fxFlex type="submit" color="primary" class="submit-button">Ok</button>
+          </div>
+        </form>
+      </md-card>
+
+      <section class="section-under-auth-card" fxLayout="row" fxFlexAlign="center center">
+        <a class="link text-under-auth-card" (click)="sendConfirmationEmailAgain();">Выслать письмо повторно</a>
+        <p class="text-under-auth-card">
+          &middot;
+        </p>
+        <p class="text-under-auth-card">
+          Уже зарегистрированы?
+        </p>
+        <a class="link text-under-auth-card" routerLink="../sign-in">Войти</a>
+      </section>
+    </div>
+  </div>
+</div>
