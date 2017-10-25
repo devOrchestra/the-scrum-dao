@@ -7,7 +7,7 @@
     "startAngular": "ng serve --proxy-config proxy.config.json --watch",
     "startExpress": "nodemon bin/www",
     "migrate": "truffle migrate",
-    "start": "concurrently --kill-others-on-fail \"npm run migrate\" \"npm run startExpress\" \"npm run startAngular\"",
+    "start": "concurrently --kill-others-on-fail \"npm run migrate\" \"npm run startAngular\"",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
@@ -56,6 +56,7 @@
     "serve-favicon": "^2.4.3",
     "truffle-contract": "^1.1.11",
     "web3": "^0.18.2",
+    "zeppelin-solidity": "^1.3.0",
     "zone.js": "^0.8.17"
   },
   "devDependencies": {
