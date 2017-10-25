@@ -4,4 +4,6 @@ md-sidenav-container {
 
 .shell{
   position: relative;
+  padding: 32px;
+  overflow: auto;
 }

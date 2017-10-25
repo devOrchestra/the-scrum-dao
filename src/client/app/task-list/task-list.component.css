@@ -1,0 +1,23 @@
+#task-list.lg .item {
+  max-width: calc(33% - 64px);
+}
+
+#task-list.md .item {
+  max-width: calc(50% - 64px);
+}
+
+#task-list .item {
+  margin: 16px 8px;
+}
+
+#task-list md-card-content *:not(p) {
+  margin-top: 12px;
+}
+
+#task-list md-card-content h3:nth-child(1) {
+  margin-top: 0;
+}
+
+#task-list md-card-content p {
+  margin-top: 4px;
+}

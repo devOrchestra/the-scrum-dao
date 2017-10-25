@@ -7,6 +7,7 @@ import {ProjectBacklogComponent} from './project-backlog/project-backlog.compone
 import {SprintBacklogComponent} from './sprint-backlog/sprint-backlog.component';
 import {MasterComponent} from './master/master.component';
 import {TaskListComponent} from './task-list/task-list.component';
+import {ContributorListComponent} from './contributor-list/contributor-list.component';
 import {SprintsComponent} from './sprints/sprints.component';
 import {AuthGuard} from './auth-guard.service'
 
@@ -14,7 +15,7 @@ const routes: Routes = [
   {
     path: 'app',
     component: ShellComponent,
-    canActivate: [AuthGuard],
+    // canActivate: [AuthGuard],
     children: [
       {
         path: 'dashboard',
@@ -39,6 +40,10 @@ const routes: Routes = [
       {
         path: 'task-list',
         component: TaskListComponent
+      },
+      {
+        path: 'contributor-list',
+        component: ContributorListComponent
       },
       {
         path: 'sprints',
