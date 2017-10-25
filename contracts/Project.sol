@@ -3,43 +3,36 @@ pragma solidity ^0.4.11;
 
 import 'zeppelin-solidity/contracts/token/StandardToken.sol';
 import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
+import 'zeppelin-solidity/contracts/math/SafeMath.sol';
+import './TrustedOracle.sol';
+import './StoryPointsVoting.sol';
 
 
-contract Project is StandardToken, Ownable {
+contract Project is StandardToken, Ownable, TrustedOracle {
+  using SafeMath for uint16;
+
   string public name;
+
   string public symbol;
+
   uint8 public decimals;
 
   uint storyPointMultiplier = 10;
+
+  StoryPointsVoting storyPointsVoiting;
 
   address[] public workers;
 
   mapping (string => address) workersLogins;
 
-  address trustedOracle;
-
-  modifier onlyTeem {
-    bool result = false;
-    for (uint i = 0; i < workers.length; i++) {
-      if (msg.sender == workers[i]) {
-        result = true;
-        break;
-      }
-    }
-    require(result);
-    _;
+  function Project(string _name, string _symbol, uint8 _decimals, address _trustedOracle) TrustedOracle(_trustedOracle) {
+    name = _name;
+    symbol = _symbol;
+    decimals = _decimals;
   }
 
-  modifier onlyTrustedOracle {
-    require(msg.sender == trustedOracle);
-    _;
-  }
-
-  function Project(string tokenName,string tokenSymbol, uint8 tokenDecimals, address oracle){
-    name=tokenName;
-    symbol=tokenSymbol;
-    decimals = tokenDecimals;
-    trustedOracle = oracle;
+  function initStoryPointsVoiting(address _storyPointsVoiting) onlyOwner {
+    storyPointsVoiting = StoryPointsVoting(_storyPointsVoiting);
   }
 
   function addWorker(address worker, string login) onlyOwner {
@@ -60,10 +53,12 @@ contract Project is StandardToken, Ownable {
     return workers[i];
   }
 
-  function payAward(string login, uint256 points) public onlyTrustedOracle {
+  function payAward(string login, string issue) public onlyTrustedOracle {
     address recepient = workersLogins[login];
-    if (recepient != 0 && points > 0) {
-      uint256 awardSupply = points.mul(storyPointMultiplier);
+    var (count, sum, isOpen) = storyPointsVoiting.getVoiting(issue);
+    require(!isOpen);
+    if (recepient != 0 && count>0 && sum>0) {
+      uint256 awardSupply = sum.mul(storyPointMultiplier).div(count);
       balances[recepient] = balances[recepient].add(awardSupply);
       totalSupply = totalSupply.add(awardSupply);
     }
