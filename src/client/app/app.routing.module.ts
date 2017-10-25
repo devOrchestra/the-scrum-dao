@@ -4,11 +4,8 @@ import {ShellComponent} from './layout/shell/shell.component';
 import {DashboardComponent} from './dashboard/dashboard.component';
 import {SettingsComponent} from './settings/settings.component';
 import {ProjectBacklogComponent} from './project-backlog/project-backlog.component';
-import {SprintBacklogComponent} from './sprint-backlog/sprint-backlog.component';
-import {MasterComponent} from './master/master.component';
 import {TaskListComponent} from './task-list/task-list.component';
 import {ContributorListComponent} from './contributor-list/contributor-list.component';
-import {SprintsComponent} from './sprints/sprints.component';
 import {AuthGuard} from './auth-guard.service'
 
 const routes: Routes = [
@@ -30,24 +27,12 @@ const routes: Routes = [
         component: ProjectBacklogComponent
       },
       {
-        path: 'sprint-backlog',
-        component: SprintBacklogComponent
-      },
-      {
-        path: 'master',
-        component: MasterComponent
-      },
-      {
         path: 'task-list',
         component: TaskListComponent
       },
       {
         path: 'contributor-list',
         component: ContributorListComponent
-      },
-      {
-        path: 'sprints',
-        component: SprintsComponent
       }
     ]
   },

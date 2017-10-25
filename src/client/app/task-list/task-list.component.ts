@@ -6,31 +6,37 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./task-list.component.css']
 })
 export class TaskListComponent implements OnInit {
-  public tasks: { [key: string]: string }[] = [
+  public storyPointsOptions: number[] = [0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100];
+  public tasks: { [key: string]: string | number }[] = [
     {
-      id: "fakeID12345678901",
-      description: "The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan. A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally bred for hunting.",
-      storyPoints: "HZHZHZ1"
+      id: "ID1111",
+      description: "Fake description 1",
+      storyPoints: 0.5,
+      issueId: "EMA-1"
     },
     {
-      id: "fakeID12345678902",
-      description: "The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan. A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally bred for hunting.",
-      storyPoints: "HZHZHZ2"
+      id: "ID1112",
+      description: "Fake description 2",
+      storyPoints: 1,
+      issueId: "EMA-2"
     },
     {
-      id: "fakeID12345678903",
-      description: "The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan. A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally bred for hunting.",
-      storyPoints: "HZHZHZ3"
+      id: "ID1113",
+      description: "Fake description 3",
+      storyPoints: 2,
+      issueId: "EMA-3"
     },
     {
-      id: "fakeID12345678904",
-      description: "The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan. A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally bred for hunting.",
-      storyPoints: "HZHZHZ4"
+      id: "ID1114",
+      description: "Fake description 4",
+      storyPoints: 3,
+      issueId: "EMA-4"
     },
     {
-      id: "fakeID12345678905",
-      description: "The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan. A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally bred for hunting.",
-      storyPoints: "HZHZHZ5"
+      id: "ID1115",
+      description: "Fake description 5",
+      storyPoints: 100,
+      issueId: "EMA-5"
     }
   ];
 

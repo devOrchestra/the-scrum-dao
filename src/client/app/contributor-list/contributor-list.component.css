@@ -1,9 +1,8 @@
-#contributor-list.lg .item {
-  max-width: calc(33% - 64px);
-}
-
-#contributor-list.md .item {
-  max-width: calc(50% - 64px);
+#contributor-list .item {
+  width: 300px;
+  min-width: 300px;
+  max-width: 300px;
+  min-height: 320px;
 }
 
 #contributor-list .item {

@@ -9,7 +9,7 @@ import {FlexLayoutModule} from '@angular/flex-layout'
 import { MaterialModule, MdNativeDateModule } from '@angular/material'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MdMenuModule, MdButtonModule, MdToolbarModule, MdCardModule, MdSidenavModule, MdInputModule,
-  MdDialogModule} from '@angular/material';
+  MdDialogModule, MdSelectModule} from '@angular/material';
 
 import {OrderContributorsByBalancePipe} from './pipes/orderContributorsByBalancePipe'
 
@@ -31,7 +31,8 @@ import {OrderContributorsByBalancePipe} from './pipes/orderContributorsByBalance
     MdCardModule,
     MdSidenavModule,
     MdInputModule,
-    MdDialogModule
+    MdDialogModule,
+    MdSelectModule
   ],
   declarations: [
     OrderContributorsByBalancePipe
@@ -54,6 +55,7 @@ import {OrderContributorsByBalancePipe} from './pipes/orderContributorsByBalance
     MdSidenavModule,
     MdInputModule,
     MdDialogModule,
+    MdSelectModule,
 
     OrderContributorsByBalancePipe
   ]

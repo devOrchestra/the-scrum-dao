@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./contributor-list.component.css']
 })
 export class ContributorListComponent implements OnInit {
-  public totalBalance = 1500;
+  public totalBalance = 1000;
   public contributors: { [key: string]: string | number }[] = [
     {
       username: "Username1",
@@ -29,12 +29,7 @@ export class ContributorListComponent implements OnInit {
       username: "Username4",
       balance: 400,
       walletAddress: "0xEBA547094b6D1EB82DFDD011749165D490e07cf8"
-    },
-    {
-      username: "Username5",
-      balance: 500,
-      walletAddress: "0xEBA547094b6D1EB82DFDD011749165D490e07cf8"
-    },
+    }
   ];
 
   constructor() { }

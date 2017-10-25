@@ -13,6 +13,14 @@
   padding: 0 16px;
 }
 
+.logo {
+  color: white;
+}
+
+md-toolbar {
+  background-color: #383838;
+}
+
 /deep/ .mat-menu-content {
   padding: 0 !important;
 }

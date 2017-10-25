@@ -41,7 +41,7 @@ h4 {
 }
 
 .bgc-main {
-  background-color: #3E475A !important;
+  background-color: #333333 !important;
 }
 
 .bgc-accent {
@@ -57,10 +57,12 @@ h4 {
 }
 
 .cloud {
-  font-size: 10px;
-  border: 1px white solid;
+  font-size: 12px;
   border-radius: 10px;
-  padding: 4px 12px;
+  padding: 5px 10px;
+  background-color: #eeeeee;
+  font-weight: bold;
+  width: 40px;
 }
 
 .regular-card-border {

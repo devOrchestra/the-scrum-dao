@@ -1,23 +1,35 @@
-#task-list.lg .item {
-  max-width: calc(33% - 64px);
-}
-
-#task-list.md .item {
-  max-width: calc(50% - 64px);
-}
-
 #task-list .item {
-  margin: 16px 8px;
+  width: calc(100% - 16px);
+  min-width: calc(100% - 16px);
+  max-width: calc(100% - 16px);
+  margin: 0 8px;
+  padding: 8px 16px;
 }
 
-#task-list md-card-content *:not(p) {
-  margin-top: 12px;
+#task-list .item:first-child {
+  border: 1px #e1e1e1 solid;
 }
 
-#task-list md-card-content h3:nth-child(1) {
-  margin-top: 0;
+#task-list .item:not(first-child) {
+  border-left: 1px #e1e1e1 solid;
+  border-right: 1px #e1e1e1 solid;
+  border-bottom: 1px #e1e1e1 solid;
 }
 
-#task-list md-card-content p {
-  margin-top: 4px;
+#task-list .item .left-side * {
+  margin-left: 16px;
+}
+
+#task-list .item .right-side * {
+  margin-left: 8px;
+}
+
+#task-list .item .left-side .first {
+  margin-left: 0;
+}
+
+/deep/ #task-list .story-points-dropdown .mat-select-trigger {
+  width: 50px;
+  min-width: 50px;
+  max-width: 50px;
 }

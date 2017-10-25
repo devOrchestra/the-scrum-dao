@@ -1,6 +1,6 @@
 <div fxFlex>
-  <div id="contributor-list" fxLayout="row" fxLayoutWrap fxLayoutAlign="center stretch" class.xs="xs" class.sm="sm" class.md="md" class.lg="lg">
-    <div class="item" *ngFor="let contributor of contributors | orderContributorsByBalancePipe" fxLayout="column" fxLayoutAlign="space-between">
+  <div id="contributor-list" fxLayout="row" fxLayoutWrap fxLayoutAlign="center">
+    <div class="item" *ngFor="let contributor of contributors | orderContributorsByBalancePipe" fxLayout="column" fxLayoutAlign="space-between" fxFlex>
       <div class="main-content" fxLayout="column" fxLayoutAlign="space-between center">
         <div fxLayout="column" fxLayoutAlign="space-between center">
           <img *ngIf="contributor.avatar" class="avatar" src="{{contributor.avatar}}" alt="">
@@ -9,7 +9,7 @@
           </div>
           <div class="info" fxLayout="column" fxLayoutAlign="center center">
             <h2>{{contributor.username}}</h2>
-            <h4>{{contributor.balance}} SRC ({{contributor.balance * 100 / totalBalance}}%)</h4>
+            <h4>{{contributor.balance}} SRC ({{(contributor.balance * 100 / totalBalance).toFixed(2)}}%)</h4>
             <p class="wallet-address">{{contributor.walletAddress}}</p>
           </div>
         </div>

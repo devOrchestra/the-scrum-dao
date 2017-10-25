@@ -9,11 +9,8 @@ import { DashboardComponent } from '../dashboard/dashboard.component';
 import { SettingsComponent } from '../settings/settings.component';
 import { ProjectBacklogComponent } from '../project-backlog/project-backlog.component';
 import { ProjectBacklogAddTrackDialogComponent } from '../project-backlog/project-backlog-add-track-dialog/project-backlog-add-track-dialog.component';
-import { SprintBacklogComponent } from '../sprint-backlog/sprint-backlog.component';
-import { MasterComponent } from '../master/master.component';
 import { TaskListComponent } from '../task-list/task-list.component';
 import { ContributorListComponent } from '../contributor-list/contributor-list.component';
-import { SprintsComponent } from '../sprints/sprints.component';
 
 import { RouterModule } from '@angular/router';
 
@@ -31,11 +28,8 @@ import { RouterModule } from '@angular/router';
     SettingsComponent,
     ProjectBacklogComponent,
     ProjectBacklogAddTrackDialogComponent,
-    SprintBacklogComponent,
-    MasterComponent,
     TaskListComponent,
-    ContributorListComponent,
-    SprintsComponent
+    ContributorListComponent
   ],
   entryComponents: [ProjectBacklogAddTrackDialogComponent]
 })

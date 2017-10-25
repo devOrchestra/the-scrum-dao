@@ -1,22 +1,19 @@
 <div fxFlex>
-  <div id="task-list" fxLayout="row" fxLayoutWrap fxLayoutAlign="center stretch" class.xs="xs" class.sm="sm" class.md="md" class.lg="lg">
-    <md-card class="item" *ngFor="let task of tasks">
-      <!--<md-card-header>-->
-      <!--<div mat-card-avatar class="example-header-image"></div>-->
-      <!--<md-card-title>Shiba Inu</md-card-title>-->
-      <!--<md-card-subtitle>Dog Breed</md-card-subtitle>-->
-      <!--</md-card-header>-->
-      <md-card-content>
-        <h3>ID: {{task.id}}</h3>
-        <h3>Description:</h3>
+  <div id="task-list" fxLayout="column">
+    <div class="item" *ngFor="let task of tasks" fxLayout="row" fxLayoutAlign="space-between">
+      <div class="left-side" fxLayout="row" fxLayoutAlign="center center">
+        <h3 class="first">{{task.id}}</h3>
         <p>{{task.description}}</p>
-        <h3>Story points:</h3>
-        <p>{{task.storyPoints}}</p>
-      </md-card-content>
-      <!--<md-card-actions>-->
-      <!--<button md-button>LIKE</button>-->
-      <!--<button md-button>SHARE</button>-->
-      <!--</md-card-actions>-->
-    </md-card>
+        <md-select class="story-points-dropdown" [(ngModel)]="task.storyPoints">
+          <md-option *ngFor="let option of storyPointsOptions" [value]="option">
+            {{option}}
+          </md-option>
+        </md-select>
+      </div>
+      <div class="right-side" fxLayout="row" fxLayoutAlign="center center">
+        <h3>{{task.issueId}}</h3>
+        <div class="cloud" fxLayout="row" fxLayoutAlign="center center">{{task.storyPoints}}</div>
+      </div>
+    </div>
   </div>
 </div>
