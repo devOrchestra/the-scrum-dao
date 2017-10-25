@@ -14,6 +14,7 @@ body, html {
   height: 100%;
   padding: 0;
   margin: 0;
+  overflow: hidden;
 }
 
 * {
@@ -27,7 +28,7 @@ h3,
 h4,
 h5,
 h6 {
-  color: white;
+  color: #333333;
   margin: 0;
 }
 

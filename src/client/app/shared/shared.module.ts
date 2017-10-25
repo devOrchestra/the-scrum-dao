@@ -11,6 +11,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MdMenuModule, MdButtonModule, MdToolbarModule, MdCardModule, MdSidenavModule, MdInputModule,
   MdDialogModule} from '@angular/material';
 
+import {OrderContributorsByBalancePipe} from './pipes/orderContributorsByBalancePipe'
+
 @NgModule({
   imports: [
     CommonModule,
@@ -31,7 +33,9 @@ import { MdMenuModule, MdButtonModule, MdToolbarModule, MdCardModule, MdSidenavM
     MdInputModule,
     MdDialogModule
   ],
-  declarations: [],
+  declarations: [
+    OrderContributorsByBalancePipe
+  ],
   exports: [
     CommonModule,
     FormsModule,
@@ -49,7 +53,9 @@ import { MdMenuModule, MdButtonModule, MdToolbarModule, MdCardModule, MdSidenavM
     MdCardModule,
     MdSidenavModule,
     MdInputModule,
-    MdDialogModule
+    MdDialogModule,
+
+    OrderContributorsByBalancePipe
   ]
 })
 export class SharedModule {
