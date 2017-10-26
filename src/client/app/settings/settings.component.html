@@ -1,18 +1,3 @@
-<h2 class="title">Investors</h2>
-<div *ngFor="let investor of investors;">
-  {{investor}}
-</div>
-
-<div fxLayout="row">
-  <div fxLayout="row" fxFlex="30">
-    <md-input-container>
-      <input mdInput placeholder="Add investor address" [(ngModel)]="investor">
-    </md-input-container>
-    <button md-button (click)="addInvestor()">Add</button>
-  </div>
-</div>
-
-
 <h2 class="title">Workers</h2>
 <div *ngFor="let worker of workers;">
   {{worker}}
@@ -27,14 +12,37 @@
   </div>
 </div>
 
+<h2 class="title">Contributors</h2>
+<div *ngFor="let contributor of contributors;">
+  {{contributor}}
+</div>
 
-<h2 class="title">Master</h2>
-<div>{{master}}</div>
 <div fxLayout="row">
   <div fxLayout="row" fxFlex="30">
-    <md-input-container>
-      <input mdInput placeholder="Add worker address" [(ngModel)]="masterNew">
-    </md-input-container>
-    <button md-button (click)="setMaster()">Set</button>
+    <div fxLayout="column">
+      <md-input-container>
+        <input mdInput placeholder="Add contributor username" [(ngModel)]="newContributor.username">
+      </md-input-container>
+      <md-input-container>
+        <input mdInput placeholder="Add contributor address" [(ngModel)]="newContributor.address">
+      </md-input-container>
+    </div>
+    <button md-button (click)="addContributor()">Add</button>
+  </div>
+</div>
+
+<h2 class="title">Oracle</h2>
+<!--<div *ngFor="let worker of workers;">-->
+  <!--{{worker}}-->
+<!--</div>-->
+
+<div fxLayout="row">
+  <div fxLayout="row" fxFlex="30">
+    <div fxLayout="column">
+      <md-input-container>
+        <input mdInput placeholder="Add oracle address" [(ngModel)]="newOracleAddress">
+      </md-input-container>
+    </div>
+    <button md-button (click)="addOracleAddress()">Add</button>
   </div>
 </div>

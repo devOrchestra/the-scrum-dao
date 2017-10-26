@@ -15,8 +15,35 @@ import * as moment from 'moment';
 export class ProjectBacklogComponent implements OnInit {
   track: String;
   story: String;
-
-  public items = [];
+  fakePercents = 10.123456789;
+  public items: { [key: string]: string | number }[] = [
+    {
+      description: "Fake description 1",
+      storyPoints: 0.5,
+      issueId: "EMA-1"
+    },
+    {
+      description: "Fake description 2",
+      storyPoints: 1,
+      issueId: "EMA-2"
+    },
+    {
+      description: "Fake description 3",
+      storyPoints: 2,
+      issueId: "EMA-3"
+    },
+    {
+      description: "Fake description 4",
+      storyPoints: 3,
+      issueId: "EMA-4"
+    },
+    {
+      description: "Fake description 5",
+      storyPoints: 100,
+      issueId: "EMA-5"
+    }
+  ];
+  // public items = [];
 
   Project = contract(project_artifacts);
 
@@ -100,6 +127,10 @@ export class ProjectBacklogComponent implements OnInit {
         })
       })
     })
+  }
+
+  voteForIssue(id: string): void {
+    console.log("Voited issue id:", id);
   }
 
   openDialog() {

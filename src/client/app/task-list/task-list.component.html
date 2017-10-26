@@ -2,8 +2,7 @@
   <div id="task-list" fxLayout="column">
     <div class="item" *ngFor="let task of tasks" fxLayout="row" fxLayoutAlign="space-between">
       <div class="left-side" fxLayout="row" fxLayoutAlign="center center">
-        <h3 class="first">{{task.id}}</h3>
-        <p>{{task.description}}</p>
+        <p class="first">{{task.description}}</p>
         <md-select class="story-points-dropdown" [(ngModel)]="task.storyPoints">
           <md-option *ngFor="let option of storyPointsOptions" [value]="option">
             {{option}}
@@ -12,7 +11,7 @@
       </div>
       <div class="right-side" fxLayout="row" fxLayoutAlign="center center">
         <h3>{{task.issueId}}</h3>
-        <div class="cloud" fxLayout="row" fxLayoutAlign="center center">{{task.storyPoints}}</div>
+        <div class="story-points-cloud" fxLayout="row" fxLayoutAlign="center center">{{task.storyPoints}}</div>
       </div>
     </div>
   </div>

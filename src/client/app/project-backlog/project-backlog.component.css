@@ -1,32 +1,47 @@
-.table-header {
-  background-color: #3E475A;
+#task-list .item {
+  width: calc(100% - 16px);
+  min-width: calc(100% - 16px);
+  max-width: calc(100% - 16px);
+  margin: 0 8px;
+  padding: 8px 16px;
+}
+
+#task-list .item:first-child {
+  border: 1px #e1e1e1 solid;
+}
+
+#task-list .item:not(first-child) {
+  border-left: 1px #e1e1e1 solid;
+  border-right: 1px #e1e1e1 solid;
+  border-bottom: 1px #e1e1e1 solid;
+}
+
+#task-list .item .left-side * {
+  margin-left: 16px;
+}
+
+#task-list .item .right-side * {
+  margin-left: 8px;
+}
+
+#task-list .item .left-side .first {
+  margin-left: 0;
+}
+
+#task-list .item .vote-cloud {
+  font-size: 12px;
+  border-radius: 10px;
+  padding: 5px 10px;
+  background-color: #239b23;
+  font-weight: bold;
+  width: 70px;
   color: white;
 }
 
-.cell {
-  border: 1px rgba(0,0,0,.12) solid;
-  padding: 3px;
-}
-
-.cell + .cell {
-  border-left: none;
-}
-
-.row .cell {
-  border-top: none;
-}
-
-.cell > button {
-  min-width: 1px !important;
-  padding: 0 !important;
-}
-
-.vote-button-flex {
-  flex: 1 1 1e-09px;
-}
-
-.row:nth-child(2n) {
-  background-color: rgba(0,0,0,.02);
+/deep/ #task-list .story-points-dropdown .mat-select-trigger {
+  width: 50px;
+  min-width: 50px;
+  max-width: 50px;
 }
 
 .add-button {

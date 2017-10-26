@@ -8,12 +8,11 @@ import {default as contract} from 'truffle-contract'
   styleUrls: ['./settings.component.css']
 })
 export class SettingsComponent implements OnInit {
-  investor: String;
   worker: String;
-  masterNew: String;
-  investors: any[] = []
-  workers: any[] = []
-  master: String;
+  workers: any[] = [];
+  contributors: any[] = [];
+  newContributor: { [key: string]: string } = {};
+  newOracleAddress: string;
   Project = contract(project_artifacts);
 
   constructor() {
@@ -22,15 +21,6 @@ export class SettingsComponent implements OnInit {
   ngOnInit() {
     this.Project.setProvider(web3.currentProvider);
     this.Project.deployed().then(contractInstance => {
-      contractInstance.getInvestorsLength.call().then(data => {
-        const length = parseInt(data.toString(), 10);
-        for (let i = 0; i < length; i++) {
-          contractInstance.getInvestor.call(i).then(investor => {
-            this.investors.push(investor)
-          })
-        }
-      })
-
       contractInstance.getWorkersLength.call().then(data => {
         const length = parseInt(data.toString(), 10);
         for (let i = 0; i < length; i++) {
@@ -38,26 +28,6 @@ export class SettingsComponent implements OnInit {
             this.workers.push(worker)
           })
         }
-      })
-
-      contractInstance.master().then(data => {
-        this.master = data
-      })
-    })
-
-
-  }
-
-  addInvestor() {
-    this.Project.deployed().then(contractInstance => {
-      contractInstance.addInvestor(this.investor, {gas: 500000, from: web3.eth.accounts[0]}).then(data => {
-        contractInstance.getInvestorsLength.call().then(data => {
-          const length = parseInt(data.toString(), 10);
-          contractInstance.getInvestor.call(length - 1).then(investor => {
-            console.log(investor)
-            this.investors.push(investor)
-          })
-        })
       })
     })
   }
@@ -68,21 +38,19 @@ export class SettingsComponent implements OnInit {
         contractInstance.getWorkersLength.call().then(data => {
           const length = parseInt(data.toString(), 10);
           contractInstance.getWorker.call(length - 1).then(worker => {
-            console.log(worker)
-            this.workers.push(worker)
+            console.log(worker);
+            this.workers.push(worker);
           })
         })
       })
     })
   }
 
-  setMaster() {
-    this.Project.deployed().then(contractInstance => {
-      contractInstance.setMaster(this.masterNew, {gas: 500000, from: web3.eth.accounts[0]}).then(data => {
-        contractInstance.master().then(data => {
-          this.master = data;
-        })
-      })
-    })
+  addContributor() {
+    console.log("new contributor: ", this.newContributor);
+  }
+
+  addOracleAddress() {
+    console.log("new oracle address: ", this.newOracleAddress);
   }
 }
