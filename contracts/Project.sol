@@ -60,7 +60,7 @@ contract Project is StandardToken, Ownable, TrustedOracle {
 
   function payAward(string username, string issue) public onlyTrustedOracle {
     address recepient = usernames[username];
-    var (count, sum, isOpen, awardPaid) = storyPointsVoting.getVoting(issue);
+    var (id, count, sum, isOpen, awardPaid) = storyPointsVoting.getVoting(issue);
     require(!isOpen);
     if (recepient != 0 && count > 0 && sum > 0 && !awardPaid) {
       uint256 awardSupply = sum.mul(storyPointMultiplier).div(count);

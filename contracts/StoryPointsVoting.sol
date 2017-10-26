@@ -23,11 +23,6 @@ contract StoryPointsVoting is Ownable, TrustedOracle {
   mapping (address => uint) votes;
   }
 
-  struct Vote {
-  address voter;
-  uint points;
-  }
-
   modifier onlyTeem {
     bool result = false;
     uint length = project.getWorkersLength();
@@ -69,8 +64,8 @@ contract StoryPointsVoting is Ownable, TrustedOracle {
     votings[issue].votesCount++;
   }
 
-  function getVoting(string issue) public constant returns (uint, uint, bool, bool){
-    return (votings[issue].votesCount, votings[issue].sum, votings[issue].isOpen, votings[issue].awardPaid);
+  function getVoting(string issue) public constant returns (string ,uint, uint, bool, bool){
+    return (votings[issue].issue, votings[issue].votesCount, votings[issue].sum, votings[issue].isOpen, votings[issue].awardPaid);
   }
 
   function markVotingAsPaid(string issue){
