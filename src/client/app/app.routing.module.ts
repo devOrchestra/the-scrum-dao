@@ -6,13 +6,11 @@ import {SettingsComponent} from './settings/settings.component';
 import {ProjectBacklogComponent} from './project-backlog/project-backlog.component';
 import {TaskListComponent} from './task-list/task-list.component';
 import {ContributorListComponent} from './contributor-list/contributor-list.component';
-import {AuthGuard} from './auth-guard.service'
 
 const routes: Routes = [
   {
     path: 'app',
     component: ShellComponent,
-    // canActivate: [AuthGuard],
     children: [
       {
         path: 'dashboard',
@@ -35,18 +33,12 @@ const routes: Routes = [
         component: ContributorListComponent
       }
     ]
-  },
-  {
-    path: '',
-    redirectTo: '/sign-in',
-    pathMatch: 'full'
-  },
+  }
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  declarations: [],
-  providers: [AuthGuard]
+  declarations: []
 })
 export class AppRoutingModule {
 }

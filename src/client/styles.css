@@ -17,7 +17,7 @@ body, html {
   overflow: hidden;
 }
 
-* {
+body {
   font-family: Roboto-Light, Roboto, 'Helvetica Neue', sans-serif !important;
 }
 
@@ -56,15 +56,6 @@ h4 {
   border-radius: 0 !important;
 }
 
-.cloud {
-  font-size: 12px;
-  border-radius: 10px;
-  padding: 5px 10px;
-  background-color: #eeeeee;
-  font-weight: bold;
-  width: 40px;
-}
-
 .regular-card-border {
   border-radius: 4px !important;
 }
@@ -80,6 +71,14 @@ h4 {
 
 .pointer {
   cursor: pointer;
+}
+
+.unselectable {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
 }
 
 .no-paddings {
@@ -118,6 +117,15 @@ h4 {
   color: inherit;
 }
 
+.story-points-cloud {
+  font-size: 12px;
+  border-radius: 10px;
+  padding: 5px 10px;
+  background-color: #eeeeee;
+  font-weight: bold;
+  width: 40px;
+}
+
 /* IMAGES */
 
 .bitcoin-logo {
@@ -126,33 +134,6 @@ h4 {
 
 .ethereum-logo {
   content: url(assets/images/ethereum-logo.png);
-}
-
-/* AUTH */
-
-.section-under-auth-card {
-  font-size: 12px;
-}
-
-.text-under-auth-card {
-  padding: 0 2px;
-  margin: 6px 0 0 0;
-}
-
-.auth-card {
-  width: 310px;
-}
-
-.section-under-card {
-  margin-top: 18px;
-}
-
-.submit-button {
-  margin-top: 24px !important;
-}
-
-.auth-card-header-text {
-  margin-left: -16px;
 }
 
 /* "md-card" shadow classes */
