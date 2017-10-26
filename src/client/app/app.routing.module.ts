@@ -7,10 +7,15 @@ import {ProjectBacklogComponent} from './project-backlog/project-backlog.compone
 import {TaskListComponent} from './task-list/task-list.component';
 import {ContributorListComponent} from './contributor-list/contributor-list.component';
 
+import {WorkersResolverService} from './core/resolvers/workers-resolver.service';
+
 const routes: Routes = [
   {
     path: 'app',
     component: ShellComponent,
+    resolve: {
+      workers: WorkersResolverService
+    },
     children: [
       {
         path: 'dashboard',
@@ -32,8 +37,13 @@ const routes: Routes = [
         path: 'contributor-list',
         component: ContributorListComponent
       }
-    ]
-  }
+    ],
+  },
+  {
+    path: '',
+    redirectTo: 'app/contributor-list',
+    pathMatch: 'full'
+  },
 ];
 
 @NgModule({

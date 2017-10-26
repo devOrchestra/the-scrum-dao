@@ -1,8 +1,16 @@
 <div fxLayout="column" fxFill>
+
+  <div fxLayout="row">
+    <md-input-container fxFlex="30">
+      <input mdInput placeholder="Add new issue">
+    </md-input-container>
+    <button md-button>Add</button>
+  </div>
+
   <div id="task-list" fxLayout="column">
     <div class="item" *ngFor="let item of items" fxLayout="row" fxLayoutAlign="space-between">
       <div class="left-side" fxLayout="row" fxLayoutAlign="center center">
-        <i class="fa fa-anchor first" aria-hidden="true"></i>
+        <i class="fa fa-angle-double-up first" aria-hidden="true"></i>
         <p>{{item.description}}</p>
       </div>
       <div class="right-side" fxLayout="row" fxLayoutAlign="center center">

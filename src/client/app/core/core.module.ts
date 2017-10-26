@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from './auth.service';
 import { DataService } from './data.service';
 import { UserService } from './user.service';
+import { WorkerService } from './worker.service';
 
 @NgModule({
   imports: [
@@ -12,6 +13,11 @@ import { UserService } from './user.service';
     HttpModule
   ],
   declarations: [],
-  providers: [AuthService, DataService, UserService]
+  providers: [
+    AuthService,
+    DataService,
+    UserService,
+    WorkerService
+  ]
 })
 export class CoreModule {}

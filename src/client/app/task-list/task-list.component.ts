@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import * as _ from 'lodash'
 
 @Component({
   selector: 'app-task-list',
@@ -11,6 +12,7 @@ export class TaskListComponent implements OnInit {
     {
       description: "Fake description 1",
       storyPoints: 0.5,
+      storyPointsUserChoice: 13,
       issueId: "EMA-1"
     },
     {
@@ -21,16 +23,19 @@ export class TaskListComponent implements OnInit {
     {
       description: "Fake description 3",
       storyPoints: 2,
+      storyPointsUserChoice: 40,
       issueId: "EMA-3"
     },
     {
       description: "Fake description 4",
       storyPoints: 3,
+      storyPointsUserChoice: 20,
       issueId: "EMA-4"
     },
     {
       description: "Fake description 5",
       storyPoints: 100,
+      storyPointsUserChoice: 1,
       issueId: "EMA-5"
     }
   ];
@@ -40,4 +45,8 @@ export class TaskListComponent implements OnInit {
   ngOnInit() {
   }
 
+  changeStoryPointsUserChoice(id: string, val: number): void {
+    const item = _.find(this.tasks, {issueId: id});
+    item.storyPointsUserChoice = val;
+  }
 }

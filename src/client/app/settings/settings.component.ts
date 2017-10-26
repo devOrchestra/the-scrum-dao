@@ -1,4 +1,5 @@
 import {Component, OnInit} from '@angular/core';
+import {WorkerService} from '../core/worker.service'
 import project_artifacts from '../../../../build/contracts/Project.json'
 import {default as contract} from 'truffle-contract'
 
@@ -11,28 +12,23 @@ export class SettingsComponent implements OnInit {
   worker: any = {};
   workers: any[] = [];
   newOracleAddress: string;
+  currentOracleAddress: string;
   Project = contract(project_artifacts);
 
-  constructor() {
-  }
+  constructor(
+    private _workerService: WorkerService
+  ) {}
 
   ngOnInit() {
-    // todo Load users in resolvers before app route. store in a service
     this.Project.setProvider(web3.currentProvider);
     this.Project.deployed().then(contractInstance => {
-      contractInstance.getWorkersLength.call().then(data => {
-        const length = parseInt(data.toString(), 10);
-        for (let i = 0; i < length; i++) {
-          contractInstance.getWorker.call(i).then(worker => {
-            this.workers.push(worker)
-          })
-        }
-      })
-
       contractInstance.trustedOracle().then(data => {
-        // todo display
-        console.log('ORACLE', data)
+        this.currentOracleAddress = data;
       })
+    });
+
+    this._workerService.getWorkers().subscribe(data => {
+      this.workers = data;
     })
   }
 
@@ -59,8 +55,7 @@ export class SettingsComponent implements OnInit {
         from: web3.eth.accounts[0]
       }).then(() => {
         contractInstance.trustedOracle().then(data => {
-          // todo display
-          console.log('ORACLE', data)
+          this.currentOracleAddress = data;
         })
       })
     })

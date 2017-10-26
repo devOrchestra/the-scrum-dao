@@ -3,7 +3,7 @@
   min-width: calc(100% - 16px);
   max-width: calc(100% - 16px);
   margin: 0 8px;
-  padding: 8px 16px;
+  padding: 8px 8px 8px 16px;
 }
 
 #task-list .item:first-child {
@@ -28,8 +28,24 @@
   margin-left: 0;
 }
 
-/deep/ #task-list .story-points-dropdown .mat-select-trigger {
-  width: 50px;
-  min-width: 50px;
-  max-width: 50px;
+#task-list .item .storyPointsUserChoiceBtn * {
+  margin-left: 0;
+}
+
+#task-list .item .story-points-user-choice-cloud {
+  font-size: 12px;
+  border-radius: 10px;
+  padding: 5px 10px;
+  background-color: #239b23;
+  font-weight: bold;
+  width: 54px;
+  color: white;
+}
+
+#task-list .item .story-points-user-choice-cloud i {
+  margin-left: 4px;
+}
+
+#task-list .item .story-points-user-choice-cloud span {
+  margin-left: 0;
 }

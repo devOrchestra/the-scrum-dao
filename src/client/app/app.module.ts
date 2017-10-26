@@ -7,6 +7,8 @@ import { CoreModule } from './core/core.module';
 import { AppRoutingModule } from './app.routing.module';
 import { LayoutModule } from './layout/layout.module';
 
+import { WorkersResolverService } from './core/resolvers/workers-resolver.service'
+
 @NgModule({
   declarations: [
     AppComponent
@@ -19,7 +21,9 @@ import { LayoutModule } from './layout/layout.module';
     AppRoutingModule,
     LayoutModule
   ],
-  providers: [],
+  providers: [
+    WorkersResolverService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
