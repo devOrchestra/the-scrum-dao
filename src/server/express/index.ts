@@ -3,12 +3,11 @@ import morganLogger = require('morgan');
 import bodyParser = require('body-parser');
 import path = require('path');
 
-import logger from './logger';
+import issueRouter from './issue';
+import logger from '../logger';
 
 const app = express();
 let webAppPath: string = path.resolve('./', 'web-app/client');
-// uncomment after placing your favicon in /public
-// app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 if (process.env.NODE_ENV === 'development') {
   app.use(morganLogger('dev'));
 }
@@ -24,6 +23,8 @@ app.get('/api/ping', (req, res)=> {
   logger.debug("ping");
   res.json("pong");
 });
+
+app.use('/api/issues', issueRouter);
 
 if (process.env.NODE_ENV === 'production') {
   app.use('*', express.static(path.resolve(webAppPath, 'index.html')));
