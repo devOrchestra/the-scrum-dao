@@ -25,7 +25,7 @@ contract Project is StandardToken, Ownable, TrustedOracle {
 
   mapping (string => address) workersLogins;
 
-  function Project(string _name, string _symbol, uint8 _decimals, address _trustedOracle) TrustedOracle(_trustedOracle) {
+  function Project(string _name, string _symbol, uint8 _decimals) {
     name = _name;
     symbol = _symbol;
     decimals = _decimals;

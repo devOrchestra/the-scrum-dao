@@ -40,7 +40,7 @@ contract StoryPointsVoting is Ownable, TrustedOracle {
     _;
   }
 
-  function StoryPointsVoting(address _projectContract, address _trustedOracle) TrustedOracle(_trustedOracle) {
+  function StoryPointsVoting(address _projectContract){
     project = Project(_projectContract);
   }
 

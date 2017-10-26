@@ -9,7 +9,9 @@ contract TrustedOracle {
     _;
   }
 
-  function TrustedOracle(address _trustedOracle){
+  function TrustedOracle(){}
+
+  function addTrustedOracle(address _trustedOracle){
     trustedOracle = _trustedOracle;
   }
 }
