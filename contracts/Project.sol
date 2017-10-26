@@ -19,11 +19,16 @@ contract Project is StandardToken, Ownable, TrustedOracle {
 
   uint storyPointMultiplier = 10;
 
-  StoryPointsVoting storyPointsVoiting;
+  StoryPointsVoting storyPointsVoting;
 
-  address[] public workers;
+  Worker[] public workers;
 
-  mapping (string => address) workersLogins;
+  struct Worker {
+  address _address;
+  string username;
+  }
+
+  mapping (string => address) usernames;
 
   function Project(string _name, string _symbol, uint8 _decimals) {
     name = _name;
@@ -31,37 +36,37 @@ contract Project is StandardToken, Ownable, TrustedOracle {
     decimals = _decimals;
   }
 
-  function initStoryPointsVoiting(address _storyPointsVoiting) onlyOwner {
-    storyPointsVoiting = StoryPointsVoting(_storyPointsVoiting);
+  function initStoryPointsVoting(address _storyPointsVoting) onlyOwner {
+    storyPointsVoting = StoryPointsVoting(_storyPointsVoting);
   }
 
-  function addWorker(address worker, string login) onlyOwner {
+  function addWorker(address worker, string username) onlyOwner {
     bool alreadyAdded = false;
-    if (workersLogins[login] != 0) {
+    if (usernames[username] != 0) {
       alreadyAdded = true;
     }
     require(!alreadyAdded);
-    workers.push(worker);
-    workersLogins[login] = worker;
+    workers.push(Worker(worker, username));
+    usernames[username] = worker;
   }
 
   function getWorkersLength() public constant returns (uint){
     return workers.length;
   }
 
-  function getWorker(uint i) public constant returns (address){
-    return workers[i];
+  function getWorker(uint i) public constant returns (address, string){
+    return (workers[i]._address, workers[i].username);
   }
 
-  function payAward(string login, string issue) public onlyTrustedOracle {
-    address recepient = workersLogins[login];
-    var (count, sum, isOpen, awardPaid) = storyPointsVoiting.getVoting(issue);
+  function payAward(string username, string issue) public onlyTrustedOracle {
+    address recepient = usernames[username];
+    var (count, sum, isOpen, awardPaid) = storyPointsVoting.getVoting(issue);
     require(!isOpen);
-    if (recepient != 0 && count>0 && sum>0 && !awardPaid) {
+    if (recepient != 0 && count > 0 && sum > 0 && !awardPaid) {
       uint256 awardSupply = sum.mul(storyPointMultiplier).div(count);
       balances[recepient] = balances[recepient].add(awardSupply);
       totalSupply = totalSupply.add(awardSupply);
-      storyPointsVoiting.markVotingAsPaid(issue);
+      storyPointsVoting.markVotingAsPaid(issue);
     }
   }
 }

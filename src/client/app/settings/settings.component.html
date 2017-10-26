@@ -5,35 +5,21 @@
 
 <div fxLayout="row">
   <div fxLayout="row" fxFlex="30">
-    <md-input-container>
-      <input mdInput placeholder="Add worker address" [(ngModel)]="worker">
-    </md-input-container>
-    <button md-button (click)="addWorker()">Add</button>
-  </div>
-</div>
-
-<h2 class="title">Contributors</h2>
-<div *ngFor="let contributor of contributors;">
-  {{contributor}}
-</div>
-
-<div fxLayout="row">
-  <div fxLayout="row" fxFlex="30">
     <div fxLayout="column">
       <md-input-container>
-        <input mdInput placeholder="Add contributor username" [(ngModel)]="newContributor.username">
+        <input mdInput placeholder="Jira username" [(ngModel)]="worker.login">
       </md-input-container>
       <md-input-container>
-        <input mdInput placeholder="Add contributor address" [(ngModel)]="newContributor.address">
+        <input mdInput placeholder="ETH address" [(ngModel)]="worker.address">
       </md-input-container>
     </div>
-    <button md-button (click)="addContributor()">Add</button>
+    <button md-button (click)="addWorker()">Add</button>
   </div>
 </div>
 
 <h2 class="title">Oracle</h2>
 <!--<div *ngFor="let worker of workers;">-->
-  <!--{{worker}}-->
+<!--{{worker}}-->
 <!--</div>-->
 
 <div fxLayout="row">

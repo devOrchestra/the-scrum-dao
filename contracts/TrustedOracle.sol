@@ -2,7 +2,7 @@ pragma solidity ^0.4.11;
 
 
 contract TrustedOracle {
-  address trustedOracle;
+  address public trustedOracle;
 
   modifier onlyTrustedOracle {
     require(msg.sender == trustedOracle);

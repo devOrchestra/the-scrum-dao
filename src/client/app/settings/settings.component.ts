@@ -8,10 +8,8 @@ import {default as contract} from 'truffle-contract'
   styleUrls: ['./settings.component.css']
 })
 export class SettingsComponent implements OnInit {
-  worker: String;
+  worker: any = {};
   workers: any[] = [];
-  contributors: any[] = [];
-  newContributor: { [key: string]: string } = {};
   newOracleAddress: string;
   Project = contract(project_artifacts);
 
@@ -19,6 +17,7 @@ export class SettingsComponent implements OnInit {
   }
 
   ngOnInit() {
+    // todo Load users in resolvers before app route. store in a service
     this.Project.setProvider(web3.currentProvider);
     this.Project.deployed().then(contractInstance => {
       contractInstance.getWorkersLength.call().then(data => {
@@ -29,28 +28,40 @@ export class SettingsComponent implements OnInit {
           })
         }
       })
+
+      contractInstance.trustedOracle().then(data => {
+        // todo display
+        console.log('ORACLE', data)
+      })
     })
   }
 
   addWorker() {
     this.Project.deployed().then(contractInstance => {
-      contractInstance.addWorker(this.worker, {gas: 500000, from: web3.eth.accounts[0]}).then(data => {
+      contractInstance.addWorker(this.worker.address, this.worker.login, {
+        from: web3.eth.accounts[0]
+      }).then(() => {
         contractInstance.getWorkersLength.call().then(data => {
           const length = parseInt(data.toString(), 10);
           contractInstance.getWorker.call(length - 1).then(worker => {
-            console.log(worker);
-            this.workers.push(worker);
+            this.workers.push(worker)
           })
         })
       })
     })
   }
 
-  addContributor() {
-    console.log("new contributor: ", this.newContributor);
-  }
 
   addOracleAddress() {
-    console.log("new oracle address: ", this.newOracleAddress);
+    this.Project.deployed().then(contractInstance => {
+      contractInstance.addTrustedOracle(this.newOracleAddress, {
+        from: web3.eth.accounts[0]
+      }).then(() => {
+        contractInstance.trustedOracle().then(data => {
+          // todo display
+          console.log('ORACLE', data)
+        })
+      })
+    })
   }
 }

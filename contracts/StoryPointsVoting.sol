@@ -32,7 +32,8 @@ contract StoryPointsVoting is Ownable, TrustedOracle {
     bool result = false;
     uint length = project.getWorkersLength();
     for (uint i = 0; i < length; i++) {
-      if (msg.sender == project.getWorker(i)) {
+      var (_address, username) = project.getWorker(i);
+      if (msg.sender == _address) {
         result = true;
         break;
       }
