@@ -39,11 +39,12 @@ export class SettingsComponent implements OnInit {
   addWorker() {
     this.Project.deployed().then(contractInstance => {
       contractInstance.addWorker(this.worker.address, this.worker.login, {
-        from: web3.eth.accounts[0]
+        from: web3.eth.accounts[0],
+        gas: 150000
       }).then(() => {
         contractInstance.getWorkersLength.call().then(data => {
           const length = parseInt(data.toString(), 10);
-          contractInstance.getWorker.call(length - 1).then(worker => {
+          contractInstance.getWorker.call(length).then(worker => {
             this.workers.push(worker)
           })
         })
