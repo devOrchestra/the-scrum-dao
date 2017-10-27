@@ -19,10 +19,14 @@ export class ContributorListComponent implements OnInit {
 
   ngOnInit() {
     this._workerService.getWorkers().subscribe(data => {
-      data.forEach((item, i) => {
-        data[i] = this.formatWorkers(item)
+      const clone = [];
+      data.forEach(item => {
+        clone.push(item);
       });
-      this.contributors = data;
+      clone.forEach((item, i) => {
+        clone[i] = this.formatWorkers(item)
+      });
+      this.contributors = clone;
     });
 
     this.Project.setProvider(web3.currentProvider);

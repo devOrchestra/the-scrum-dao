@@ -28,6 +28,7 @@ export class SettingsComponent implements OnInit {
     });
 
     this._workerService.getWorkers().subscribe(data => {
+      console.log("WORKERS:", data);
       this.workers = data;
     })
   }
