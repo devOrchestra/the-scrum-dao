@@ -1,19 +1,4 @@
 {
-  "/test-route": {
-    "target": "http://localhost:8021",
-    "secure": false,
-    "logLevel": "debug"
-  },
-  "/login": {
-    "target": "http://localhost:8021",
-    "secure": false,
-    "logLevel": "debug"
-  },
-  "/logout": {
-    "target": "http://localhost:8021",
-    "secure": false,
-    "logLevel": "debug"
-  },
   "/api/*": {
     "target": "http://localhost:8021",
     "secure": false,

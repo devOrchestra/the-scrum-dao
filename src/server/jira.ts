@@ -17,7 +17,7 @@ class JiraConnector {
     request({oauth: this.jiraOAuth, ...options}, (error, response, body) => {
       if (error) return cb(error);
       if (response && response.statusCode >= 400) {
-        let error: any = new Error(JSON.stringify(body));
+        let error: any = new Error(body);
         error.status = response.statusCode;
         return cb(error);
       }

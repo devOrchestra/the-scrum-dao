@@ -4,6 +4,7 @@ import bodyParser = require('body-parser');
 import path = require('path');
 
 import issueRouter from './issue';
+import contributorRouter from './contributor';
 import logger from '../logger';
 
 const app = express();
@@ -25,6 +26,7 @@ app.get('/api/ping', (req, res)=> {
 });
 
 app.use('/api/issues', issueRouter);
+app.use('/api/contributors', contributorRouter);
 
 if (process.env.NODE_ENV === 'production') {
   app.use('*', express.static(path.resolve(webAppPath, 'index.html')));
