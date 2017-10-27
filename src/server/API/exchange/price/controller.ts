@@ -1,5 +1,0 @@
-const controller = {
-
-}
-
-export {controller}
