@@ -8,13 +8,15 @@ import {TaskListComponent} from './task-list/task-list.component';
 import {ContributorListComponent} from './contributor-list/contributor-list.component';
 
 import {WorkersResolverService} from './core/resolvers/workers-resolver.service';
+import {JiraIssuesResolverService} from './core/resolvers/jira-issues-resolver.service';
 
 const routes: Routes = [
   {
     path: 'app',
     component: ShellComponent,
     resolve: {
-      workers: WorkersResolverService
+      workers: WorkersResolverService,
+      issues: JiraIssuesResolverService
     },
     children: [
       {

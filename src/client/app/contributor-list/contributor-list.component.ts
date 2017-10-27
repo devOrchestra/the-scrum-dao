@@ -10,6 +10,7 @@ import {default as contract} from 'truffle-contract'
 })
 export class ContributorListComponent implements OnInit {
   Project = contract(project_artifacts);
+  public readyToRenderPage = false;
   public totalBalance: number;
   public contributors;
 
@@ -19,6 +20,7 @@ export class ContributorListComponent implements OnInit {
 
   ngOnInit() {
     this._workerService.getWorkers().subscribe(data => {
+      const currentWorkersArr = data;
       const clone = [];
       data.forEach(item => {
         clone.push(item);
@@ -26,7 +28,27 @@ export class ContributorListComponent implements OnInit {
       clone.forEach((item, i) => {
         clone[i] = this.formatWorkers(item)
       });
-      this.contributors = clone;
+
+      if (!this._workerService.workersAvatarsWereSet) {
+        this._workerService.getContributors().then(response => {
+          response.forEach((responseItem, i) => {
+            clone.forEach((cloneItem, j) => {
+              if (responseItem.displayName.toLowerCase() === cloneItem.username.toLowerCase() ||
+                responseItem.name.toLowerCase() === cloneItem.username.toLowerCase()) {
+                cloneItem.avatar = responseItem.avatarUrl;
+                currentWorkersArr[j].push(responseItem.avatarUrl);
+              }
+            });
+          });
+          this._workerService.workersAvatarsWereSet = true;
+          this._workerService.setWorkers(currentWorkersArr);
+          this.contributors = clone;
+          this.readyToRenderPage = true;
+        })
+      } else {
+        this.contributors = clone;
+        this.readyToRenderPage = true;
+      }
     });
 
     this.Project.setProvider(web3.currentProvider);

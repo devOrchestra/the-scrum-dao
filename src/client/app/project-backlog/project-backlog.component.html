@@ -11,13 +11,19 @@
     <div class="item" *ngFor="let item of items" fxLayout="row" fxLayoutAlign="space-between">
       <div class="left-side" fxLayout="row" fxLayoutAlign="center center">
         <i class="fa fa-anchor first" aria-hidden="true"></i>
-        <p>{{item.description}}</p>
+        <p>{{item.fields.summary}}</p>
+        <div class="assignee-cloud" fxLayout="row" fxLayoutAlign="center center" *ngIf="item.fields.assignee && item.fields.assignee.displayName">
+          {{item.fields.assignee.displayName}}
+        </div>
       </div>
       <div class="right-side" fxLayout="row" fxLayoutAlign="center center">
-        <h3>{{item.issueId}}</h3>
-        <div class="story-points-cloud" fxLayout="row" fxLayoutAlign="center center">{{item.storyPoints}}</div>
+        <h3>{{item.key}}</h3>
+        <div class="story-points-cloud" fxLayout="row" fxLayoutAlign="center center">
+          <span *ngIf="item.storyPoints">{{item.storyPoints}}</span>
+          <span *ngIf="!item.storyPoints">none</span>
+        </div>
         <div mdTooltip="Vote for issue" mdTooltipPosition="after" class="vote-cloud unselectable pointer"
-             (click)="voteForIssue(item.issueId)" fxLayout="row" fxLayoutAlign="center center">
+             (click)="voteForIssue(item.key)" fxLayout="row" fxLayoutAlign="center center">
           {{fakePercents.toFixed(1)}}%
           <i class="fa fa-angle-double-up first" aria-hidden="true"></i>
         </div>

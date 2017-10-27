@@ -3,11 +3,17 @@
     <div class="item" *ngFor="let task of tasks" fxLayout="row" fxLayoutAlign="space-between">
       <div class="left-side" fxLayout="row" fxLayoutAlign="center center">
         <i class="fa fa-anchor first" aria-hidden="true"></i>
-        <p>{{task.description}}</p>
+        <p>{{task.fields.summary}}</p>
+        <div class="assignee-cloud" fxLayout="row" fxLayoutAlign="center center" *ngIf="task.fields.assignee && task.fields.assignee.displayName">
+          {{task.fields.assignee.displayName}}
+        </div>
       </div>
       <div class="right-side" fxLayout="row" fxLayoutAlign="center center">
-        <h3>{{task.issueId}}</h3>
-        <div class="story-points-cloud" fxLayout="row" fxLayoutAlign="center center">{{task.storyPoints}}</div>
+        <h3>{{task.key}}</h3>
+        <div class="story-points-cloud" fxLayout="row" fxLayoutAlign="center center">
+          <span *ngIf="task.storyPoints">{{task.storyPoints}}</span>
+          <span *ngIf="!task.storyPoints">none</span>
+        </div>
         <div class="story-points-user-choice-cloud unselectable pointer" fxLayout="row" fxLayoutAlign="center center"
              [mdMenuTriggerFor]="storyPointsUserChoiceMenu">
           <span *ngIf="!task.storyPointsUserChoice">Vote</span>

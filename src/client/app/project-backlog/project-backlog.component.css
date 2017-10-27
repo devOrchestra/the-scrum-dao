@@ -38,6 +38,19 @@
   color: white;
 }
 
+#task-list .item .assignee-cloud {
+  font-size: 12px;
+  border-radius: 10px;
+  padding: 5px 10px;
+  background-color: royalblue;
+  font-weight: bold;
+  color: white;
+}
+
+#task-list .item .story-points-cloud span {
+  margin-left: 0;
+}
+
 /deep/ #task-list .story-points-dropdown .mat-select-trigger {
   width: 50px;
   min-width: 50px;

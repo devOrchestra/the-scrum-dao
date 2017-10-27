@@ -42,10 +42,20 @@
   color: white;
 }
 
+#task-list .item .assignee-cloud {
+  font-size: 12px;
+  border-radius: 10px;
+  padding: 5px 10px;
+  background-color: royalblue;
+  font-weight: bold;
+  color: white;
+}
+
 #task-list .item .story-points-user-choice-cloud i {
   margin-left: 4px;
 }
 
-#task-list .item .story-points-user-choice-cloud span {
+#task-list .item .story-points-user-choice-cloud span,
+#task-list .item .story-points-cloud span {
   margin-left: 0;
 }

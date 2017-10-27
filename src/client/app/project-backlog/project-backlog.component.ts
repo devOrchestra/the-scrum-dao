@@ -5,6 +5,8 @@ import * as _ from 'lodash';
 import project_artifacts from '../../../../build/contracts/Project.json';
 import {MdDialog} from '@angular/material';
 import {ProjectBacklogAddTrackDialogComponent} from './project-backlog-add-track-dialog/project-backlog-add-track-dialog.component'
+import {JiraService} from '../core/jira.service'
+
 import * as moment from 'moment';
 
 @Component({
@@ -16,56 +18,59 @@ export class ProjectBacklogComponent implements OnInit {
   track: String;
   story: String;
   fakePercents = 10.123456789;
-  public items: { [key: string]: string | number }[] = [
-    {
-      description: "Fake description 1",
-      storyPoints: 0.5,
-      issueId: "EMA-1"
-    },
-    {
-      description: "Fake description 2",
-      storyPoints: 1,
-      issueId: "EMA-2"
-    },
-    {
-      description: "Fake description 3",
-      storyPoints: 2,
-      issueId: "EMA-3"
-    },
-    {
-      description: "Fake description 4",
-      storyPoints: 3,
-      issueId: "EMA-4"
-    },
-    {
-      description: "Fake description 5",
-      storyPoints: 100,
-      issueId: "EMA-5"
-    }
-  ];
-  // public items = [];
+  // public items: { [key: string]: string | number }[] = [
+  //   {
+  //     description: "Fake description 1",
+  //     storyPoints: 0.5,
+  //     issueId: "EMA-1"
+  //   },
+  //   {
+  //     description: "Fake description 2",
+  //     storyPoints: 1,
+  //     issueId: "EMA-2"
+  //   },
+  //   {
+  //     description: "Fake description 3",
+  //     storyPoints: 2,
+  //     issueId: "EMA-3"
+  //   },
+  //   {
+  //     description: "Fake description 4",
+  //     storyPoints: 3,
+  //     issueId: "EMA-4"
+  //   },
+  //   {
+  //     description: "Fake description 5",
+  //     storyPoints: 100,
+  //     issueId: "EMA-5"
+  //   }
+  // ];
+  public items = [];
 
   Project = contract(project_artifacts);
 
   constructor(
-    public dialog: MdDialog
+    public dialog: MdDialog,
+    public _jiraService: JiraService
   ) {}
 
 
   ngOnInit() {
-    this.Project.setProvider(web3.currentProvider);
-    this.Project.deployed().then(contractInstance => {
-      contractInstance.getBacklogLength.call().then(data => {
-        const length = parseInt(data.toString(), 10);
-        for (let i = 0; i < length; i++) {
-          contractInstance.getUserStory.call(i).then(story => {
-            story.push(i);
-            this.items.push(this.parseUserStory(story))
-          })
-        }
-      })
+    // this.Project.setProvider(web3.currentProvider);
+    // this.Project.deployed().then(contractInstance => {
+    //   contractInstance.getBacklogLength.call().then(data => {
+    //     const length = parseInt(data.toString(), 10);
+    //     for (let i = 0; i < length; i++) {
+    //       contractInstance.getUserStory.call(i).then(story => {
+    //         story.push(i);
+    //         this.items.push(this.parseUserStory(story))
+    //       })
+    //     }
+    //   })
+    // })
 
-
+    this._jiraService.getIssues().subscribe(data => {
+      this.items = _.cloneDeep(data);
     })
   }
 
