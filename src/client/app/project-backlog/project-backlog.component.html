@@ -10,7 +10,7 @@
   <div id="task-list" fxLayout="column">
     <div class="item" *ngFor="let item of items" fxLayout="row" fxLayoutAlign="space-between">
       <div class="left-side" fxLayout="row" fxLayoutAlign="center center">
-        <i class="fa fa-angle-double-up first" aria-hidden="true"></i>
+        <i class="fa fa-anchor first" aria-hidden="true"></i>
         <p>{{item.description}}</p>
       </div>
       <div class="right-side" fxLayout="row" fxLayoutAlign="center center">
@@ -19,7 +19,7 @@
         <div mdTooltip="Vote for issue" mdTooltipPosition="after" class="vote-cloud unselectable pointer"
              (click)="voteForIssue(item.issueId)" fxLayout="row" fxLayoutAlign="center center">
           {{fakePercents.toFixed(1)}}%
-          <i class="fa fa-chevron-circle-up" aria-hidden="true"></i>
+          <i class="fa fa-angle-double-up first" aria-hidden="true"></i>
         </div>
       </div>
     </div>

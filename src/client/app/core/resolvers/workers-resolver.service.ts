@@ -15,17 +15,28 @@ export class WorkersResolverService {
   ) {}
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<any> {
+    let final = [];
     this.Project.setProvider(web3.currentProvider);
     return this.Project.deployed().then(contractInstance => {
       return contractInstance.getWorkersLength.call().then(data => {
         const length = parseInt(data.toString(), 10);
-        const promises = [];
+        const workerPromises = [];
         for (let i = 0; i < length; i++) {
-          promises.push(contractInstance.getWorker.call(i));
+          workerPromises.push(contractInstance.getWorker.call(i));
         }
-        Promise.all(promises).then(value => {
-          console.log("Workers resolver data:", value);
-          this._workerService.setWorkers(value);
+        return Promise.all(workerPromises).then(value => {
+          final = value;
+          const balancePromises = [];
+          for (let i = 0; i < length; i++) {
+            balancePromises.push(contractInstance.balanceOf(value[i][0]))
+          }
+          return Promise.all(balancePromises).then(response => {
+            final.forEach((item, i) => {
+              item.push(parseInt(response[i].toString(), 10))
+            });
+            this._workerService.setWorkers(final);
+            console.log("Workers resolver data:", final);
+          })
         });
       });
     });

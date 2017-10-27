@@ -9,7 +9,7 @@
           </div>
           <div class="info" fxLayout="column" fxLayoutAlign="center center">
             <h2>{{contributor.username}}</h2>
-            <h4>{{contributor.balance}} SRC ({{(contributor.balance * 100 / totalBalance).toFixed(2)}}%)</h4>
+            <h4>{{contributor.balance}} SRC ({{countBalance(contributor.balance)}}%)</h4>
             <p class="wallet-address">{{contributor.walletAddress}}</p>
           </div>
         </div>

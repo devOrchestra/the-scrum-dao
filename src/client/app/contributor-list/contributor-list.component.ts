@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { WorkerService } from '../core/worker.service';
+import project_artifacts from '../../../../build/contracts/Project.json'
+import {default as contract} from 'truffle-contract'
 
 @Component({
   selector: 'app-contributor-list',
@@ -6,35 +9,56 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./contributor-list.component.css']
 })
 export class ContributorListComponent implements OnInit {
-  public totalBalance = 1000;
-  public contributors: { [key: string]: string | number }[] = [
-    {
-      username: "Username1",
-      balance: 100,
-      walletAddress: "0xEBA547094b6D1EB82DFDD011749165D490e07cf8",
-      avatar: "../../assets/images/avatar-default.png"
-    },
-    {
-      username: "Username2",
-      balance: 200,
-      walletAddress: "0xEBA547094b6D1EB82DFDD011749165D490e07cf8",
-      avatar: "../../assets/images/avatar-default.png"
-    },
-    {
-      username: "Username3",
-      balance: 300,
-      walletAddress: "0xEBA547094b6D1EB82DFDD011749165D490e07cf8"
-    },
-    {
-      username: "Username4",
-      balance: 400,
-      walletAddress: "0xEBA547094b6D1EB82DFDD011749165D490e07cf8"
-    }
-  ];
+  Project = contract(project_artifacts);
+  public totalBalance: number;
+  public contributors;
 
-  constructor() { }
+  constructor(
+    private _workerService: WorkerService
+  ) { }
 
   ngOnInit() {
+    this._workerService.getWorkers().subscribe(data => {
+      data.forEach((item, i) => {
+        data[i] = this.formatWorkers(item)
+      });
+      this.contributors = data;
+    });
+
+    this.Project.setProvider(web3.currentProvider);
+    this.Project.deployed().then(contractInstance => {
+      contractInstance.totalSupply().then(data => {
+        this.totalBalance = parseInt(data.toString(), 10);
+      })
+    })
   }
 
+  formatWorkers(arr) {
+    const obj = {
+      walletAddress: null,
+      username: null,
+      balance: null,
+      avatar: null
+    };
+    let count = 0;
+    for (const prop in obj) {
+      if (obj.hasOwnProperty(prop)) {
+        if (arr[count] !== undefined) {
+          obj[prop] = arr[count];
+          count++
+        }
+      }
+    }
+    return obj;
+  }
+
+  countBalance(contributorBalance) {
+    const calcVal = (contributorBalance * 100 / this.totalBalance).toFixed(2);
+    const finalPercentsVal = parseInt(calcVal.toString(), 10);
+    if (isNaN(finalPercentsVal)) {
+      return 0;
+    } else {
+      return finalPercentsVal;
+    }
+  }
 }
