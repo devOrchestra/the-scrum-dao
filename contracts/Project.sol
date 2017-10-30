@@ -6,6 +6,7 @@ import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
 import 'zeppelin-solidity/contracts/math/SafeMath.sol';
 import './TrustedOracle.sol';
 import './StoryPointsVoting.sol';
+import './Crowdsale.sol';
 
 
 contract Project is StandardToken, Ownable, TrustedOracle {
@@ -21,6 +22,10 @@ contract Project is StandardToken, Ownable, TrustedOracle {
 
   StoryPointsVoting storyPointsVoting;
 
+  Crowdsale crowdsale;
+
+  address trustedCrowdsale;
+
   Worker[] public workers;
 
   struct Worker {
@@ -30,6 +35,11 @@ contract Project is StandardToken, Ownable, TrustedOracle {
 
   mapping (string => address) usernames;
 
+  modifier onlyTrustedCrowdsale {
+    require(msg.sender == trustedCrowdsale);
+    _;
+  }
+
   function Project(string _name, string _symbol, uint8 _decimals) {
     name = _name;
     symbol = _symbol;
@@ -38,6 +48,11 @@ contract Project is StandardToken, Ownable, TrustedOracle {
 
   function initStoryPointsVoting(address _storyPointsVoting) onlyOwner {
     storyPointsVoting = StoryPointsVoting(_storyPointsVoting);
+  }
+
+  function initCrowdsale(address _crowdsale) onlyOwner {
+    trustedCrowdsale = _crowdsale;
+    crowdsale = Crowdsale(_crowdsale);
   }
 
   function addWorker(address worker, string username) onlyOwner {
@@ -63,10 +78,17 @@ contract Project is StandardToken, Ownable, TrustedOracle {
     var (id, count, sum, isOpen, awardPaid) = storyPointsVoting.getVoting(issue);
     require(!isOpen);
     if (recepient != 0 && count > 0 && sum > 0 && !awardPaid) {
+      storyPointsVoting.markVotingAsPaid(issue);
       uint256 awardSupply = sum.mul(storyPointMultiplier).div(count);
       balances[recepient] = balances[recepient].add(awardSupply);
       totalSupply = totalSupply.add(awardSupply);
-      storyPointsVoting.markVotingAsPaid(issue);
     }
+  }
+
+  function transferToCrowdsale(address _from, uint _value) onlyTrustedCrowdsale {
+    require(balanceOf(_from) >= _value);
+    balances[_from] = balances[_from].sub(_value);
+    balances[trustedCrowdsale] = balances[trustedCrowdsale].add(_value);
+    Transfer(_from, trustedCrowdsale, _value);
   }
 }

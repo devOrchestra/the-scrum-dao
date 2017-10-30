@@ -68,7 +68,7 @@ contract StoryPointsVoting is Ownable, TrustedOracle {
     return (votings[issue].issue, votings[issue].votesCount, votings[issue].sum, votings[issue].isOpen, votings[issue].awardPaid);
   }
 
-  function markVotingAsPaid(string issue){
+  function markVotingAsPaid(string issue) onlyTrustedOracle{
     if (votings[issue].isValid) {
       votings[issue].awardPaid = true;
     }
