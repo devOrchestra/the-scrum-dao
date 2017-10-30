@@ -4,6 +4,7 @@ import {JiraService} from '../core/jira.service'
 import storyPointsVoting_artifacts from '../../../../build/contracts/StoryPointsVoting.json';
 import {default as contract} from 'truffle-contract'
 import * as _ from 'lodash'
+import * as Bignumber from 'bignumber.js'
 
 @Component({
   selector: 'app-task-list',
@@ -43,14 +44,23 @@ export class TaskListComponent implements OnInit {
             this.tasks[i].fields.votesCount = response[i][1];
             this.tasks[i].fields.votesSum = response[i][2];
           });
+          console.log('this.tasks', this.tasks);
         })
       })
     })
   }
 
   changeStoryPointsUserChoice(id: string, val: number): void {
+    console.log('id', id, 'val', val);
+    console.log('new bignumber.', new Bignumber(12));
     const item = _.find(this.tasks, {key: id});
     item.storyPointsUserChoice = val;
+
+    this.StoryPointsVoting.deployed().then(storyPointsVotingInstance => {
+      storyPointsVotingInstance.vote(id, new Bignumber(val)).then(res => {
+        console.log('res', res);
+      });
+    });
   }
 
   countStoryPoints(votesCount, votesSum) {

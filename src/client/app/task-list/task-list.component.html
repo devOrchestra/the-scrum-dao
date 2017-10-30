@@ -2,7 +2,10 @@
   <div id="task-list" fxLayout="column">
     <div class="item" *ngFor="let task of tasks" fxLayout="row" fxLayoutAlign="space-between">
       <div class="left-side" fxLayout="row" fxLayoutAlign="center center">
-        <i class="fa fa-anchor first" aria-hidden="true"></i>
+        <img class="first" src="../../assets/images/bug-icon.svg" alt="">
+        <img class="first" src="../../assets/images/task-icon.svg" alt="">
+        <img class="first" src="../../assets/images/subtask-icon.svg" alt="">
+        <img class="first" src="../../assets/images/story-icon.svg" alt="">
         <p>{{task.fields.summary}}</p>
         <div class="assignee-cloud" fxLayout="row" fxLayoutAlign="center center" *ngIf="task.fields.assignee && task.fields.assignee.displayName">
           {{task.fields.assignee.displayName}}

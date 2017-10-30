@@ -13,6 +13,7 @@ export class SettingsComponent implements OnInit {
   workers: any[] = [];
   newOracleAddress: string;
   currentOracleAddress: string;
+  newCrowdsale: string;
   Project = contract(project_artifacts);
 
   constructor(
@@ -60,5 +61,9 @@ export class SettingsComponent implements OnInit {
         })
       })
     })
+  }
+
+  addCrowdsale() {
+    console.log('newCrowdsale:', this.newCrowdsale);
   }
 }
