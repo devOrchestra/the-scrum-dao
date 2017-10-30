@@ -52,7 +52,7 @@ contract StoryPointsVoting is Ownable, TrustedOracle {
 
   function vote(string issue, uint points) onlyTeem {
     if (!votings[issue].isValid) {
-      addVoting(issue);
+      votings[issue] = Voting(issue, 0, 0, true, true, false);
     }
     if (votings[issue].votes[msg.sender] > 0) {
       votings[issue].sum = votings[issue].sum.sub(votings[issue].votes[msg.sender]).add(points);
@@ -64,11 +64,11 @@ contract StoryPointsVoting is Ownable, TrustedOracle {
     votings[issue].votesCount++;
   }
 
-  function getVoting(string issue) public constant returns (string ,uint, uint, bool, bool){
+  function getVoting(string issue) public constant returns (string, uint, uint, bool, bool){
     return (votings[issue].issue, votings[issue].votesCount, votings[issue].sum, votings[issue].isOpen, votings[issue].awardPaid);
   }
 
-  function markVotingAsPaid(string issue) onlyTrustedOracle{
+  function markVotingAsPaid(string issue) onlyTrustedOracle {
     if (votings[issue].isValid) {
       votings[issue].awardPaid = true;
     }
