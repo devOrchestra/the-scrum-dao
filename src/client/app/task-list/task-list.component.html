@@ -11,8 +11,7 @@
       <div class="right-side" fxLayout="row" fxLayoutAlign="center center">
         <h3>{{task.key}}</h3>
         <div class="story-points-cloud" fxLayout="row" fxLayoutAlign="center center">
-          <span *ngIf="task.storyPoints">{{task.storyPoints}}</span>
-          <span *ngIf="!task.storyPoints">none</span>
+          {{countStoryPoints(task.fields.votesCount, task.fields.votesSum)}}
         </div>
         <div class="story-points-user-choice-cloud unselectable pointer" fxLayout="row" fxLayoutAlign="center center"
              [mdMenuTriggerFor]="storyPointsUserChoiceMenu">
@@ -21,7 +20,7 @@
           <i class="fa fa-caret-down" aria-hidden="true"></i>
         </div>
         <md-menu #storyPointsUserChoiceMenu="mdMenu">
-          <button md-menu-item *ngFor="let option of storyPointsOptions" (click)="changeStoryPointsUserChoice(task.issueId, option)">
+          <button md-menu-item *ngFor="let option of storyPointsOptions" (click)="changeStoryPointsUserChoice(task.key, option)">
             {{option}}
           </button>
         </md-menu>

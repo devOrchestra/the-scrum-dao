@@ -24,7 +24,8 @@
   margin-left: 8px;
 }
 
-#task-list .item .left-side .first {
+#task-list .item .left-side .first,
+#task-list .item .vote-cloud span {
   margin-left: 0;
 }
 

@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {default as Web3} from 'web3';
 import {default as contract} from 'truffle-contract'
 import * as _ from 'lodash';
+import backlog_artifacts from '../../../../build/contracts/ProductBacklog.json';
 import project_artifacts from '../../../../build/contracts/Project.json';
 import {MdDialog} from '@angular/material';
 import {ProjectBacklogAddTrackDialogComponent} from './project-backlog-add-track-dialog/project-backlog-add-track-dialog.component'
@@ -17,36 +18,9 @@ import * as moment from 'moment';
 export class ProjectBacklogComponent implements OnInit {
   track: String;
   story: String;
-  fakePercents = 10.123456789;
-  // public items: { [key: string]: string | number }[] = [
-  //   {
-  //     description: "Fake description 1",
-  //     storyPoints: 0.5,
-  //     issueId: "EMA-1"
-  //   },
-  //   {
-  //     description: "Fake description 2",
-  //     storyPoints: 1,
-  //     issueId: "EMA-2"
-  //   },
-  //   {
-  //     description: "Fake description 3",
-  //     storyPoints: 2,
-  //     issueId: "EMA-3"
-  //   },
-  //   {
-  //     description: "Fake description 4",
-  //     storyPoints: 3,
-  //     issueId: "EMA-4"
-  //   },
-  //   {
-  //     description: "Fake description 5",
-  //     storyPoints: 100,
-  //     issueId: "EMA-5"
-  //   }
-  // ];
   public items = [];
 
+  Backlog = contract(backlog_artifacts);
   Project = contract(project_artifacts);
 
   constructor(
@@ -70,7 +44,27 @@ export class ProjectBacklogComponent implements OnInit {
     // })
 
     this._jiraService.getIssues().subscribe(data => {
+      const promises = [];
       this.items = _.cloneDeep(data);
+      this.Backlog.setProvider(web3.currentProvider);
+      this.Backlog.deployed().then(backlogContractInstance => {
+        this.items.forEach(item => {
+          promises.push(backlogContractInstance.getVoting(item.key));
+        });
+        Promise.all(promises).then(response => {
+          for (let i = 0; i < response.length; i++) {
+            response[i][1] = !parseInt(response[i][1].toString(), 10) ? 0 : parseInt(response[i][1].toString(), 10);
+            response[i][2] = !parseInt(response[i][2].toString(), 10) ? 0 : parseInt(response[i][2].toString(), 10);
+            /* !!! UNCOMMENT AFTER REAL DATA!!! */
+            // const item = _.find(this.items, {key: response[i][0]});
+            // item.fields.totalSupply = response[i][1];
+            // item.fields.votingCount = response[i][2];
+            /* !!!DELETE 2 BELOW ROWS AFTER REAL DATA!!! */
+            this.items[i].fields.totalSupply = response[i][1];
+            this.items[i].fields.votingCount = response[i][2];
+          }
+        })
+      })
     })
   }
 
@@ -78,11 +72,11 @@ export class ProjectBacklogComponent implements OnInit {
     this.Project.deployed().then(contractInstance => {
       contractInstance.votePriority(i, {gas: 500000, from: web3.eth.accounts[0]}).then(data => {
         contractInstance.getUserStory.call(i).then(story => {
-          let voitingItem = _.find(this.items, item => {
+          const voitingItem = _.find(this.items, item => {
             return item.id === i;
-          })
-          story.push(i)
-          console.log('voitingItem', voitingItem)
+          });
+          story.push(i);
+          console.log('voitingItem', voitingItem);
           if (voitingItem) {
             voitingItem.votes = parseInt(story[4].toString(), 10)
           }
@@ -136,6 +130,15 @@ export class ProjectBacklogComponent implements OnInit {
 
   voteForIssue(id: string): void {
     console.log("Voited issue id:", id);
+  }
+
+  countTotalPercents(votingCount, totalSupply) {
+    const result = votingCount / totalSupply * 100;
+    if (!result && result !== 0) {
+      return 0;
+    } else {
+      return result.toFixed(1);
+    }
   }
 
   openDialog() {

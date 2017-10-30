@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import {default as Web3} from 'web3';
 import {JiraService} from '../core/jira.service'
+import storyPointsVoting_artifacts from '../../../../build/contracts/StoryPointsVoting.json';
+import {default as contract} from 'truffle-contract'
 import * as _ from 'lodash'
 
 @Component({
@@ -9,51 +12,53 @@ import * as _ from 'lodash'
 })
 export class TaskListComponent implements OnInit {
   public storyPointsOptions: number[] = [0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100];
-  // public tasks: { [key: string]: string | number }[] = [
-  //   {
-  //     description: "Fake description 1",
-  //     storyPoints: 0.5,
-  //     storyPointsUserChoice: 13,
-  //     issueId: "EMA-1"
-  //   },
-  //   {
-  //     description: "Fake description 2",
-  //     storyPoints: 1,
-  //     issueId: "EMA-2"
-  //   },
-  //   {
-  //     description: "Fake description 3",
-  //     storyPoints: 2,
-  //     storyPointsUserChoice: 40,
-  //     issueId: "EMA-3"
-  //   },
-  //   {
-  //     description: "Fake description 4",
-  //     storyPoints: 3,
-  //     storyPointsUserChoice: 20,
-  //     issueId: "EMA-4"
-  //   },
-  //   {
-  //     description: "Fake description 5",
-  //     storyPoints: 100,
-  //     storyPointsUserChoice: 1,
-  //     issueId: "EMA-5"
-  //   }
-  // ];
   public tasks = [];
+
+  StoryPointsVoting = contract(storyPointsVoting_artifacts);
 
   constructor(
     public _jiraService: JiraService
   ) { }
 
   ngOnInit() {
+    const promises = [];
     this._jiraService.getIssues().subscribe(data => {
       this.tasks = _.cloneDeep(data);
+      this.StoryPointsVoting.setProvider(web3.currentProvider);
+      this.StoryPointsVoting.deployed().then(storyPointsVotingInstance => {
+        this.tasks.forEach(item => {
+          promises.push(storyPointsVotingInstance.getVoting(item.key));
+        });
+        Promise.all(promises).then(response => {
+          response.forEach(item => {
+            item[1] = !parseInt(item[1].toString(), 10) ? 0 : parseInt(item[1].toString(), 10);
+            item[2] = !parseInt(item[2].toString(), 10) ? 0 : parseInt(item[2].toString(), 10);
+          });
+          this.tasks.forEach((item, i) => {
+            /* !!! UNCOMMENT AFTER REAL DATA!!! */
+            // const task = _.find(this.tasks, {key: response[i][0]});
+            // task.fields.votesCount = response[i][1];
+            // task.fields.votesSum = response[i][2];
+            /* !!!DELETE 2 BELOW ROWS AFTER REAL DATA!!! */
+            this.tasks[i].fields.votesCount = response[i][1];
+            this.tasks[i].fields.votesSum = response[i][2];
+          });
+        })
+      })
     })
   }
 
   changeStoryPointsUserChoice(id: string, val: number): void {
-    const item = _.find(this.tasks, {issueId: id});
+    const item = _.find(this.tasks, {key: id});
     item.storyPointsUserChoice = val;
+  }
+
+  countStoryPoints(votesCount, votesSum) {
+    const result = votesCount / votesSum;
+    if (!result && result !== 0) {
+      return 0;
+    } else {
+      return Math.round(result);
+    }
   }
 }

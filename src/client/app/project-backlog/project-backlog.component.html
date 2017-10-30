@@ -24,7 +24,7 @@
         </div>
         <div mdTooltip="Vote for issue" mdTooltipPosition="after" class="vote-cloud unselectable pointer"
              (click)="voteForIssue(item.key)" fxLayout="row" fxLayoutAlign="center center">
-          {{fakePercents.toFixed(1)}}%
+          {{countTotalPercents(item.fields.votingCount, item.fields.totalSupply)}}%
           <i class="fa fa-angle-double-up first" aria-hidden="true"></i>
         </div>
       </div>
