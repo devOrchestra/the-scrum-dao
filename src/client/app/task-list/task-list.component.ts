@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {default as Web3} from 'web3';
 import {JiraService} from '../core/jira.service'
 import storyPointsVoting_artifacts from '../../../../build/contracts/StoryPointsVoting.json';
@@ -17,9 +17,8 @@ export class TaskListComponent implements OnInit {
 
   StoryPointsVoting = contract(storyPointsVoting_artifacts);
 
-  constructor(
-    public _jiraService: JiraService
-  ) { }
+  constructor(public _jiraService: JiraService) {
+  }
 
   ngOnInit() {
     const promises = [];
@@ -57,7 +56,10 @@ export class TaskListComponent implements OnInit {
     item.storyPointsUserChoice = val;
 
     this.StoryPointsVoting.deployed().then(storyPointsVotingInstance => {
-      storyPointsVotingInstance.vote(id, new Bignumber(val)).then(res => {
+      storyPointsVotingInstance.vote(id, val, {
+        from: web3.eth.accounts[0],
+        gas: 235000
+      }).then(res => {
         console.log('res', res);
       });
     });
