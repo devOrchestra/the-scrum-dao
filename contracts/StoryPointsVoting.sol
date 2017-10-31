@@ -59,9 +59,13 @@ contract StoryPointsVoting is Ownable, TrustedOracle {
     }
     else {
       votings[issue].sum = votings[issue].sum.add(points);
+      votings[issue].votesCount++;
     }
     votings[issue].votes[msg.sender] = points;
-    votings[issue].votesCount++;
+  }
+
+  function getVote(string issue) public constant returns (uint) {
+      return votings[issue].votes[msg.sender];
   }
 
   function getVoting(string issue) public constant returns (string, uint, uint, bool, bool){

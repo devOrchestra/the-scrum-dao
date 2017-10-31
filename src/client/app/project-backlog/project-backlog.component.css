@@ -48,8 +48,23 @@
   color: white;
 }
 
-#task-list .item .story-points-cloud span {
+#task-list .item .story-points-cloud span,
+#task-list .item .story-points-cloud md-spinner,
+#task-list .item .vote-cloud md-spinner {
   margin-left: 0;
+}
+
+#task-list .item .story-points-cloud md-spinner,
+#task-list .item .vote-cloud md-spinner {
+  height: 14px;
+}
+
+/deep/ #task-list .item .vote-cloud md-spinner path {
+  stroke: white !important;
+}
+
+/deep/ #task-list .item .story-points-cloud md-spinner path {
+  stroke: #333333 !important;
 }
 
 /deep/ #task-list .story-points-dropdown .mat-select-trigger {

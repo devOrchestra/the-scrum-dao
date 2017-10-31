@@ -1,4 +1,4 @@
-<div fxLayout="column" fxFill>
+<div fxLayout="column" fxFill *ngIf="readyToDisplay">
 
   <div fxLayout="row">
     <md-input-container fxFlex="30">
@@ -10,10 +10,11 @@
   <div id="task-list" fxLayout="column">
     <div class="item" *ngFor="let item of items" fxLayout="row" fxLayoutAlign="space-between">
       <div class="left-side" fxLayout="row" fxLayoutAlign="center center">
-        <img class="first" src="../../assets/images/bug-icon.svg" alt="">
-        <img class="first" src="../../assets/images/task-icon.svg" alt="">
-        <img class="first" src="../../assets/images/subtask-icon.svg" alt="">
-        <img class="first" src="../../assets/images/story-icon.svg" alt="">
+        <img *ngIf="item.fields.issuetype.name === 'Bug'" class="first" src="../../assets/images/bug-icon.svg" alt="">
+        <img *ngIf="item.fields.issuetype.name === 'Task'" class="first" src="../../assets/images/task-icon.svg" alt="">
+        <img *ngIf="item.fields.issuetype.name === 'Subtask'" class="first" src="../../assets/images/subtask-icon.svg" alt="">
+        <img *ngIf="item.fields.issuetype.name === 'Story'" class="first" src="../../assets/images/story-icon.svg" alt="">
+        <img *ngIf="item.fields.issuetype.name === 'Epic'" class="first" src="../../assets/images/epic-icon.svg" alt="">
         <p>{{item.fields.summary}}</p>
         <div class="assignee-cloud" fxLayout="row" fxLayoutAlign="center center" *ngIf="item.fields.assignee && item.fields.assignee.displayName">
           {{item.fields.assignee.displayName}}
@@ -22,13 +23,15 @@
       <div class="right-side" fxLayout="row" fxLayoutAlign="center center">
         <h3>{{item.key}}</h3>
         <div class="story-points-cloud" fxLayout="row" fxLayoutAlign="center center">
-          <span *ngIf="item.storyPoints">{{item.storyPoints}}</span>
-          <span *ngIf="!item.storyPoints">none</span>
+          <md-spinner *ngIf="item.storyPointsLoading"></md-spinner>
+          <span *ngIf="item.storyPoints && !item.storyPointsLoading" [@flashAnimation]>{{item.storyPoints}}</span>
+          <span *ngIf="!item.storyPoints && !item.storyPointsLoading" [@flashAnimation]>none</span>
         </div>
         <div mdTooltip="Vote for issue" mdTooltipPosition="after" class="vote-cloud unselectable pointer"
-             (click)="voteForIssue(item.key)" fxLayout="row" fxLayoutAlign="center center">
-          {{countTotalPercents(item.fields.votingCount, item.fields.totalSupply)}}%
-          <i class="fa fa-angle-double-up first" aria-hidden="true"></i>
+             (click)="voteFor(item, item.key)" fxLayout="row" fxLayoutAlign="center center">
+          <md-spinner *ngIf="item.totalPercentsLoading"></md-spinner>
+          <span *ngIf="!item.totalPercentsLoading" [@flashAnimation]>{{countTotalPercents(item.fields.votingCount, item.fields.totalSupply)}}%</span>
+          <i *ngIf="!item.totalPercentsLoading" [@flashAnimation] class="fa fa-angle-double-up first" aria-hidden="true"></i>
         </div>
       </div>
     </div>

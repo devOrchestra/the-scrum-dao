@@ -56,6 +56,21 @@
 }
 
 #task-list .item .story-points-user-choice-cloud span,
+#task-list .item .story-points-user-choice-cloud div,
 #task-list .item .story-points-cloud span {
   margin-left: 0;
+}
+
+#task-list .item .story-points-user-choice-cloud md-spinner,
+#task-list .item .story-points-cloud md-spinner {
+  margin-left: 0 !important;
+  height: 14px;
+}
+
+/deep/ #task-list .item .story-points-user-choice-cloud md-spinner path {
+  stroke: white !important;
+}
+
+/deep/ #task-list .item .story-points-cloud md-spinner path {
+  stroke: #333333 !important;
 }

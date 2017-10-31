@@ -43,7 +43,7 @@ contract ProductBacklog is TrustedOracle{
 
   function vote(string issue) onlyTokenHolders {
     if (!votings[issue].isValid) {
-      addVoting(issue);
+      votings[issue] = Voting(issue, 0, 0, true, true);
     }
     if (votings[issue].votes[msg.sender] == 0) {
       votings[issue].sum = votings[issue].sum.add(project.balanceOf(msg.sender));
@@ -52,7 +52,7 @@ contract ProductBacklog is TrustedOracle{
     }
   }
 
-  function getVoting(string issue) public constant returns (string, uint, uint, bool){
+  function getVoting(string issue) public constant returns (string, uint, uint, bool) {
     return (votings[issue].issue, votings[issue].totalSupply, votings[issue].sum, votings[issue].isOpen);
   }
 }
