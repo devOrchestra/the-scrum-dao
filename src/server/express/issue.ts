@@ -11,7 +11,7 @@ issueRouter.get('/', (req, res, next) => {
   const jira: JiraConnector = req.app.get('jira');
 
   logger.debug(`retrieving backlog issues from jira project`);
-  jira.makeRequest({url: `https://legalcoins.atlassian.net/rest/api/2/search?jql=project="${PROJECT_KEY}" AND status="Backlog"&fields=id,key,status,assignee,summary`},
+  jira.makeRequest({url: `https://legalcoins.atlassian.net/rest/api/2/search?jql=project="${PROJECT_KEY}" AND status="Backlog"&fields=id,key,status,assignee,summary,issuetype`},
     (error, body) => {
     if (error) return next(error);
     if (!body || !body.issues) return next('fail during retrieving project issues');
