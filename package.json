@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "clean": "rm -rf build",
-    "migrate": "truffle migrate",
+    "migrate": "truffle migrate --network development",
     "build-app": "ng build",
     "build-server": "tsc -p src/server/tsconfig.json",
     "predev-start-angular": "npm run migrate",
@@ -71,6 +71,7 @@
     "@angular/language-service": "^4.3.6",
     "@types/jasmine": "^2.5.45",
     "@types/node": "^6.0.90",
+    "bluebird": "^3.5.1",
     "codelyzer": "^3.0.1",
     "concurrently": "^3.5.0",
     "ethereumjs-testrpc": "^4.1.3",
