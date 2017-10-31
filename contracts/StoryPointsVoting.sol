@@ -13,6 +13,8 @@ contract StoryPointsVoting is Ownable, TrustedOracle {
 
   Project project;
 
+  address projectAddress;
+
   struct Voting {
   string issue;
   uint votesCount;
@@ -39,6 +41,7 @@ contract StoryPointsVoting is Ownable, TrustedOracle {
 
   function StoryPointsVoting(address _projectContract){
     project = Project(_projectContract);
+    projectAddress = _projectContract;
   }
 
   function addVoting(string issue) onlyTrustedOracle {
@@ -65,14 +68,15 @@ contract StoryPointsVoting is Ownable, TrustedOracle {
   }
 
   function getVote(string issue) public constant returns (uint) {
-      return votings[issue].votes[msg.sender];
+    return votings[issue].votes[msg.sender];
   }
 
   function getVoting(string issue) public constant returns (string, uint, uint, bool, bool){
     return (votings[issue].issue, votings[issue].votesCount, votings[issue].sum, votings[issue].isOpen, votings[issue].awardPaid);
   }
 
-  function markVotingAsPaid(string issue) onlyTrustedOracle {
+  function markVotingAsPaid(string issue) {
+    require(msg.sender == projectAddress);
     if (votings[issue].isValid) {
       votings[issue].awardPaid = true;
     }

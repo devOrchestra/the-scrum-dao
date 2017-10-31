@@ -54,8 +54,7 @@ Promise
   })
   .then(function (votingAddresses) {
     console.log(`Votings have been added`);
-    let votedIssueAddress = votingAddresses[votedIssueIndex].tx;
-    return projectContract.initStoryPointsVoting(votedIssueAddress, {from: accounts[0], gas: 150000});
+    return projectContract.initStoryPointsVoting(storyPointsVotingContact.address, {from: accounts[0], gas: 150000});
   })
   .then(function () {
     console.log(`Voting for issue ${issues[votedIssueIndex]} has been created`);
@@ -69,6 +68,10 @@ Promise
     console.log(`Issue ${issues[votedIssueIndex]}. All workers have been voted`);
     return storyPointsVotingContact.closeVoting(issues[votedIssueIndex], {from: accounts[0], gas: 150000});
   })
+  // .then(()=>{
+  //   // return storyPointsVoting.getVoting(issues[votedIssueIndex])
+  //   return projectContract.getWorker(issues[votedIssueIndex])
+  // })
   .then(function () {
     console.log(`Issue ${issues[votedIssueIndex]}. Voting has been closed`);
     return projectContract.payAward('krabradosty', issues[votedIssueIndex], {from: accounts[0], gas: 150000});
@@ -80,4 +83,4 @@ Promise
     console.log(`Errors occurred: ${error.message}`);
   });
 
-  
+
