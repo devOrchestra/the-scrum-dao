@@ -28,8 +28,10 @@ Promise
   .then(function (contracts) {
     projectContract = contracts[0];
     storyPointsVotingContact = contracts[1];
+    return projectContract.initStoryPointsVoting(storyPointsVotingContact.address, {from: accounts[0], gas: 150000});
   })
   .then(function () {
+    console.log(`Project contract has been initialized with Story points voting contract`);
     let addWorkerTasks = [];
     for (let i = 1; i < names.length; i++) {
       addWorkerTasks.push(projectContract.addWorker(accounts[i], names[i], {from: accounts[0], gas: 150000}));
@@ -52,12 +54,8 @@ Promise
     }
     return Promise.all(addVotingTasks);
   })
-  .then(function (votingAddresses) {
-    console.log(`Votings have been added`);
-    return projectContract.initStoryPointsVoting(storyPointsVotingContact.address, {from: accounts[0], gas: 150000});
-  })
   .then(function () {
-    console.log(`Voting for issue ${issues[votedIssueIndex]} has been created`);
+    console.log(`Votings have been added`);
     let voteTasks = [];
     for (let i = 1; i < names.length; i++) {
       voteTasks.push(storyPointsVotingContact.vote(issues[votedIssueIndex], storyPoints[Math.floor(Math.random()*storyPoints.length)],{from: accounts[i], gas: 150000}));
@@ -68,10 +66,6 @@ Promise
     console.log(`Issue ${issues[votedIssueIndex]}. All workers have been voted`);
     return storyPointsVotingContact.closeVoting(issues[votedIssueIndex], {from: accounts[0], gas: 150000});
   })
-  // .then(()=>{
-  //   // return storyPointsVoting.getVoting(issues[votedIssueIndex])
-  //   return projectContract.getWorker(issues[votedIssueIndex])
-  // })
   .then(function () {
     console.log(`Issue ${issues[votedIssueIndex]}. Voting has been closed`);
     return projectContract.payAward('krabradosty', issues[votedIssueIndex], {from: accounts[0], gas: 150000});
@@ -82,5 +76,3 @@ Promise
   .catch(function (error) {
     console.log(`Errors occurred: ${error.message}`);
   });
-
-

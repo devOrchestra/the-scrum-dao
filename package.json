@@ -7,7 +7,7 @@
     "migrate": "truffle migrate --network development",
     "build-app": "ng build",
     "build-server": "tsc -p src/server/tsconfig.json",
-    "predev-start-angular": "npm run migrate",
+    "predev-start-angular": "npm run migrate && node ./populateContracts.js",
     "dev-start-angular": "ng serve --proxy-config proxy.config.json --watch",
     "predev-start-server": "npm run build-server",
     "dev-start-server": "node web-app/server/server.js",
