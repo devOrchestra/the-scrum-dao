@@ -4,12 +4,18 @@ let Web3 = require('web3');
 
 let projectArtifact = require('./build/contracts/Project.json');
 let storyPointsVotingArtifact = require('./build/contracts/StoryPointsVoting.json');
+let crowdsaleArtifact = require('./build/contracts/Crowdsale.json')
+let productBacklogArtifact = require('./build/contracts/ProductBacklog.json')
 
 let web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
 let project = contract(projectArtifact);
 project.setProvider(web3.currentProvider);
 let storyPointsVoting = contract(storyPointsVotingArtifact);
 storyPointsVoting.setProvider(web3.currentProvider);
+let crowdsale = contract(crowdsaleArtifact)
+crowdsale.setProvider(web3.currentProvider);
+let productBacklog = contract(productBacklogArtifact)
+productBacklog.setProvider(web3.currentProvider);
 
 let accounts = web3.eth.accounts;
 let names = ['admin', 'krabradosty', 'commercialsuicide', 'q2mber'];
@@ -19,16 +25,24 @@ let storyPoints = [1, 2, 3, 5, 8, 13, 20, 40, 100];
 
 let projectContract;
 let storyPointsVotingContact;
-
+let crowdsaleContract;
+let productBacklogContract;
 Promise
   .all([
     project.deployed(),
-    storyPointsVoting.deployed()
+    storyPointsVoting.deployed(),
+    crowdsale.deployed(),
+    productBacklog.deployed()
   ])
   .then(function (contracts) {
     projectContract = contracts[0];
     storyPointsVotingContact = contracts[1];
-    return projectContract.initStoryPointsVoting(storyPointsVotingContact.address, {from: accounts[0], gas: 150000});
+    crowdsaleContract = contracts[2];
+    productBacklogContract = contracts[3]
+    return Promise.all([
+      projectContract.initStoryPointsVoting(storyPointsVotingContact.address, {from: accounts[0], gas: 150000}),
+      projectContract.initCrowdsale(crowdsaleContract.address, {from: accounts[0], gas: 150000})
+    ]);
   })
   .then(function () {
     console.log(`Project contract has been initialized with Story points voting contract`);
@@ -48,6 +62,10 @@ Promise
   })
   .then(function () {
     console.log(`Trusted oracle for StoryPointsVoting has been added`);
+    return productBacklogContract.addTrustedOracle(accounts[0], {from: accounts[0], gas: 150000})
+  })
+  .then(function () {
+    console.log(`Trusted oracle for ProductBacklog has been added`);
     let addVotingTasks = [];
     for (let issueName of issues) {
       addVotingTasks.push(storyPointsVotingContact.addVoting(issueName, {from: accounts[0], gas: 150000}));
