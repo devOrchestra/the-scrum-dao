@@ -57,6 +57,7 @@ contract StoryPointsVoting is Ownable, TrustedOracle {
     if (!votings[issue].isValid) {
       votings[issue] = Voting(issue, 0, 0, true, true, false);
     }
+    require(votings[issue].isOpen);
     if (votings[issue].votes[msg.sender] > 0) {
       votings[issue].sum = votings[issue].sum.sub(votings[issue].votes[msg.sender]).add(points);
     }

@@ -45,6 +45,7 @@ contract ProductBacklog is TrustedOracle{
     if (!votings[issue].isValid) {
       votings[issue] = Voting(issue, 0, 0, true, true);
     }
+    require(votings[issue].isOpen);
     if (votings[issue].votes[msg.sender] == 0) {
       votings[issue].sum = votings[issue].sum.add(project.balanceOf(msg.sender));
       votings[issue].votes[msg.sender] = project.balanceOf(msg.sender);
