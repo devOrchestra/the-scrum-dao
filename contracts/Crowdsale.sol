@@ -51,7 +51,7 @@ contract Crowdsale is TrustedOracle {
     return sellOrders.length;
   }
 
-  function getSellOrder(uint id) public constant returns (address, uint256, uint256, uint256, bool){
+  function getSellOrder(uint id) public constant returns (address, uint256, uint256, uint256, bool, bool){
     return (sellOrders[id].owner, sellOrders[id].value, sellOrders[id].price, sellOrders[id].id, sellOrders[id].isOpen, sellOrders[id].isLocked);
   }
 
@@ -72,7 +72,7 @@ contract Crowdsale is TrustedOracle {
     return buyOrders.length;
   }
 
-  function getBuyOrder(uint id) public constant returns (address, uint256, uint256, uint256, bool){
+  function getBuyOrder(uint id) public constant returns (address, uint256, uint256, uint256, bool, bool){
     return (buyOrders[id].owner, buyOrders[id].value, buyOrders[id].price, buyOrders[id].id, buyOrders[id].isOpen, buyOrders[id].isLocked);
   }
 
@@ -97,35 +97,30 @@ contract Crowdsale is TrustedOracle {
     project.transfer(msg.sender, order.value);
   }
 
-  function lockOrder(uint id, string type){
-    Order order;
-    if (type == 'sell') {
-      order = sellOrders[id];
-    }
-    else if (type == 'buy') {
-      order = buyOrders[id];
-    }
-
-    require(order.owner == msg.owner && order.isOpen);
+  function lockSellOrder(uint id){
+    Order order = sellOrders[id];
+    require(order.owner == msg.sender && order.isOpen);
     order.isLocked == true;
   }
 
-  function closeOrder(uint id, string type) onlyTrustedOracle {
-    if (type == 'sell') {
-      order = sellOrders[id];
-    }
-    else if (type == 'buy') {
-      order = buyOrders[id];
-    }
+  function lockBuyOrder(uint id){
+    Order order = buyOrders[id];
+    require(order.owner == msg.sender && order.isOpen);
+    order.isLocked == true;
+  }
 
+  function closeSellOrder(uint id) onlyTrustedOracle {
+    Order order = sellOrders[id];
     require(order.isLocked && !order.isOpen);
-    order.isOpen = true;
-    if (type == 'sell') {
-      project.transfer(msg.sender, order.value);
-    }
-    else if (type == 'buy') {
-      weiAmount = order.value.mul(order.price);
-      order.owner.transfer(weiAmount);
-    }
+    order.isOpen = false;
+    project.transfer(msg.sender, order.value);
+  }
+
+  function closeBuyOrder(uint id) onlyTrustedOracle {
+    Order order = buyOrders[id];
+    require(order.isLocked && !order.isOpen);
+    order.isOpen = false;
+    uint weiAmount = order.value.mul(order.price);
+    order.owner.transfer(weiAmount);
   }
 }
