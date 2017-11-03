@@ -174,7 +174,7 @@ export class CrowdsaleComponent implements OnInit {
     itemToExcludeFromList.flashAnimation = "void";
     setTimeout(() => {
       itemToExcludeFromList.isOpen = false;
-    }, 1000);
+    }, 750);
   }
 
   parseBigNumber(item: number): number {

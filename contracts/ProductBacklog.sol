@@ -53,6 +53,10 @@ contract ProductBacklog is TrustedOracle{
     }
   }
 
+  function getVote(string issue) public constant returns (uint) {
+      return votings[issue].votes[msg.sender];
+  }
+
   function getVoting(string issue) public constant returns (string, uint, uint, bool) {
     return (votings[issue].issue, votings[issue].totalSupply, votings[issue].sum, votings[issue].isOpen);
   }
