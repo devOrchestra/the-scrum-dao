@@ -35,44 +35,50 @@ export class ProjectBacklogComponent implements OnInit {
       const promises = [];
       this.items = _.cloneDeep(data);
       this.Backlog.setProvider(web3.currentProvider);
-      this.Backlog.deployed().then(backlogContractInstance => {
-        this.items.forEach(item => {
-          promises.push(backlogContractInstance.getVoting(item.key));
-          item.storyPointsLoading = true;
-          item.totalPercentsLoading = true;
-        });
-        this.readyToDisplay = true;
-        Promise.all(promises).then(response => {
-          console.log('getVoting response', response);
-          for (let i = 0; i < response.length; i++) {
-            response[i][1] = !parseInt(response[i][1].toString(), 10) ? 0 : parseInt(response[i][1].toString(), 10);
-            response[i][2] = !parseInt(response[i][2].toString(), 10) ? 0 : parseInt(response[i][2].toString(), 10);
-            this.items[i].fields.totalSupply = response[i][1];
-            this.items[i].fields.votingCount = response[i][2];
-            this.items[i].storyPointsLoading = false;
-            this.items[i].totalPercentsLoading = false;
-          }
-          console.log('items', this.items);
+      this.Backlog.deployed()
+        .then(backlogContractInstance => {
+          this.items.forEach(item => {
+            promises.push(backlogContractInstance.getVoting(item.key));
+            item.storyPointsLoading = true;
+            item.totalPercentsLoading = true;
+          });
+          this.readyToDisplay = true;
+          Promise.all(promises)
+            .then(response => {
+              console.log('getVoting response', response);
+              for (let i = 0; i < response.length; i++) {
+                response[i][1] = !parseInt(response[i][1].toString(), 10) ? 0 : parseInt(response[i][1].toString(), 10);
+                response[i][2] = !parseInt(response[i][2].toString(), 10) ? 0 : parseInt(response[i][2].toString(), 10);
+                this.items[i].fields.totalSupply = response[i][1];
+                this.items[i].fields.votingCount = response[i][2];
+                this.items[i].storyPointsLoading = false;
+                this.items[i].totalPercentsLoading = false;
+              }
+              console.log('items', this.items);
+            })
         })
-      })
     })
   }
 
   voteFor(item, id) {
     item.storyPointsLoading = true;
     item.totalPercentsLoading = true;
-    this.Backlog.deployed().then(contractInstance => {
-      console.log('id for voting', id);
-      contractInstance.vote(id, {gas: 500000, from: web3.eth.accounts[0]}).then(data => {
-        item.storyPointsLoading = false;
-        item.totalPercentsLoading = false;
-        console.log('vote response', data);
-      }).catch(err => {
-        item.storyPointsLoading = false;
-        item.totalPercentsLoading = false;
-        console.error('ERR', err);
+    this.Backlog.deployed()
+      .then(contractInstance => {
+        console.log('id for voting', id);
+        contractInstance.vote(id, {gas: 500000, from: web3.eth.accounts[0]})
+          .then(data => {
+            item.storyPointsLoading = false;
+            item.totalPercentsLoading = false;
+            item.flashAnimation = "animate";
+            console.log('vote response', data);
+          })
+          .catch(err => {
+            item.storyPointsLoading = false;
+            item.totalPercentsLoading = false;
+            console.error('ERR', err);
+          })
       })
-    })
   }
 
   countTotalPercents(votingCount, totalSupply) {

@@ -34,24 +34,27 @@ export class TaskListComponent implements OnInit {
           item.storyPointsLoading = true;
         });
         this.readyToDisplay = true;
-        Promise.all(getVotingPromises).then(response => {
-          response.forEach(item => {
-            item[1] = this.parseBigNumber(item[1]);
-            item[2] = this.parseBigNumber(item[2]);
-          });
-          this.tasks.forEach((item, i) => {
-            this.tasks[i].fields.votesCount = response[i][1];
-            this.tasks[i].fields.votesSum = response[i][2];
-            getVotePromises.push(storyPointsVotingInstance.getVote(this.tasks[i].key));
-          });
-          Promise.all(getVotePromises).then(res => {
+        Promise.all(getVotingPromises)
+          .then(response => {
+            response.forEach(item => {
+              item[1] = this.parseBigNumber(item[1]);
+              item[2] = this.parseBigNumber(item[2]);
+            });
+            this.tasks.forEach((item, i) => {
+              this.tasks[i].fields.votesCount = response[i][1];
+              this.tasks[i].fields.votesSum = response[i][2];
+              getVotePromises.push(storyPointsVotingInstance.getVote(this.tasks[i].key, {from: web3.eth.accounts[0]}));
+            });
+            return Promise.all(getVotePromises)
+          })
+          .then(res => {
             res.forEach((item, i) => {
               this.tasks[i].fields.votesUserChoice = this.parseBigNumber(item);
               this.tasks[i].votingLoading = false;
               this.tasks[i].storyPointsLoading = false;
             });
+            console.log('tasks', this.tasks);
           })
-        })
       })
     })
   }
@@ -59,12 +62,13 @@ export class TaskListComponent implements OnInit {
   changeStoryPointsUserChoice(item, id: string, val: number): void {
     item.votingLoading = true;
     item.storyPointsLoading = true;
-    this.StoryPointsVoting.deployed().then(storyPointsVotingInstance => {
-      storyPointsVotingInstance.vote(id, val, {
-        from: web3.eth.accounts[0],
-        gas: 235000
-      }).then(res => {
-        storyPointsVotingInstance.getVoting(item.key).then(response => {
+    this.StoryPointsVoting.deployed()
+      .then(storyPointsVotingInstance => {
+        storyPointsVotingInstance.vote(id, val, {from: web3.eth.accounts[0], gas: 235000})
+        .then(res => {
+          return storyPointsVotingInstance.getVoting(item.key)
+        })
+        .then(response => {
           response[1] = this.parseBigNumber(response[1]);
           response[2] = this.parseBigNumber(response[2]);
           if (!item.fields.votesUserChoice) {
@@ -80,11 +84,13 @@ export class TaskListComponent implements OnInit {
           item.fields.votesUserChoice = val;
           item.votingLoading = false;
           item.storyPointsLoading = false;
+          item.flashAnimation = "animate";
+          console.log('item after vote', item);
         })
-      }).catch(() => {
-        item.votingLoading = false;
-        item.storyPointsLoading = false;
-      });
+        .catch(() => {
+          item.votingLoading = false;
+          item.storyPointsLoading = false;
+        });
     });
   }
 

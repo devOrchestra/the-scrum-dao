@@ -24,14 +24,16 @@
         <h3>{{item.key}}</h3>
         <div class="story-points-cloud" fxLayout="row" fxLayoutAlign="center center">
           <md-spinner *ngIf="item.storyPointsLoading"></md-spinner>
-          <span *ngIf="item.storyPoints && !item.storyPointsLoading" [@flashAnimation]>{{item.storyPoints}}</span>
-          <span *ngIf="!item.storyPoints && !item.storyPointsLoading" [@flashAnimation]>none</span>
+          <span *ngIf="item.storyPoints && !item.storyPointsLoading" [@flashAnimation]="item.flashAnimation">{{item.storyPoints}}</span>
+          <span *ngIf="!item.storyPoints && !item.storyPointsLoading" [@flashAnimation]="item.flashAnimation">none</span>
         </div>
         <div mdTooltip="Vote for issue" mdTooltipPosition="after" class="vote-cloud unselectable pointer"
              (click)="voteFor(item, item.key)" fxLayout="row" fxLayoutAlign="center center">
           <md-spinner *ngIf="item.totalPercentsLoading"></md-spinner>
-          <span *ngIf="!item.totalPercentsLoading" [@flashAnimation]>{{countTotalPercents(item.fields.votingCount, item.fields.totalSupply)}}%</span>
-          <i *ngIf="!item.totalPercentsLoading" [@flashAnimation] class="fa fa-angle-double-up first" aria-hidden="true"></i>
+          <span *ngIf="!item.totalPercentsLoading" [@flashAnimation]="item.flashAnimation">
+            {{countTotalPercents(item.fields.votingCount, item.fields.totalSupply)}}%
+          </span>
+          <i *ngIf="!item.totalPercentsLoading" [@flashAnimation]="item.flashAnimation" class="fa fa-angle-double-up first" aria-hidden="true"></i>
         </div>
       </div>
     </div>

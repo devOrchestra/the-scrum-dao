@@ -52,11 +52,13 @@ export class ContributorListComponent implements OnInit {
     });
 
     this.Project.setProvider(web3.currentProvider);
-    this.Project.deployed().then(contractInstance => {
-      contractInstance.totalSupply().then(data => {
-        this.totalBalance = parseInt(data.toString(), 10);
+    this.Project.deployed()
+      .then(contractInstance => {
+        return contractInstance.totalSupply();
       })
-    })
+      .then(data => {
+        this.totalBalance = parseInt(data.toString(), 10);
+      });
   }
 
   formatWorkers(arr) {
