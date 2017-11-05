@@ -45,7 +45,7 @@ Promise
     ]);
   })
   .then(function () {
-    console.log(`Project contract has been initialized with Story points voting contract`);
+    console.log(`Project contract has been initialized with Story points voting and crowdsale contracts`);
     let addWorkerTasks = [];
     for (let i = 1; i < names.length; i++) {
       addWorkerTasks.push(projectContract.addWorker(accounts[i], names[i], {from: accounts[0], gas: 150000}));
