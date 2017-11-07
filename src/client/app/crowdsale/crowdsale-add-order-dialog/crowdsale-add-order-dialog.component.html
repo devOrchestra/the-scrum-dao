@@ -1,0 +1,31 @@
+<h2 class="title" md-dialog-title>Add order</h2>
+<md-dialog-content fxLayout="column" fxLayoutAlign="space-between" style="overflow-y: hidden !important;">
+  <md-select placeholder="Order type" [(ngModel)]="type" (change)="resetHiddenInputs()">
+    <md-option *ngFor="let orderType of orderTypes" [value]="orderType.value" >
+      {{ orderType.viewValue }}
+    </md-option>
+  </md-select>
+  <div *ngIf="type === 'buy' || type === 'sell'" [@inputEnterLeaveAnimation]>
+    <md-input-container fxFlex>
+      <input mdInput placeholder="Price" type="number" [(ngModel)]="price">
+    </md-input-container>
+  </div>
+  <div *ngIf="type === 'sell'" [@inputEnterLeaveAnimation]>
+    <md-input-container fxFlex>
+      <input mdInput placeholder="Value" type="number" [(ngModel)]="val">
+    </md-input-container>
+  </div>
+  <div *ngIf="type === 'buy'" [@inputEnterLeaveAnimation]>
+    <md-input-container fxFlex>
+      <input mdInput placeholder="ETH" type="number" [(ngModel)]="eth">
+    </md-input-container>
+  </div>
+</md-dialog-content>
+<md-dialog-actions class="buttons" fxLayout="row" fxLayoutAlign="space-between">
+  <button md-button [md-dialog-close]="false">CANCEL</button>
+  <button md-button [md-dialog-close]="sendData()" class="transition-fast"
+          [disabled]="(type === 'buy' && ((!price || price.length === 0) || (!eth || eth.length === 0))) ||
+                      (type === 'sell' && ((!price || price.length === 0) || (!val || val.length === 0)))">
+    CONFIRM
+  </button>
+</md-dialog-actions>

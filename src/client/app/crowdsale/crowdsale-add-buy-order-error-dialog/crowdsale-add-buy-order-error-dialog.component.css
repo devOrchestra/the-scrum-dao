@@ -1,0 +1,12 @@
+.mat-dialog-content {
+  margin: 0;
+  padding: 0;
+  max-width: 252px;
+  width: 252px;
+  text-align: center;
+}
+
+.title {
+  color: black;
+  text-align: center;
+}

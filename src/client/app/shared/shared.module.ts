@@ -11,7 +11,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MdMenuModule, MdButtonModule, MdToolbarModule, MdCardModule, MdSidenavModule, MdInputModule,
   MdDialogModule, MdSelectModule, MdTooltipModule, MdProgressSpinnerModule} from '@angular/material';
 
-import {OrderContributorsByBalancePipe} from './pipes/orderContributorsByBalancePipe'
+import {SortContributorsByBalancePipe} from './pipes/sortContributorsByBalancePipe'
+import {SortBuyAndSellOrdersByTypeAndPriceDescendingPipe} from './pipes/sortBuyAndSellOrdersByTypeAndPriceDescendingPipe'
 
 @NgModule({
   imports: [
@@ -37,7 +38,8 @@ import {OrderContributorsByBalancePipe} from './pipes/orderContributorsByBalance
     MdProgressSpinnerModule
   ],
   declarations: [
-    OrderContributorsByBalancePipe
+    SortContributorsByBalancePipe,
+    SortBuyAndSellOrdersByTypeAndPriceDescendingPipe
   ],
   exports: [
     CommonModule,
@@ -61,7 +63,8 @@ import {OrderContributorsByBalancePipe} from './pipes/orderContributorsByBalance
     MdTooltipModule,
     MdProgressSpinnerModule,
 
-    OrderContributorsByBalancePipe
+    SortContributorsByBalancePipe,
+    SortBuyAndSellOrdersByTypeAndPriceDescendingPipe
   ]
 })
 export class SharedModule {

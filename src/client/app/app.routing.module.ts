@@ -6,6 +6,7 @@ import {SettingsComponent} from './settings/settings.component';
 import {ProjectBacklogComponent} from './project-backlog/project-backlog.component';
 import {TaskListComponent} from './task-list/task-list.component';
 import {ContributorListComponent} from './contributor-list/contributor-list.component';
+import {CrowdsaleComponent} from './crowdsale/crowdsale.component';
 
 import {WorkersResolverService} from './core/resolvers/workers-resolver.service';
 import {JiraIssuesResolverService} from './core/resolvers/jira-issues-resolver.service';
@@ -38,6 +39,10 @@ const routes: Routes = [
       {
         path: 'contributor-list',
         component: ContributorListComponent
+      },
+      {
+        path: 'crowdsale',
+        component: CrowdsaleComponent
       }
     ],
   },

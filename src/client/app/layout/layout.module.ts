@@ -11,6 +11,9 @@ import { ProjectBacklogComponent } from '../project-backlog/project-backlog.comp
 import { ProjectBacklogAddTrackDialogComponent } from '../project-backlog/project-backlog-add-track-dialog/project-backlog-add-track-dialog.component';
 import { TaskListComponent } from '../task-list/task-list.component';
 import { ContributorListComponent } from '../contributor-list/contributor-list.component';
+import { CrowdsaleComponent } from '../crowdsale/crowdsale.component';
+import { CrowdsaleAddOrderDialogComponent } from '../crowdsale/crowdsale-add-order-dialog/crowdsale-add-order-dialog.component';
+import { CrowdsaleAddBuyOrderErrorDialogComponent } from '../crowdsale/crowdsale-add-buy-order-error-dialog/crowdsale-add-buy-order-error-dialog.component';
 
 import { RouterModule } from '@angular/router';
 
@@ -29,8 +32,15 @@ import { RouterModule } from '@angular/router';
     ProjectBacklogComponent,
     ProjectBacklogAddTrackDialogComponent,
     TaskListComponent,
-    ContributorListComponent
+    ContributorListComponent,
+    CrowdsaleComponent,
+    CrowdsaleAddOrderDialogComponent,
+    CrowdsaleAddBuyOrderErrorDialogComponent
   ],
-  entryComponents: [ProjectBacklogAddTrackDialogComponent]
+  entryComponents: [
+    ProjectBacklogAddTrackDialogComponent,
+    CrowdsaleAddOrderDialogComponent,
+    CrowdsaleAddBuyOrderErrorDialogComponent
+  ]
 })
 export class LayoutModule { }

@@ -1,0 +1,70 @@
+#orders .item-wrapper {
+
+}
+
+#orders .item-wrapper .item {
+  padding: 8px 16px;
+  margin: 0 8px;
+  border-left: 1px #e1e1e1 solid;
+  border-bottom: 1px #e1e1e1 solid;
+  border-right: 1px #e1e1e1 solid;
+}
+
+#orders .item-wrapper:first-child .item {
+  border-top: 1px #e1e1e1 solid;
+}
+
+#orders .item:hover {
+  background-color: #e1e1e1;
+}
+
+#orders .buy-cloud i,
+#orders .sell-cloud i {
+  color: white;
+}
+
+#orders .buy-cloud span,
+#orders .sell-cloud span {
+  margin-left: 4px;
+}
+
+#orders .item .buy-cloud {
+  font-size: 12px;
+  border-radius: 10px;
+  padding: 5px 10px;
+  background-color: #239b23;
+  font-weight: bold;
+  width: 56px;
+  min-width: 56px;
+  color: white;
+  margin-right: 12px;
+}
+
+#orders .item .sell-cloud {
+  font-size: 12px;
+  border-radius: 10px;
+  padding: 5px 10px;
+  background-color: #f30000;
+  font-weight: bold;
+  width: 56px;
+  min-width: 56px;
+  color: white;
+  margin-right: 12px;
+}
+
+#orders .fat-border-bottom {
+  border-bottom: 3px #e1e1e1 solid !important;
+}
+
+#top-row {
+  margin-bottom: 16px;
+}
+
+#add-order-button {
+  background-color: #333333;
+  color: #fffa7a;
+  font-size: 24px;
+  position: fixed;
+  bottom: 8px;
+  right: 32px;
+}
