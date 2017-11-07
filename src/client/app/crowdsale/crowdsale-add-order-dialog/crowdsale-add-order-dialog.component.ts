@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { InputEnterLeaveAnimation } from '../../shared/animations';
+import { ShortEnterLeaveAnimation } from '../../shared/animations';
 
 @Component({
   selector: 'app-crowdsale-add-order-dialog',
   templateUrl: './crowdsale-add-order-dialog.component.html',
   styleUrls: ['./crowdsale-add-order-dialog.component.css'],
-  animations: [InputEnterLeaveAnimation]
+  animations: [ShortEnterLeaveAnimation]
 })
 export class CrowdsaleAddOrderDialogComponent {
   orderTypes = [

@@ -34,6 +34,39 @@ $custom-green: (
   )
 );
 
+$custom-black: (
+  50: #333333,
+  100: #333333,
+  200: #333333,
+  300: #333333,
+  400: #333333,
+  500: #333333,
+  600: #333333,
+  700: #333333,
+  800: #333333,
+  900: #333333,
+  A100: #333333,
+  A200: #333333,
+  A400: #333333,
+  A700: #333333,
+  contrast: (
+    50: $black-87-opacity,
+    100: $black-87-opacity,
+    200: $black-87-opacity,
+    300: $black-87-opacity,
+    400: $black-87-opacity,
+    500: $black-87-opacity,
+    600: $black-87-opacity,
+    700: $black-87-opacity,
+    800: 333333,
+    900: 333333,
+    A100: $black-87-opacity,
+    A200: $black-87-opacity,
+    A400: $black-87-opacity,
+    A700: $black-87-opacity,
+  )
+);
+
 // Include the base styles for Angular Material core. We include this here so that you only
 // have to load a single css file for Angular Material in your app.
 @include mat-core();
@@ -42,7 +75,7 @@ $custom-green: (
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue.
 $candy-app-primary: mat-palette($custom-green);
-$candy-app-accent:  mat-palette($mat-light-green, A200, A200, A300);
+$candy-app-accent:  mat-palette($custom-black);
 
 // The warn palette is optional (defaults to red).
 $candy-app-warn:    mat-palette($mat-red);

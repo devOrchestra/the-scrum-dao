@@ -22,6 +22,7 @@ export class CrowdsaleComponent implements OnInit {
   readyToDisplay = false;
   buyOrdersLength: number;
   sellOrdersLength: number;
+  currentOwner: string = web3.eth.accounts[0];
 
   constructor(
     private dialog: MdDialog
@@ -135,7 +136,7 @@ export class CrowdsaleComponent implements OnInit {
       })
   }
 
-  tradeOrder(type: string, id: string): void {
+  tradeOrder(type: string, id: number): void {
     if (type === 'sell') {
       this.buy(id);
     } else if (type === 'buy') {
@@ -143,7 +144,7 @@ export class CrowdsaleComponent implements OnInit {
     }
   }
 
-  buy(id: string): void {
+  buy(id: number): void {
     this.Crowdsale.deployed()
       .then(crowdsaleContractInstance => {
         crowdsaleContractInstance.buy(id, {gas: 500000, from: web3.eth.accounts[0]})
@@ -156,7 +157,8 @@ export class CrowdsaleComponent implements OnInit {
       })
   }
 
-  sell(id: string): void {
+  sell(id: number): void {
+    console.log(typeof id);
     this.Crowdsale.deployed()
       .then(crowdsaleContractInstance => {
         crowdsaleContractInstance.sell(id, {gas: 500000, from: web3.eth.accounts[0]})
@@ -169,12 +171,41 @@ export class CrowdsaleComponent implements OnInit {
       })
   }
 
+  lockOrder(e, type: string, id: number): void {
+    e.stopPropagation();
+    this.Crowdsale.deployed()
+      .then(crowdsaleContractInstance => {
+        if (type === "sell") {
+          crowdsaleContractInstance.lockSellOrder(id, {gas: 500000, from: web3.eth.accounts[0]})
+            .then(lockSellOrderResponse => {
+              console.log("lockSellOrderResponse", lockSellOrderResponse);
+              this.excludeItemFromList(id, 'sell');
+            })
+            .catch(err => {
+              console.error(err);
+            })
+        } else if (type === "buy") {
+          crowdsaleContractInstance.lockBuyOrder(id, {gas: 500000, from: web3.eth.accounts[0]})
+            .then(lockBuyOrderResponse => {
+              console.log("lockBuyOrderResponse", lockBuyOrderResponse);
+              this.excludeItemFromList(id, 'buy');
+            })
+            .catch(err => {
+              console.error(err);
+            })
+        }
+      })
+  }
+
   excludeItemFromList(id, type) {
     const itemToExcludeFromList = _.find(this.orders, {id: id, orderType: type});
     itemToExcludeFromList.flashAnimation = "void";
-    setTimeout(() => {
-      itemToExcludeFromList.isOpen = false;
-    }, 750);
+    itemToExcludeFromList.isOpen = false;
+    const index = _.findIndex(this.orders, itemToExcludeFromList);
+    this.orders.splice(index, 1);
+    if (type === "sell") {
+      this.sellOrdersLength -= 1
+    }
   }
 
   parseBigNumber(item: number): number {
@@ -212,6 +243,26 @@ export class CrowdsaleComponent implements OnInit {
       isOpen: item[4],
       isLocked: item[5],
       orderType: orderType
+    }
+  }
+
+  styleRow(e): void {
+    let isRow = false;
+    e.target.classList.forEach(i => {
+      if (i === "item") { isRow = true }
+    });
+    if (e.type === 'mouseenter') {
+      if (isRow) {
+        e.target.style.backgroundColor = '#e1e1e1'
+      } else {
+        e.target.parentNode.parentNode.parentNode.style.backgroundColor = 'transparent'
+      }
+    } else if (e.type === 'mouseleave') {
+      if (isRow) {
+        e.target.style.backgroundColor = 'transparent'
+      } else {
+        e.target.parentNode.parentNode.parentNode.style.backgroundColor = '#e1e1e1'
+      }
     }
   }
 }

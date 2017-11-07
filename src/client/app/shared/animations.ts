@@ -21,8 +21,8 @@ export const FlashAnimation = trigger(
     ])
   ]);
 
-export const InputEnterLeaveAnimation = trigger(
-  'inputEnterLeaveAnimation',
+export const ShortEnterLeaveAnimation = trigger(
+  'shortEnterLeaveAnimation',
   [
     transition(
       ':enter', [
@@ -33,8 +33,60 @@ export const InputEnterLeaveAnimation = trigger(
     transition(
       ':leave', [
         style({'opacity': 1}),
-        animate('0ms', style({'opacity': 0}))
+        animate('300ms', style({'opacity': 0}))
       ]
     )
   ]
 );
+
+export const MediumEnterLeaveAnimation = trigger(
+  'mediumEnterLeaveAnimation',
+  [
+    transition(
+      ':enter', [
+        style({'opacity': 0}),
+        animate('500ms', style({'opacity': 1}))
+      ]
+    ),
+    transition(
+      ':leave', [
+        style({'opacity': 1}),
+        animate('500ms', style({'opacity': 0}))
+      ]
+    )
+  ]
+);
+
+export const MediumControlledEnterLeaveAnimation = trigger(
+  'mediumControlledEnterLeaveAnimation',
+  [
+    transition('* => animate', [
+      animate('500ms ease-in-out', keyframes([
+        style({opacity: 0}),
+        style({opacity: 1})
+      ]))
+    ]),
+    transition('animate => void', [
+      animate('500ms ease-in-out', keyframes([
+        style({opacity: 1}),
+        style({opacity: 0})
+      ]))
+    ])
+  ]);
+
+export const LongControlledEnterLeaveAnimation = trigger(
+  'longControlledEnterLeaveAnimation',
+  [
+    transition('* => animate', [
+      animate('1s ease-in-out', keyframes([
+        style({opacity: 0}),
+        style({opacity: 1})
+      ]))
+    ]),
+    transition('* => void', [
+      animate('1s ease-in-out', keyframes([
+        style({opacity: 1}),
+        style({opacity: 0})
+      ]))
+    ])
+  ]);

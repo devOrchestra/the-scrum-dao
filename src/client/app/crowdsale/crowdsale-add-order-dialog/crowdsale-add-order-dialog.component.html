@@ -5,17 +5,17 @@
       {{ orderType.viewValue }}
     </md-option>
   </md-select>
-  <div *ngIf="type === 'buy' || type === 'sell'" [@inputEnterLeaveAnimation]>
+  <div *ngIf="type === 'buy' || type === 'sell'" [@shortEnterLeaveAnimation]>
     <md-input-container fxFlex>
       <input mdInput placeholder="Price" type="number" [(ngModel)]="price">
     </md-input-container>
   </div>
-  <div *ngIf="type === 'sell'" [@inputEnterLeaveAnimation]>
+  <div *ngIf="type === 'sell'" [@shortEnterLeaveAnimation]>
     <md-input-container fxFlex>
       <input mdInput placeholder="Value" type="number" [(ngModel)]="val">
     </md-input-container>
   </div>
-  <div *ngIf="type === 'buy'" [@inputEnterLeaveAnimation]>
+  <div *ngIf="type === 'buy'" [@shortEnterLeaveAnimation]>
     <md-input-container fxFlex>
       <input mdInput placeholder="ETH" type="number" [(ngModel)]="eth">
     </md-input-container>

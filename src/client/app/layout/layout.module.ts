@@ -14,6 +14,8 @@ import { ContributorListComponent } from '../contributor-list/contributor-list.c
 import { CrowdsaleComponent } from '../crowdsale/crowdsale.component';
 import { CrowdsaleAddOrderDialogComponent } from '../crowdsale/crowdsale-add-order-dialog/crowdsale-add-order-dialog.component';
 import { CrowdsaleAddBuyOrderErrorDialogComponent } from '../crowdsale/crowdsale-add-buy-order-error-dialog/crowdsale-add-buy-order-error-dialog.component';
+import { WalletComponent } from '../wallet/wallet.component'
+import { ConnectionStateComponent } from './connection-state/connection-state.component';
 
 import { RouterModule } from '@angular/router';
 
@@ -35,7 +37,9 @@ import { RouterModule } from '@angular/router';
     ContributorListComponent,
     CrowdsaleComponent,
     CrowdsaleAddOrderDialogComponent,
-    CrowdsaleAddBuyOrderErrorDialogComponent
+    CrowdsaleAddBuyOrderErrorDialogComponent,
+    WalletComponent,
+    ConnectionStateComponent
   ],
   entryComponents: [
     ProjectBacklogAddTrackDialogComponent,

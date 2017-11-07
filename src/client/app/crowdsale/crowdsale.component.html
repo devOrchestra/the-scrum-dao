@@ -1,5 +1,8 @@
+<div fxLayout="row" fxLayoutAlign="center center" *ngIf="!orders || orders.length === 0" class="no-orders">
+  <h2>No opened orders!</h2>
+</div>
 <div *ngIf="readyToDisplay">
-  <div fxLayout="column" fxFill>
+  <div fxLayout="column" fxFill class="relative-container">
     <div id="top-row" fxLayout="row" fxLayoutAlign="space-between">
       <h2>Order book</h2>
     </div>
@@ -8,8 +11,8 @@
       <div fxLayout="row" fxFlex="100" class="item-wrapper unselectable pointer transition-fast" [@flashAnimation]="order.flashAnimation"
            *ngFor="let order of orders | sortBuyAndSellOrdersByTypeAndPriceDescendingPipe; let index = index;"
            (click)="tradeOrder(order.orderType, order.id)">
-        <div fxLayout="row" fxFlex="100" class="item unselectable pointer transition-fast"
-             *ngIf="order.isOpen && !isLocked"
+        <div fxLayout="row" fxFlex="100" class="item unselectable pointer item-background-transition-fast"
+             *ngIf="order.isOpen && !isLocked" (mouseenter)="styleRow($event)" (mouseleave)="styleRow($event)"
              [ngClass]="{'fat-border-bottom': buyOrdersLength && buyOrdersLength > 0 && index === sellOrdersLength - 1}">
           <div fxLayout="row" fxLayoutAlign="space-between" fxFlex="100">
             <div fxLayout="row" class="break-long-words">
@@ -25,8 +28,12 @@
                 {{order.value}} {{tokenSymbol}} ({{order.value * order.price}} ETH)
               </div>
             </div>
-            <div fxLayout="column" fxLayoutAlign="center">
-              {{order.price}} {{tokenSymbol}}/ETH
+            <div fxLayout="row">
+              <div *ngIf="currentOwner === order.owner" class="lock-button transition-fast" (mouseenter)="styleRow($event)"
+                      (mouseleave)="styleRow($event)" (click)="lockOrder($event, order.orderType, order.id)">
+                LOCK
+              </div>
+              <span fxLayout="column" fxLayoutAlign="center">{{order.price}} {{tokenSymbol}}/ETH</span>
             </div>
           </div>
         </div>

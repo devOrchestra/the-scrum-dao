@@ -9,6 +9,7 @@ import { LayoutModule } from './layout/layout.module';
 
 import { WorkersResolverService } from './core/resolvers/workers-resolver.service'
 import { JiraIssuesResolverService } from './core/resolvers/jira-issues-resolver.service';
+import { Web3ResolverService } from './core/resolvers/web3-resolver.service';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { JiraIssuesResolverService } from './core/resolvers/jira-issues-resolver
   ],
   providers: [
     WorkersResolverService,
-    JiraIssuesResolverService
+    JiraIssuesResolverService,
+    Web3ResolverService
   ],
   bootstrap: [AppComponent]
 })

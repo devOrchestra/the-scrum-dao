@@ -1,0 +1,32 @@
+<div fxLayout="column" fxLayoutAlign="start start" *ngIf="readyToDisplay">
+  <div fxLayout="row" fxLayoutAlign="center center" class="balance-container">
+    <div fxLayout="row" class="balance">
+      <h2>Balance: {{currentBalance}} {{tokenSymbol}}</h2>
+    </div>
+    <h2 class="minus-tokens" [@mediumEnterLeaveAnimation] *ngIf="showSentTokens">- {{sentTokens}}</h2>
+  </div>
+  <div fxLayout="column" class="form-container">
+    <div fxLayout="row" fxLayoutAlign="center center">
+      <h2>Send tokens</h2>
+    </div>
+    <div class="form" fxLayout="column">
+      <div fxLayout="column" class="inputs" *ngIf="!sendTokensLoading" [@mediumControlledEnterLeaveAnimation]="sendTokensObj.fadeAnimation">
+        <md-input-container [color]="'accent'">
+          <input mdInput placeholder="Recipient address" [(ngModel)]="sendTokensObj.address" (keyup)="checkIsRecipientExists()">
+        </md-input-container>
+        <md-input-container [color]="'accent'">
+          <input mdInput type="number" placeholder="Quantity" [(ngModel)]="sendTokensObj.value">
+        </md-input-container>
+      </div>
+      <button md-button class="button transition-fast"  *ngIf="!sendTokensLoading" (click)="sendTokens()"
+              [@mediumControlledEnterLeaveAnimation]="sendTokensObj.fadeAnimation"
+              [disabled]="!isSendTokensRecipientExists || !sendTokensObj.value || sendTokensObj.value <= 0">
+        SEND
+      </button>
+      <div fxLayout="row" fxLayoutAlign="center center" class="send-tokens-spinner-container" *ngIf="sendTokensLoading">
+        <md-spinner *ngIf="sendTokensLoading"></md-spinner>
+      </div>
+      <div class="bottom-accent"></div>
+    </div>
+  </div>
+</div>

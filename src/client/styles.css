@@ -40,6 +40,12 @@ h4 {
   font-size: 12px;
 }
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 .bgc-main {
   background-color: #333333 !important;
 }

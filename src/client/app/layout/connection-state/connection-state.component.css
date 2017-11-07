@@ -1,0 +1,77 @@
+#connection {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+}
+
+#connection a,
+#connection a:link,
+#connection a:visited,
+#connection a:active,
+#connection a:focus {
+  color: white;
+  text-decoration: underline;
+  cursor: pointer;
+  transition: all .2s;
+}
+
+#connection a:hover {
+  color: #23af23;
+}
+
+#connection .backdrop {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  z-index: 3;
+  background-color: #333333;
+}
+
+#connection .success-section .state {
+  font-size: 56px;
+  z-index: 4;
+  color: white;
+}
+
+#connection .state-icon {
+  font-size: 100px;
+  z-index: 4;
+  margin-bottom: 24px;
+}
+
+#connection .success-section .state-icon {
+  animation: flash 1s linear infinite;
+  color: #ffd02a;
+}
+
+#connection .failure-section .state {
+  font-size: 56px;
+  z-index: 4;
+  color: white;
+}
+
+#connection .failure-section .state-icon {
+  color: #f30000;
+}
+
+#connection .failure-section p {
+  font-size: 21px;
+  z-index: 4;
+  color: white;
+}
+
+@-webkit-keyframes flash {
+  100% {
+    color: white;
+  }
+}
+
+@keyframes flash {
+  100% {
+    color: white;
+  }
+}

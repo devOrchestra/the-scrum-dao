@@ -1,0 +1,18 @@
+<div id="connection" fxLayout="row" fxLayoutAlign="center center">
+  <div class="backdrop" *ngIf="backdrop" [@longControlledEnterLeaveAnimation]="backdropAnimation"></div>
+  <div fxLayout="column" fxLayoutAlign="center center" *ngIf="showConnectionSuccessSection" class="success-section">
+    <i class="fa fa-bolt state-icon" aria-hidden="true" *ngIf="connectionSuccess"
+       [@longControlledEnterLeaveAnimation]="connectionSuccessAnimation"></i>
+    <h1 fxLayout="column" fxLayoutAlign="center center" class="state" *ngIf="connectionSuccess"
+        [@longControlledEnterLeaveAnimation]="connectionSuccessAnimation">
+      Connected successfully!
+    </h1>
+  </div>
+  <div fxLayout="column" fxLayoutAlign="center center" *ngIf="showConnectionFailureSection" class="failure-section">
+    <h1 fxLayout="column" fxLayoutAlign="center center" class="state">
+      <i class="fa fa-exclamation-triangle state-icon" aria-hidden="true"></i>
+      Connection error!
+    </h1>
+    <p>Please, install <a href="https://metamask.io/">METAMASK</a> or any other client</p>
+  </div>
+</div>

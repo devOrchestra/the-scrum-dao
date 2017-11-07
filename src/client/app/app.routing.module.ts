@@ -7,9 +7,11 @@ import {ProjectBacklogComponent} from './project-backlog/project-backlog.compone
 import {TaskListComponent} from './task-list/task-list.component';
 import {ContributorListComponent} from './contributor-list/contributor-list.component';
 import {CrowdsaleComponent} from './crowdsale/crowdsale.component';
+import {WalletComponent} from './wallet/wallet.component';
 
 import {WorkersResolverService} from './core/resolvers/workers-resolver.service';
 import {JiraIssuesResolverService} from './core/resolvers/jira-issues-resolver.service';
+import {Web3ResolverService} from './core/resolvers/web3-resolver.service';
 
 const routes: Routes = [
   {
@@ -17,7 +19,8 @@ const routes: Routes = [
     component: ShellComponent,
     resolve: {
       workers: WorkersResolverService,
-      issues: JiraIssuesResolverService
+      issues: JiraIssuesResolverService,
+      connection: Web3ResolverService
     },
     children: [
       {
@@ -43,6 +46,10 @@ const routes: Routes = [
       {
         path: 'crowdsale',
         component: CrowdsaleComponent
+      },
+      {
+        path: 'wallet',
+        component: WalletComponent
       }
     ],
   },

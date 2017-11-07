@@ -7,6 +7,7 @@ import { DataService } from './data.service';
 import { UserService } from './user.service';
 import { WorkerService } from './worker.service';
 import { JiraService } from './jira.service';
+import { Web3Service } from './web3.service';
 
 @NgModule({
   imports: [
@@ -19,7 +20,8 @@ import { JiraService } from './jira.service';
     DataService,
     UserService,
     WorkerService,
-    JiraService
+    JiraService,
+    Web3Service
   ]
 })
 export class CoreModule {}

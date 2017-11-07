@@ -1,0 +1,71 @@
+.balance {
+  padding: 8px 16px;
+  background-color: #239b23;
+  border-radius: 6px;
+}
+
+.balance-container .minus-tokens {
+  color: #f30000;
+  margin-left: 16px;
+}
+
+.balance-container h2 {
+  color: white;
+}
+
+.form-container {
+  margin-top: 64px;
+}
+
+.form-container .form {
+  background-color: #fffa7a;
+  height: 240px;
+  width: 265px;
+}
+
+.form-container .bottom-accent {
+  height: 4px;
+  background-color: #ffef41;
+}
+
+.form-container .inputs {
+  height: 200px;
+  padding: 32px;
+  background-color: #fffa7a;
+}
+
+.form-container .send-tokens-spinner-container {
+  height: 236px;
+  width: 265px;
+  background-color: #fffa7a;
+}
+
+/deep/ .form-container md-spinner {
+  width: 50px;
+  height: 50px;
+}
+
+/deep/ .form-container md-spinner path {
+  stroke: #333333;
+}
+
+.form-container .button {
+  border-radius: 0;
+  background-color: #fffa7a;
+  font-size: 12px;
+  letter-spacing: 1px;
+  font-weight: bold;
+  font-family: Roboto, 'Helvetica Neue', sans-serif !important;
+}
+
+.form-container h2 {
+  margin-bottom: 16px;
+}
+
+/deep/ .form-container .inputs .mat-input-placeholder {
+  color: #333333;
+}
+
+/deep/ .form-container .inputs .mat-input-underline {
+  background-color: #333333;
+}
