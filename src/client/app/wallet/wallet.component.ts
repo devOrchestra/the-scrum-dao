@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, QueryList } from '@angular/core';
+import { MdMenuTrigger } from '@angular/material'
 import { WorkerService } from '../core/worker.service'
 import project_artifacts from '../../../../build/contracts/Project.json'
 import {default as contract} from 'truffle-contract'
@@ -11,6 +12,7 @@ import {MediumEnterLeaveAnimation, MediumControlledEnterLeaveAnimation} from '..
   animations: [MediumEnterLeaveAnimation, MediumControlledEnterLeaveAnimation]
 })
 export class WalletComponent implements OnInit {
+  @ViewChild('sendTokensMenuTrigger') sendTokensMenuTrigger: MdMenuTrigger;
   Project = contract(project_artifacts);
   currentBalance: number;
   tokenSymbol: string;
@@ -66,6 +68,7 @@ export class WalletComponent implements OnInit {
               this.currentBalance = this.currentBalance - Number(this.sendTokensObj.value);
               this.sendTokensObj.address = "";
               this.sendTokensObj.value = "";
+              this.sendTokensMenuTrigger.closeMenu();
               this.sendTokensLoading = false;
               this.sendTokensObj.fadeAnimation = "animate";
               setTimeout(() => {

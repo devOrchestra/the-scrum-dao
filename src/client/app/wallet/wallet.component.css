@@ -1,3 +1,7 @@
+.balance-container {
+  cursor: pointer;
+}
+
 .balance {
   padding: 8px 16px;
   background-color: #239b23;
@@ -14,30 +18,22 @@
 }
 
 .form-container {
-  margin-top: 64px;
+  margin-top: 16px;
 }
 
 .form-container .form {
-  background-color: #fffa7a;
-  height: 240px;
+  height: 204px;
   width: 265px;
-}
-
-.form-container .bottom-accent {
-  height: 4px;
-  background-color: #ffef41;
 }
 
 .form-container .inputs {
-  height: 200px;
-  padding: 32px;
-  background-color: #fffa7a;
+  height: 168px;
+  padding: 16px 32px;
 }
 
 .form-container .send-tokens-spinner-container {
-  height: 236px;
+  height: 204px;
   width: 265px;
-  background-color: #fffa7a;
 }
 
 /deep/ .form-container md-spinner {
@@ -51,15 +47,10 @@
 
 .form-container .button {
   border-radius: 0;
-  background-color: #fffa7a;
   font-size: 12px;
   letter-spacing: 1px;
   font-weight: bold;
   font-family: Roboto, 'Helvetica Neue', sans-serif !important;
-}
-
-.form-container h2 {
-  margin-bottom: 16px;
 }
 
 /deep/ .form-container .inputs .mat-input-placeholder {

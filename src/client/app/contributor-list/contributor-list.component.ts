@@ -41,10 +41,9 @@ export class ContributorListComponent implements OnInit {
                   cloneItem.avatar = responseItem.avatarUrl;
                   currentWorkersArr[j].push(responseItem.avatarUrl);
                 }
-              })
+              });
             });
             this._workerService.workersAvatarsWereSet = true;
-            this._workerService.setWorkers(currentWorkersArr);
             this.contributors = clone;
             this.Project.setProvider(web3.currentProvider);
             return this.Project.deployed();
@@ -62,15 +61,22 @@ export class ContributorListComponent implements OnInit {
               .then(decimalsResponse => {
                 this.decimals = this.countDecimals(decimalsResponse);
                 this.totalBalance = this.totalBalance / this.decimals;
+                this._workerService.setTotalBalance(this.totalBalance);
                 this.contributors.forEach(item => {
                   item.balance = item.balance / this.decimals;
                 });
-                this.readyToRenderPage = true;
+                currentWorkersArr.forEach(item => {
+                  item[2] = item[2] / this.decimals;
+                });
+                this._workerService.setWorkers(currentWorkersArr);
               })
           })
       } else {
         this.contributors = clone;
-        this.readyToRenderPage = true;
+        this.totalBalance = this._workerService.getTotalBalance();
+        setTimeout(() => {
+          this.readyToRenderPage = true;
+        }, 100);
       }
     });
   }
@@ -95,6 +101,8 @@ export class ContributorListComponent implements OnInit {
   }
 
   countBalance(contributorBalance) {
+    console.log('contributorBalance', contributorBalance);
+    console.log('this.totalBalance', this.totalBalance);
     const calcVal = (contributorBalance * 100 / this.totalBalance).toFixed(2);
     const finalPercentsVal = parseInt(calcVal.toString(), 10);
     if (isNaN(finalPercentsVal)) {

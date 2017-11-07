@@ -7,6 +7,7 @@ import 'rxjs/add/operator/toPromise';
 export class WorkerService {
   public workers;
   public workers$: BehaviorSubject<any> = new BehaviorSubject<any>('');
+  private totalBalance: number;
 
   public workersAvatarsWereSet = false;
 
@@ -23,6 +24,14 @@ export class WorkerService {
 
   public getWorkers(): Observable<any> {
     return this.workers$.asObservable();
+  }
+
+  public setTotalBalance(balance: number): void {
+    this.totalBalance = balance;
+  }
+
+  public getTotalBalance(): number {
+    return this.totalBalance;
   }
 
   public getContributors(): Promise<any> {
