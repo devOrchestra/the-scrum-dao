@@ -18,7 +18,7 @@ contract Project is StandardToken, Ownable, TrustedOracle {
 
   uint8 public decimals;
 
-  uint storyPointMultiplier = 10;
+  uint storyPointMultiplier = 1000000000000000000;
 
   StoryPointsVoting storyPointsVoting;
 
