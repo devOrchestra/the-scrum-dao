@@ -1,13 +1,12 @@
 <h2 class="title" md-dialog-title>Add track</h2>
 <md-dialog-content fxLayout="column" fxLayoutAlign="space-between">
-  <md-input-container fxFlex>
+  <md-input-container fxFlex [color]="'accent'">
     <input mdInput placeholder="Track" [(ngModel)]="track">
-  </md-input-container>
-  <md-input-container fxFlex>
-    <input mdInput placeholder="Story description" [(ngModel)]="storyDescription">
   </md-input-container>
 </md-dialog-content>
 <md-dialog-actions class="buttons" fxLayout="row" fxLayoutAlign="space-between">
   <button md-button [md-dialog-close]="false">CANCEL</button>
-  <button md-button [md-dialog-close]="sendData()">CONFIRM</button>
+  <button md-button [md-dialog-close]="sendData()" [disabled]="!track || track.length === 0" class="transition-fast">
+    CONFIRM
+  </button>
 </md-dialog-actions>

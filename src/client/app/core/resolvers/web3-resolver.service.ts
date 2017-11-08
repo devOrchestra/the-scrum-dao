@@ -20,7 +20,7 @@ export class Web3ResolverService {
       .then(contractInstance => {
         contractInstance.balanceOf(web3.eth.accounts[0])
           .then(balanceResponse => {
-            if (!connectionStateIsSet) {
+            if (!connectionStateIsSet || connectionStateIsSet.connectionStateIsSet === false) {
               this._web3Service.setConnectionState("connected");
               sessionStorage.setItem("connectionStateIsSet", JSON.stringify({connectionStateIsSet: true}));
             } else if (connectionStateIsSet) {
@@ -28,8 +28,13 @@ export class Web3ResolverService {
             }
           })
           .catch(err => {
+            sessionStorage.setItem("connectionStateIsSet", JSON.stringify({connectionStateIsSet: false}));
             this._web3Service.setConnectionState("not connected")
           })
+      })
+      .catch(() => {
+        sessionStorage.setItem("connectionStateIsSet", JSON.stringify({connectionStateIsSet: false}));
+        this._web3Service.setConnectionState("not connected")
       })
   }
 }

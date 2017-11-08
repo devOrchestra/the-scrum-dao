@@ -5,14 +5,14 @@ import {MdDialog} from '@angular/material';
 import crowdsale_artifacts from '../../../../build/contracts/Crowdsale.json';
 import project_artifacts from '../../../../build/contracts/Project.json';
 import {default as contract} from 'truffle-contract'
-import {FlashAnimation} from '../shared/animations'
+import {FlashAnimation, ShortEnterAnimation} from '../shared/animations'
 import * as _ from 'lodash'
 
 @Component({
   selector: 'app-crowdsale',
   templateUrl: './crowdsale.component.html',
   styleUrls: ['./crowdsale.component.css'],
-  animations: [FlashAnimation]
+  animations: [FlashAnimation, ShortEnterAnimation]
 })
 export class CrowdsaleComponent implements OnInit {
   Crowdsale = contract(crowdsale_artifacts);

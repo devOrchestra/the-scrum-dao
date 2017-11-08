@@ -32,7 +32,7 @@ contract ProductBacklog is TrustedOracle{
     project = Project(_projectContract);
   }
 
-  function addVoting(string issue) onlyTrustedOracle {
+  function addVoting(string issue) onlyTokenHolders {
     votings[issue] = Voting(issue, 0, 0, true, true);
   }
 

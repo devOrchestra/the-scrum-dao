@@ -1,20 +1,16 @@
 <md-card fxLayout="column" fxFlex="100" class="sidenav no-paddings card-shadow-4 bgc-main square-corners">
   <div fxLayout="column" fxLayoutAlign="center center" class="main-title-container">
   </div>
-  <nav fxLayout="column">
+  <nav fxLayout="column" *ngIf="readyToRender">
     <a class="nav-button transition-fast" md-button routerLink="/app/contributor-list" color="primary"
        routerLinkActive="active-nav-button">Contributor list</a>
-    <a class="nav-button transition-fast" md-button routerLink="/app/dashboard" color="primary"
-       routerLinkActive="active-nav-button">Dashboard</a>
     <a class="nav-button transition-fast" md-button routerLink="/app/crowdsale" color="primary"
        routerLinkActive="active-nav-button">Crowdsale</a>
     <a class="nav-button transition-fast" md-button routerLink="/app/project-backlog" color="primary"
        routerLinkActive="active-nav-button">Project backlog</a>
     <a class="nav-button transition-fast" md-button routerLink="/app/task-list" color="primary"
        routerLinkActive="active-nav-button">Planing Poker</a>
-    <a class="nav-button transition-fast" md-button routerLink="/app/wallet" color="primary"
-       routerLinkActive="active-nav-button">Wallet</a>
-    <a class="nav-button transition-fast" md-button routerLink="/app/settings" color="primary"
+    <a class="nav-button transition-fast" md-button routerLink="/app/settings" color="primary" *ngIf="showSettingsLink"
        routerLinkActive="active-nav-button">Settings</a>
   </nav>
 </md-card>

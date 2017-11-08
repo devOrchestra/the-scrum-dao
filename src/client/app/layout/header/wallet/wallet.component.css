@@ -4,21 +4,25 @@
 
 .balance {
   padding: 8px 16px;
-  background-color: #239b23;
+  /*background-color: #239b23;*/
+  border: 1px white solid;
   border-radius: 6px;
+  height: 40px;
 }
 
 .balance-container .minus-tokens {
-  color: #f30000;
-  margin-left: 16px;
+  font-size: 20px;
+  color: #ff0000;
+  margin-right: 16px;
 }
 
 .balance-container h2 {
   color: white;
+  line-height: 22px;
 }
 
 .form-container {
-  margin-top: 16px;
+  margin-top: 28px;
 }
 
 .form-container .form {

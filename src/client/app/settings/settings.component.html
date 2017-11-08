@@ -1,46 +1,51 @@
-<h2 class="title">Workers</h2>
-<div *ngFor="let worker of workers;">
-  {{worker}}
+<div fxFlexFill fxLayout="row" fxLayoutAlign="center center" *ngIf="!readyToDisplay">
+  <md-spinner class="main-spinner"></md-spinner>
 </div>
-
-<div fxLayout="row">
-  <div fxLayout="row" fxFlex="30">
-    <div fxLayout="column">
-      <md-input-container>
-        <input mdInput placeholder="Jira username" [(ngModel)]="worker.login">
-      </md-input-container>
-      <md-input-container>
-        <input mdInput placeholder="ETH address" [(ngModel)]="worker.address">
-      </md-input-container>
-    </div>
-    <button md-button (click)="addWorker()">Add</button>
+<div fxLayout="column" *ngIf="readyToDisplay" [@shortEnterAnimation]>
+  <h2 class="title">Workers</h2>
+  <div *ngFor="let worker of workers;">
+    {{worker}}
   </div>
-</div>
 
-<h2 class="title">Oracle</h2>
-<div>{{currentOracleAddress}}</div>
-
-<div fxLayout="row">
-  <div fxLayout="row" fxFlex="30">
-    <div fxLayout="column">
-      <md-input-container>
-        <input mdInput placeholder="Add oracle address" [(ngModel)]="newOracleAddress">
-      </md-input-container>
+  <div fxLayout="row">
+    <div fxLayout="row" fxFlex="30">
+      <div fxLayout="column">
+        <md-input-container [color]="'accent'">
+          <input mdInput placeholder="Jira username" [(ngModel)]="worker.login">
+        </md-input-container>
+        <md-input-container [color]="'accent'">
+          <input mdInput placeholder="ETH address" [(ngModel)]="worker.address">
+        </md-input-container>
+      </div>
+      <button md-button (click)="addWorker()">Add</button>
     </div>
-    <button md-button (click)="addOracleAddress()">Add</button>
   </div>
-</div>
 
-<h2 class="title">Crowdsale</h2>
-<div>{{Crowdsale}}</div>
+  <h2 class="title">Oracle</h2>
+  <div>{{currentOracleAddress}}</div>
 
-<div fxLayout="row">
-  <div fxLayout="row" fxFlex="30">
-    <div fxLayout="column">
-      <md-input-container>
-        <input mdInput placeholder="Add crowdsale" [(ngModel)]="newCrowdsale">
-      </md-input-container>
+  <div fxLayout="row">
+    <div fxLayout="row" fxFlex="30">
+      <div fxLayout="column">
+        <md-input-container [color]="'accent'">
+          <input mdInput placeholder="Add oracle address" [(ngModel)]="newOracleAddress">
+        </md-input-container>
+      </div>
+      <button md-button (click)="addOracleAddress()">Add</button>
     </div>
-    <button md-button (click)="addCrowdsale()">Add</button>
+  </div>
+
+  <h2 class="title">Crowdsale</h2>
+  <div>{{Crowdsale}}</div>
+
+  <div fxLayout="row">
+    <div fxLayout="row" fxFlex="30">
+      <div fxLayout="column">
+        <md-input-container [color]="'accent'">
+          <input mdInput placeholder="Add crowdsale" [(ngModel)]="newCrowdsale">
+        </md-input-container>
+      </div>
+      <button md-button (click)="addCrowdsale()">Add</button>
+    </div>
   </div>
 </div>

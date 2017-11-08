@@ -85,6 +85,8 @@ input::-webkit-inner-spin-button {
   -ms-user-select: none;
   -o-user-select: none;
   user-select: none;
+  user-drag: none;
+  -webkit-user-drag: none;
 }
 
 .no-paddings {

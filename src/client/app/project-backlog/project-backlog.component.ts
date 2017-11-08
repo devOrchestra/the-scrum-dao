@@ -7,7 +7,7 @@ import storyPoints_artifacts from '../../../../build/contracts/StoryPointsVoting
 import {MdDialog} from '@angular/material';
 import {ProjectBacklogAddTrackDialogComponent} from './project-backlog-add-track-dialog/project-backlog-add-track-dialog.component'
 import {JiraService} from '../core/jira.service'
-import {FlashAnimation} from '../shared/animations'
+import {FlashAnimation, ShortEnterAnimation} from '../shared/animations'
 
 import * as moment from 'moment';
 
@@ -15,11 +15,9 @@ import * as moment from 'moment';
   selector: 'app-project-backlog',
   templateUrl: './project-backlog.component.html',
   styleUrls: ['./project-backlog.component.css'],
-  animations: [FlashAnimation]
+  animations: [FlashAnimation, ShortEnterAnimation]
 })
 export class ProjectBacklogComponent implements OnInit {
-  track: String;
-  story: String;
   public items = [];
   public readyToDisplay = false;
 
@@ -34,41 +32,43 @@ export class ProjectBacklogComponent implements OnInit {
 
   ngOnInit() {
     this._jiraService.getIssues().subscribe(data => {
-      const getVotingBacklogPromises = [];
-      const getVotingStoryPointsPromises = [];
-      this.items = _.cloneDeep(data);
-      this.Backlog.setProvider(web3.currentProvider);
-      this.Backlog.deployed()
-        .then(backlogContractInstance => {
-          this.StoryPoints.setProvider(web3.currentProvider);
-          this.StoryPoints.deployed()
-            .then(storyPointsContractInstance => {
-              this.items.forEach(item => {
-                getVotingBacklogPromises.push(backlogContractInstance.getVoting(item.key));
-                getVotingStoryPointsPromises.push(storyPointsContractInstance.getVoting(item.key));
-                item.storyPointsLoading = true;
-                item.totalPercentsLoading = true;
-              });
-              this.readyToDisplay = true;
-              return Promise.all(getVotingBacklogPromises)
-            })
-            .then(response => {
-              console.log('getVotingBacklog response', response);
-              for (let i = 0; i < response.length; i++) {
-                this.items[i].fields.totalSupply = this.parseBigNumber(response[i][1]);
-                this.items[i].fields.votingCount = this.parseBigNumber(response[i][2]);
-              }
-              return Promise.all(getVotingStoryPointsPromises)
-            })
-            .then(response => {
-              for (let i = 0; i < response.length; i++) {
-                this.items[i].fields.storyPoints = this.countStoryPoints(response[i][1], response[i][2]);
-                this.items[i].storyPointsLoading = false;
-                this.items[i].totalPercentsLoading = false;
-              }
-              console.log('items', this.items);
-            })
-        })
+      if (data) {
+        const getVotingBacklogPromises = [];
+        const getVotingStoryPointsPromises = [];
+        this.items = _.cloneDeep(data);
+        this.Backlog.setProvider(web3.currentProvider);
+        this.Backlog.deployed()
+          .then(backlogContractInstance => {
+            this.StoryPoints.setProvider(web3.currentProvider);
+            this.StoryPoints.deployed()
+              .then(storyPointsContractInstance => {
+                this.items.forEach(item => {
+                  getVotingBacklogPromises.push(backlogContractInstance.getVoting(item.key));
+                  getVotingStoryPointsPromises.push(storyPointsContractInstance.getVoting(item.key));
+                  item.storyPointsLoading = true;
+                  item.totalPercentsLoading = true;
+                });
+                this.readyToDisplay = true;
+                return Promise.all(getVotingBacklogPromises)
+              })
+              .then(response => {
+                console.log('getVotingBacklog response', response);
+                for (let i = 0; i < response.length; i++) {
+                  this.items[i].fields.totalSupply = this.parseBigNumber(response[i][1]);
+                  this.items[i].fields.votingCount = this.parseBigNumber(response[i][2]);
+                }
+                return Promise.all(getVotingStoryPointsPromises)
+              })
+              .then(response => {
+                for (let i = 0; i < response.length; i++) {
+                  this.items[i].fields.storyPoints = this.countStoryPoints(response[i][1], response[i][2]);
+                  this.items[i].storyPointsLoading = false;
+                  this.items[i].totalPercentsLoading = false;
+                }
+                console.log('items', this.items);
+              })
+          })
+      }
     })
   }
 
@@ -110,7 +110,6 @@ export class ProjectBacklogComponent implements OnInit {
   getVotingToUpdate(contractInstance, id, index) {
     contractInstance.getVoting(id)
       .then(getVotingResponse => {
-        // this.parseBigNumber(response[i][1]);
         if (this.parseBigNumber(getVotingResponse[1]) === this.items[index].fields.totalSupply &&
             this.parseBigNumber(getVotingResponse[2]) === this.items[index].fields.votingCount) {
           this.getVotingToUpdate(contractInstance, id, index);
@@ -142,8 +141,22 @@ export class ProjectBacklogComponent implements OnInit {
 
   openDialog(): void {
     const dialogRef = this.dialog.open(ProjectBacklogAddTrackDialogComponent);
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('result.track', result.track, 'result.storyDescription', result.storyDescription);
+    dialogRef.afterClosed().subscribe(track => {
+      if (track) {
+        this.readyToDisplay = false;
+        this.Backlog.setProvider(web3.currentProvider);
+        this.Backlog.deployed()
+          .then(backlogContractInstance => {
+            return backlogContractInstance.addVoting(track, {gas: 500000, from: web3.eth.accounts[0]});
+          })
+          .then(addVotingResponse => {
+            console.log('addVotingResponse', addVotingResponse);
+            this.readyToDisplay = true;
+          })
+          .catch(() => {
+            this.readyToDisplay = true;
+          })
+      }
     });
   }
 }

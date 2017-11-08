@@ -1,12 +1,7 @@
-<div fxLayout="column" fxFill *ngIf="readyToDisplay">
-
-  <div fxLayout="row">
-    <md-input-container fxFlex="30">
-      <input mdInput placeholder="Add new issue">
-    </md-input-container>
-    <button md-button>Add</button>
-  </div>
-
+<div fxFlexFill fxLayout="row" fxLayoutAlign="center center" *ngIf="!readyToDisplay">
+  <md-spinner class="main-spinner"></md-spinner>
+</div>
+<div fxLayout="column" fxFill *ngIf="readyToDisplay" [@shortEnterAnimation]>
   <div id="task-list" fxLayout="column">
     <div class="item" *ngFor="let item of items; let index = index" fxLayout="row" fxLayoutAlign="space-between">
       <div class="left-side" fxLayout="row" fxLayoutAlign="center center">
@@ -38,7 +33,5 @@
     </div>
   </div>
 
-  <div fxFlex fxLayoutAlign="end end">
-    <button md-mini-fab (click)="openDialog()" class="add-button">+</button>
-  </div>
+  <button class="add-button" md-fab (click)="openDialog()">+</button>
 </div>

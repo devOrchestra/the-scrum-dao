@@ -1,4 +1,7 @@
-<div fxFlex *ngIf="readyToDisplay">
+<div fxFlexFill fxLayout="row" fxLayoutAlign="center center" *ngIf="!readyToDisplay">
+  <md-spinner class="main-spinner"></md-spinner>
+</div>
+<div fxFlex *ngIf="readyToDisplay" [@shortEnterAnimation]>
   <div id="task-list" fxLayout="column">
     <div class="item" *ngFor="let task of tasks" fxLayout="row" fxLayoutAlign="space-between">
       <div class="left-side" fxLayout="row" fxLayoutAlign="center center">

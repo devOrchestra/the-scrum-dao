@@ -2,11 +2,13 @@ import {Component, OnInit} from '@angular/core';
 import {WorkerService} from '../core/worker.service'
 import project_artifacts from '../../../../build/contracts/Project.json'
 import {default as contract} from 'truffle-contract'
+import {ShortEnterAnimation} from '../shared/animations'
 
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
-  styleUrls: ['./settings.component.css']
+  styleUrls: ['./settings.component.css'],
+  animations: [ShortEnterAnimation]
 })
 export class SettingsComponent implements OnInit {
   worker: any = {};
@@ -14,6 +16,7 @@ export class SettingsComponent implements OnInit {
   newOracleAddress: string;
   currentOracleAddress: string;
   newCrowdsale: string;
+  readyToDisplay = false;
   Project = contract(project_artifacts);
 
   constructor(
@@ -25,13 +28,13 @@ export class SettingsComponent implements OnInit {
     this.Project.deployed().then(contractInstance => {
       contractInstance.trustedOracle().then(data => {
         this.currentOracleAddress = data;
+        this._workerService.getWorkers().subscribe(getWorkersResponse => {
+          console.log("WORKERS:", getWorkersResponse);
+          this.workers = getWorkersResponse;
+          this.readyToDisplay = true;
+        })
       })
     });
-
-    this._workerService.getWorkers().subscribe(data => {
-      console.log("WORKERS:", data);
-      this.workers = data;
-    })
   }
 
   addWorker() {

@@ -1,10 +1,13 @@
-<div fxFlex *ngIf="readyToRenderPage">
+<div fxFlexFill fxLayout="row" fxLayoutAlign="center center" *ngIf="!readyToRenderPage">
+  <md-spinner class="main-spinner"></md-spinner>
+</div>
+<div fxFlex *ngIf="readyToRenderPage" [@shortEnterAnimation]>
   <div id="contributor-list" fxLayout="row" fxLayoutWrap fxLayoutAlign="center">
     <div class="item" *ngFor="let contributor of contributors | sortContributorsByBalancePipe" fxLayout="column" fxLayoutAlign="space-between" fxFlex>
       <div class="main-content" fxLayout="column" fxLayoutAlign="space-between center">
         <div fxLayout="column" fxLayoutAlign="space-between center">
-          <img *ngIf="contributor.avatar" class="avatar" src="{{contributor.avatar}}" alt="">
-          <div *ngIf="!contributor.avatar" class="fake-avatar" fxLayout="row" fxLayoutAlign="center center">
+          <img *ngIf="contributor.avatar" class="avatar unselectable" src="{{contributor.avatar}}" alt="">
+          <div *ngIf="!contributor.avatar" class="fake-avatar unselectable" fxLayout="row" fxLayoutAlign="center center">
             {{contributor.username[0]}}
           </div>
           <div class="info" fxLayout="column" fxLayoutAlign="center center">

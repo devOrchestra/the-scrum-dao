@@ -1,3 +1,12 @@
 .title{
   color:#000;
 }
+
+.main-spinner {
+  width: 75px;
+  height: 75px;
+}
+
+/deep/ .main-spinner path {
+  stroke: #333333;
+}

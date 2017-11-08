@@ -2,11 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { WorkerService } from '../core/worker.service';
 import project_artifacts from '../../../../build/contracts/Project.json'
 import {default as contract} from 'truffle-contract'
+import { ShortEnterAnimation } from '../shared/animations'
 
 @Component({
   selector: 'app-contributor-list',
   templateUrl: './contributor-list.component.html',
-  styleUrls: ['./contributor-list.component.css']
+  styleUrls: ['./contributor-list.component.css'],
+  animations: [ShortEnterAnimation]
 })
 export class ContributorListComponent implements OnInit {
   Project = contract(project_artifacts);
@@ -21,62 +23,65 @@ export class ContributorListComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    console.log(web3.eth.accounts[0]);
+    let workersWereSet = false;
     this._workerService.getWorkers().subscribe(data => {
-      const currentWorkersArr = data;
+      let currentWorkersArr;
       const clone = [];
-      data.forEach(item => {
-        clone.push(item);
-      });
-      clone.forEach((item, i) => {
-        clone[i] = this.formatWorkers(item)
-      });
-
-      if (!this._workerService.workersAvatarsWereSet) {
-        this._workerService.getContributors()
-          .then(response => {
-            response.forEach((responseItem, i) => {
-              clone.forEach((cloneItem, j) => {
-                if (responseItem.displayName.toLowerCase() === cloneItem.username.toLowerCase() ||
-                  responseItem.name.toLowerCase() === cloneItem.username.toLowerCase()) {
-                  cloneItem.avatar = responseItem.avatarUrl;
-                  currentWorkersArr[j].push(responseItem.avatarUrl);
-                }
+      if (data) {
+        currentWorkersArr = data;
+        data.forEach(item => {
+          clone.push(item);
+        });
+        clone.forEach((item, i) => {
+          clone[i] = this.formatWorkers(item)
+        });
+        if (!this._workerService.workersAvatarsWereSet && !workersWereSet) {
+          this._workerService.getContributors()
+            .then(response => {
+              response.forEach((responseItem, i) => {
+                clone.forEach((cloneItem, j) => {
+                  if (responseItem.displayName.toLowerCase() === cloneItem.username.toLowerCase() ||
+                    responseItem.name.toLowerCase() === cloneItem.username.toLowerCase()) {
+                    cloneItem.avatar = responseItem.avatarUrl;
+                    currentWorkersArr[j].push(responseItem.avatarUrl);
+                  }
+                });
               });
-            });
-            this._workerService.workersAvatarsWereSet = true;
-            this.contributors = clone;
-            this.Project.setProvider(web3.currentProvider);
-            return this.Project.deployed();
-          })
-          .then(contractInstance => {
-            contractInstance.totalSupply()
-              .then(totalSupplyResponse => {
-                this.totalBalance = this.parseBigNumber(totalSupplyResponse);
-                return contractInstance.symbol()
-              })
-              .then(symbol => {
-                this.tokenSymbol = symbol;
-                return contractInstance.decimals();
-              })
-              .then(decimalsResponse => {
-                this.decimals = this.countDecimals(decimalsResponse);
-                this.totalBalance = this.totalBalance / this.decimals;
-                this._workerService.setTotalBalance(this.totalBalance);
-                this.contributors.forEach(item => {
-                  item.balance = item.balance / this.decimals;
-                });
-                currentWorkersArr.forEach(item => {
-                  item[2] = item[2] / this.decimals;
-                });
-                this._workerService.setWorkers(currentWorkersArr);
-              })
-          })
-      } else {
-        this.contributors = clone;
-        this.totalBalance = this._workerService.getTotalBalance();
-        setTimeout(() => {
+              this._workerService.workersAvatarsWereSet = true;
+              this.contributors = clone;
+              this.Project.setProvider(web3.currentProvider);
+              return this.Project.deployed();
+            })
+            .then(contractInstance => {
+              contractInstance.totalSupply()
+                .then(totalSupplyResponse => {
+                  this.totalBalance = this.parseBigNumber(totalSupplyResponse);
+                  return contractInstance.symbol()
+                })
+                .then(symbol => {
+                  this.tokenSymbol = symbol;
+                  return contractInstance.decimals();
+                })
+                .then(decimalsResponse => {
+                  this.decimals = this.countDecimals(decimalsResponse);
+                  this.totalBalance = this.totalBalance / this.decimals;
+                  this._workerService.setTotalBalance(this.totalBalance);
+                  this.contributors.forEach(item => {
+                    item.balance = item.balance / this.decimals;
+                  });
+                  currentWorkersArr.forEach(item => {
+                    item[2] = item[2] / this.decimals;
+                  });
+                  this._workerService.setWorkers(currentWorkersArr);
+                  workersWereSet = true;
+                })
+            })
+        } else {
+          this.contributors = clone;
+          this.totalBalance = this._workerService.getTotalBalance();
           this.readyToRenderPage = true;
-        }, 100);
+        }
       }
     });
   }

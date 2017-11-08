@@ -1,5 +1,5 @@
 <app-connection-state></app-connection-state>
-<div fxFlexFill fxLayout="row">
+<div fxFlexFill fxLayout="row" *ngIf="connectionState === 'connected' || connectionState === 'none'">
   <app-sidenav></app-sidenav>
   <div fxFlex fxLayout="column">
     <app-header></app-header>

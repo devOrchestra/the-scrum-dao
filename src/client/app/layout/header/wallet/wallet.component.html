@@ -1,10 +1,10 @@
 <div fxLayout="column" fxLayoutAlign="start start" *ngIf="readyToDisplay">
   <div fxLayout="row" fxLayoutAlign="center center" class="balance-container" [mdMenuTriggerFor]="sendTokensMenu"
        #sendTokensMenuTrigger="mdMenuTrigger">
-    <div fxLayout="row" class="balance">
-      <h2>Balance: {{currentBalance.toFixed(2)}} {{tokenSymbol}}</h2>
-    </div>
     <h2 class="minus-tokens" [@mediumEnterLeaveAnimation] *ngIf="showSentTokens">- {{sentTokens}}</h2>
+    <div fxLayout="row" class="balance">
+      <h2 class="unselectable">MY WALLET : {{currentBalance.toFixed(2)}} {{tokenSymbol}}</h2>
+    </div>
   </div>
 
   <md-menu #sendTokensMenu="mdMenu" [overlapTrigger]="false" (click)="$event.stopPropagation()">

@@ -67,6 +67,15 @@
   height: 14px;
 }
 
+.main-spinner {
+  width: 75px;
+  height: 75px;
+}
+
+/deep/ .main-spinner path {
+  stroke: #333333;
+}
+
 /deep/ #task-list .item .story-points-user-choice-cloud md-spinner path {
   stroke: white !important;
 }

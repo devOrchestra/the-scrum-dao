@@ -11,6 +11,8 @@ import { WorkersResolverService } from './core/resolvers/workers-resolver.servic
 import { JiraIssuesResolverService } from './core/resolvers/jira-issues-resolver.service';
 import { Web3ResolverService } from './core/resolvers/web3-resolver.service';
 
+import { OwnerGuardService } from './owner-guard.service'
+
 @NgModule({
   declarations: [
     AppComponent
@@ -26,7 +28,9 @@ import { Web3ResolverService } from './core/resolvers/web3-resolver.service';
   providers: [
     WorkersResolverService,
     JiraIssuesResolverService,
-    Web3ResolverService
+    Web3ResolverService,
+
+    OwnerGuardService
   ],
   bootstrap: [AppComponent]
 })

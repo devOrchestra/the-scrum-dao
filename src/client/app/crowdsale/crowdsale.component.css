@@ -69,7 +69,7 @@
   color: #fffa7a;
   font-size: 24px;
   position: fixed;
-  bottom: 8px;
+  bottom: 16px;
   right: 32px;
 }
 
@@ -95,4 +95,13 @@
   -moz-transition: background-color .2s ease-in-out !important;
   -o-transition: background-color .2s ease-in-out !important;
   transition: background-color .2s ease-in-out !important;
+}
+
+.main-spinner {
+  width: 75px;
+  height: 75px;
+}
+
+/deep/ .main-spinner path {
+  stroke: #333333;
 }

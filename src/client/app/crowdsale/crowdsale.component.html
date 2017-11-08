@@ -1,7 +1,11 @@
-<div fxLayout="row" fxLayoutAlign="center center" *ngIf="!orders || orders.length === 0" class="no-orders">
-  <h2>No opened orders!</h2>
+<div fxFlexFill fxLayout="row" fxLayoutAlign="center center" *ngIf="!readyToDisplay">
+  <md-spinner class="main-spinner"></md-spinner>
 </div>
-<div *ngIf="readyToDisplay">
+<div fxLayout="row" fxLayoutAlign="center center" *ngIf="(!orders || orders.length === 0) && readyToDisplay" class="no-orders"
+     [@shortEnterAnimation]>
+  <h2>No open orders!</h2>
+</div>
+<div *ngIf="readyToDisplay" [@shortEnterAnimation]>
   <div fxLayout="column" fxFill class="relative-container">
     <div id="top-row" fxLayout="row" fxLayoutAlign="space-between">
       <h2>Order book</h2>

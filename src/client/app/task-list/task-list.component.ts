@@ -3,13 +3,13 @@ import {JiraService} from '../core/jira.service'
 import storyPointsVoting_artifacts from '../../../../build/contracts/StoryPointsVoting.json';
 import {default as contract} from 'truffle-contract'
 import * as _ from 'lodash'
-import {FlashAnimation} from '../shared/animations'
+import {FlashAnimation, ShortEnterAnimation} from '../shared/animations'
 
 @Component({
   selector: 'app-task-list',
   templateUrl: './task-list.component.html',
   styleUrls: ['./task-list.component.css'],
-  animations: [FlashAnimation]
+  animations: [FlashAnimation, ShortEnterAnimation]
 })
 export class TaskListComponent implements OnInit {
   public storyPointsOptions: number[] = [1, 2, 3, 5, 8, 13, 20, 40, 100];
@@ -25,37 +25,39 @@ export class TaskListComponent implements OnInit {
     const getVotingPromises = [];
     const getVotePromises = [];
     this._jiraService.getIssues().subscribe(data => {
-      this.tasks = _.cloneDeep(data);
-      this.StoryPointsVoting.setProvider(web3.currentProvider);
-      this.StoryPointsVoting.deployed().then(storyPointsVotingInstance => {
-        this.tasks.forEach(item => {
-          getVotingPromises.push(storyPointsVotingInstance.getVoting(item.key));
-          item.votingLoading = true;
-          item.storyPointsLoading = true;
-        });
-        this.readyToDisplay = true;
-        Promise.all(getVotingPromises)
-          .then(response => {
-            response.forEach(item => {
-              item[1] = this.parseBigNumber(item[1]);
-              item[2] = this.parseBigNumber(item[2]);
-            });
-            this.tasks.forEach((item, i) => {
-              this.tasks[i].fields.votesCount = response[i][1];
-              this.tasks[i].fields.votesSum = response[i][2];
-              getVotePromises.push(storyPointsVotingInstance.getVote(this.tasks[i].key, {from: web3.eth.accounts[0]}));
-            });
-            return Promise.all(getVotePromises)
-          })
-          .then(res => {
-            res.forEach((item, i) => {
-              this.tasks[i].fields.votesUserChoice = this.parseBigNumber(item);
-              this.tasks[i].votingLoading = false;
-              this.tasks[i].storyPointsLoading = false;
-            });
-            console.log('tasks', this.tasks);
-          })
-      })
+      if (data) {
+        this.tasks = _.cloneDeep(data);
+        this.StoryPointsVoting.setProvider(web3.currentProvider);
+        this.StoryPointsVoting.deployed().then(storyPointsVotingInstance => {
+          this.tasks.forEach(item => {
+            getVotingPromises.push(storyPointsVotingInstance.getVoting(item.key));
+            item.votingLoading = true;
+            item.storyPointsLoading = true;
+          });
+          this.readyToDisplay = true;
+          Promise.all(getVotingPromises)
+            .then(response => {
+              response.forEach(item => {
+                item[1] = this.parseBigNumber(item[1]);
+                item[2] = this.parseBigNumber(item[2]);
+              });
+              this.tasks.forEach((item, i) => {
+                this.tasks[i].fields.votesCount = response[i][1];
+                this.tasks[i].fields.votesSum = response[i][2];
+                getVotePromises.push(storyPointsVotingInstance.getVote(this.tasks[i].key, {from: web3.eth.accounts[0]}));
+              });
+              return Promise.all(getVotePromises)
+            })
+            .then(res => {
+              res.forEach((item, i) => {
+                this.tasks[i].fields.votesUserChoice = this.parseBigNumber(item);
+                this.tasks[i].votingLoading = false;
+                this.tasks[i].storyPointsLoading = false;
+              });
+              console.log('tasks', this.tasks);
+            })
+        })
+      }
     })
   }
 

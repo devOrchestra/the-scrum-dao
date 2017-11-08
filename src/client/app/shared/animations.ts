@@ -21,8 +21,8 @@ export const FlashAnimation = trigger(
     ])
   ]);
 
-export const ShortEnterLeaveAnimation = trigger(
-  'shortEnterLeaveAnimation',
+export const ShortEnterAnimation = trigger(
+  'shortEnterAnimation',
   [
     transition(
       ':enter', [
@@ -33,7 +33,7 @@ export const ShortEnterLeaveAnimation = trigger(
     transition(
       ':leave', [
         style({'opacity': 1}),
-        animate('300ms', style({'opacity': 0}))
+        animate('0ms', style({'opacity': 0}))
       ]
     )
   ]

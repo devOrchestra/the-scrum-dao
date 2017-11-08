@@ -1,4 +1,4 @@
-<div id="connection" fxLayout="row" fxLayoutAlign="center center">
+<div id="connection" *ngIf="backdrop" fxLayout="row" fxLayoutAlign="center center">
   <div class="backdrop" *ngIf="backdrop" [@longControlledEnterLeaveAnimation]="backdropAnimation"></div>
   <div fxLayout="column" fxLayoutAlign="center center" *ngIf="showConnectionSuccessSection" class="success-section">
     <i class="fa fa-bolt state-icon" aria-hidden="true" *ngIf="connectionSuccess"

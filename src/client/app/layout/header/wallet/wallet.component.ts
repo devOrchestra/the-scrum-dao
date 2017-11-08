@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild, QueryList } from '@angular/core';
 import { MdMenuTrigger } from '@angular/material'
-import { WorkerService } from '../core/worker.service'
-import project_artifacts from '../../../../build/contracts/Project.json'
+import { WorkerService } from '../../../core/worker.service'
+import project_artifacts from '../../../../../../build/contracts/Project.json'
 import {default as contract} from 'truffle-contract'
-import {MediumEnterLeaveAnimation, MediumControlledEnterLeaveAnimation} from '../shared/animations'
+import {MediumEnterLeaveAnimation, MediumControlledEnterLeaveAnimation} from '../../../shared/animations'
 
 @Component({
   selector: 'app-wallet',
@@ -30,26 +30,30 @@ export class WalletComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    let addressesWereSet = false;
     this._workerService.getWorkers().subscribe(workers => {
-      this.workersAddresses = workers.map(worker => worker[0]);
-      this.Project.setProvider(web3.currentProvider);
-      this.Project.deployed()
-        .then(contractInstance => {
-          contractInstance.balanceOf(web3.eth.accounts[0])
-            .then(balanceResponse => {
-              this.currentBalance = this.parseBigNumber(balanceResponse);
-              return contractInstance.symbol();
-            })
-            .then(symbol => {
-              this.tokenSymbol = symbol;
-              return contractInstance.decimals();
-            })
-            .then(decimalsResponse => {
-              this.decimals = this.countDecimals(decimalsResponse);
-              this.currentBalance = this.currentBalance / this.decimals;
-              this.readyToDisplay = true;
-            })
-        })
+      if (!addressesWereSet && workers) {
+        this.workersAddresses = workers.map(worker => worker[0]);
+        addressesWereSet = true;
+        this.Project.setProvider(web3.currentProvider);
+        this.Project.deployed()
+          .then(contractInstance => {
+            contractInstance.balanceOf(web3.eth.accounts[0])
+              .then(balanceResponse => {
+                this.currentBalance = this.parseBigNumber(balanceResponse);
+                return contractInstance.symbol();
+              })
+              .then(symbol => {
+                this.tokenSymbol = symbol;
+                return contractInstance.decimals();
+              })
+              .then(decimalsResponse => {
+                this.decimals = this.countDecimals(decimalsResponse);
+                this.currentBalance = this.currentBalance / this.decimals;
+                this.readyToDisplay = true;
+              })
+          })
+      }
     });
   }
 

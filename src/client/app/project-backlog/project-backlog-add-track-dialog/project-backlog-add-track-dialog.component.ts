@@ -7,9 +7,8 @@ import { Component } from '@angular/core';
 })
 export class ProjectBacklogAddTrackDialogComponent {
   track: string;
-  storyDescription: string;
 
   sendData() {
-    return {track: this.track, storyDescription: this.storyDescription};
+    return this.track;
   }
 }
