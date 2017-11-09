@@ -5,15 +5,19 @@ import path = require('path');
 import logger from './logger';
 import expressServer from './express';
 import JiraConnector from './jira';
+import TaskScheduler from './taskScheduler';
 
 loadConfig(path.resolve(__dirname, 'config.ini'), (error, config) => {
   if (error) throw error;
-  expressServer.set('jira', new JiraConnector());
-  expressServer.set('config', config);
-
+  
+  let scheduler = new TaskScheduler(config);
+  
   /**
    * STARTING HTTP SERVER
    */
+  expressServer.set('scheduler', scheduler);
+  expressServer.set('jira', new JiraConnector());
+  expressServer.set('config', config);
   let port: number = config.port;
   let server: http.Server = http.createServer(expressServer);
   server.listen(port, function () {
