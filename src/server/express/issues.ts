@@ -9,10 +9,16 @@ const PROJECT_KEY: string = 'SD';
 
 issueRouter.get('/', (req, res, next) => {
   const jira: JiraConnector = req.app.get('jira');
-
+  let {status} = req.query;
+  let statusQuery: string;
+  if (status) {
+    statusQuery = `AND status="${status}"`;
+  } else {
+    statusQuery = `AND (status="Backlog" OR status="In Progress" OR status="Selected for Development")`
+  }
   logger.debug(`retrieving backlog issues from jira project`);
-  jira.makeRequest({url: `https://legalcoins.atlassian.net/rest/api/2/search?jql=project="${PROJECT_KEY}" AND status="Backlog"&fields=id,key,status,assignee,summary,issuetype`},
-    (error, body) => {
+  let url = `https://legalcoins.atlassian.net/rest/api/2/search?jql=project="${PROJECT_KEY}" ${statusQuery}&fields=id,key,status,assignee,summary,issuetype`;
+  jira.makeRequest({url}, (error, body) => {
     if (error) return next(error);
     if (!body || !body.issues) return next('fail during retrieving project issues');
     res.json(body.issues);
