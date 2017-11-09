@@ -80,7 +80,14 @@ export class ContributorListComponent implements OnInit {
         } else {
           this.contributors = clone;
           this.totalBalance = this._workerService.getTotalBalance();
-          this.readyToRenderPage = true;
+          this.Project.deployed()
+            .then(contractInstance => {
+              return contractInstance.symbol()
+            })
+            .then(symbol => {
+              this.tokenSymbol = symbol;
+              this.readyToRenderPage = true;
+            });
         }
       }
     });
