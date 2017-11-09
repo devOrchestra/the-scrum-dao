@@ -4,7 +4,7 @@ var ProductBacklog = artifacts.require("./ProductBacklog.sol");
 var Crowdsale = artifacts.require("./Crowdsale.sol");
 
 module.exports = function(deployer) {
-  deployer.deploy(Project,"SCRUM-DAO", "SAO", 18).then(function() {
+  deployer.deploy(Project,"SCRUM-DAO", "SCR", 18).then(function() {
     return deployer.deploy(StoryPointsVoting, Project.address);
   }).then(function() {
     return deployer.deploy(ProductBacklog, Project.address);

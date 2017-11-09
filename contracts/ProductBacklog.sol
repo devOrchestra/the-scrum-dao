@@ -6,7 +6,7 @@ import './TrustedOracle.sol';
 import './StoryPointsVoting.sol';
 
 
-contract ProductBacklog is TrustedOracle{
+contract ProductBacklog is TrustedOracle {
 
   using SafeMath for uint;
   mapping (string => Voting) votings;
@@ -16,10 +16,10 @@ contract ProductBacklog is TrustedOracle{
   struct Voting {
   string issue;
   uint sum;
-  uint totalSupply;
+  uint256 totalSupply;
   bool isValid;
   bool isOpen;
-  mapping (address => uint) votes;
+  mapping (address => uint256) votes;
   }
 
   modifier onlyTokenHolders {
@@ -53,8 +53,8 @@ contract ProductBacklog is TrustedOracle{
     }
   }
 
-  function getVote(string issue) public constant returns (uint) {
-      return votings[issue].votes[msg.sender];
+  function getVote(string issue) public constant returns (uint256, uint256) {
+    return (votings[issue].votes[msg.sender], votings[issue].totalSupply);
   }
 
   function getVoting(string issue) public constant returns (string, uint, uint, bool) {
