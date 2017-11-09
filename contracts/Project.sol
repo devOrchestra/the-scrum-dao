@@ -28,6 +28,8 @@ contract Project is StandardToken, Ownable, TrustedOracle {
 
   Worker[] public workers;
 
+  address[] public holders;
+
   struct Worker {
   address _address;
   string username;
@@ -44,6 +46,24 @@ contract Project is StandardToken, Ownable, TrustedOracle {
     name = _name;
     symbol = _symbol;
     decimals = _decimals;
+  }
+
+  /**
+  * @dev overwrite BasicToken transfer function
+  * @param _to The address to transfer to.
+  * @param _value The amount to be transferred.
+  */
+  function transfer(address _to, uint256 _value) public returns (bool) {
+    require(_to != address(0));
+
+    if (balanceOf(msg.sender) == 0) {
+      holders.push(msg.sender);
+    }
+    // SafeMath.sub will throw if there is not enough balance.
+    balances[msg.sender] = balances[msg.sender].sub(_value);
+    balances[_to] = balances[_to].add(_value);
+    Transfer(msg.sender, _to, _value);
+    return true;
   }
 
   function initStoryPointsVoting(address _storyPointsVoting) onlyOwner {
@@ -71,6 +91,10 @@ contract Project is StandardToken, Ownable, TrustedOracle {
 
   function getWorker(uint i) public constant returns (address, string){
     return (workers[i]._address, workers[i].username);
+  }
+
+  function getHoldersLength() public constant returns (uint){
+    return holders.length;
   }
 
   function payAward(string username, string issue) public onlyTrustedOracle {
