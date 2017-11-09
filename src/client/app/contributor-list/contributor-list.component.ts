@@ -25,6 +25,7 @@ export class ContributorListComponent implements OnInit {
   ngOnInit() {
     console.log(web3.eth.accounts[0]);
     let workersWereSet = false;
+    this.Project.setProvider(web3.currentProvider);
     this._workerService.getWorkers().subscribe(data => {
       let currentWorkersArr;
       const clone = [];
@@ -50,7 +51,6 @@ export class ContributorListComponent implements OnInit {
               });
               this._workerService.workersAvatarsWereSet = true;
               this.contributors = clone;
-              this.Project.setProvider(web3.currentProvider);
               return this.Project.deployed();
             })
             .then(contractInstance => {
