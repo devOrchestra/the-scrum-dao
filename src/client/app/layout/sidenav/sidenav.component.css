@@ -8,8 +8,7 @@
 }
 
 .main-title-container {
-  padding: 32px;
-  margin-bottom: 32px;
+  padding: 64px 32px;
 }
 
 .main-title {
@@ -59,6 +58,7 @@
 .nav-button {
   font-size: 16px;
   border-radius: 0;
+  line-height: 48px;
 }
 
 .active-nav-button {
