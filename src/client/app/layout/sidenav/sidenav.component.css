@@ -2,8 +2,14 @@
   width: 320px;
 }
 
+.sidenav .logo {
+  width: 256px;
+  height: auto;
+}
+
 .main-title-container {
-  height: 178px;
+  padding: 32px;
+  margin-bottom: 32px;
 }
 
 .main-title {

@@ -2,10 +2,6 @@ md-toolbar {
   background-color: #383838;
 }
 
-md-toolbar .logo {
-  color: white;
-}
-
 /deep/ .mat-menu-content {
   padding: 0 !important;
 }

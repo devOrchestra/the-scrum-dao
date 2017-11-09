@@ -19,6 +19,9 @@ body, html {
 
 body {
   font-family: Roboto-Light, Roboto, 'Helvetica Neue', sans-serif !important;
+  /* Render fonts properly on all platforms */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 p,
