@@ -21,7 +21,7 @@ if (cluster.isMaster) {
     tasksHandler.on('exit', (code, signal) => {
       logger.info(`Tasks handler died with code ${code}`);
     });
-    
+
     expressServer.set('scheduler', scheduler);
     expressServer.set('jira', new JiraConnector());
     expressServer.set('config', config);
@@ -38,7 +38,7 @@ if (cluster.isMaster) {
    */
   loadConfig(path.resolve(__dirname, 'config.ini'), (error, config) => {
     if (error) throw error;
-    
+
     new TaskHandler(config);
   });
 }

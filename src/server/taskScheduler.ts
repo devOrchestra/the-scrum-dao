@@ -21,6 +21,7 @@ class TaskScheduler {
       .delay(period)
       .save((error) => {
         if (error) return done(error);
+        logger.info(`Task ${type} with payload ${JSON.stringify(data)} and delay of ${period} has been created`);
         done(null);
       });
   }
