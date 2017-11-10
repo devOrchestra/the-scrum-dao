@@ -3,13 +3,13 @@ import {JiraService} from '../core/jira.service'
 import storyPointsVoting_artifacts from '../../../../build/contracts/StoryPointsVoting.json';
 import {default as contract} from 'truffle-contract'
 import * as _ from 'lodash'
-import {FlashAnimation, ShortEnterAnimation} from '../shared/animations'
+import {AlternativeControlFlashAnimation, ShortEnterAnimation} from '../shared/animations'
 
 @Component({
   selector: 'app-task-list',
   templateUrl: './task-list.component.html',
   styleUrls: ['./task-list.component.css'],
-  animations: [FlashAnimation, ShortEnterAnimation]
+  animations: [AlternativeControlFlashAnimation, ShortEnterAnimation]
 })
 export class TaskListComponent implements OnInit {
   public storyPointsOptions: number[] = [1, 2, 3, 5, 8, 13, 20, 40, 100];
@@ -37,13 +37,16 @@ export class TaskListComponent implements OnInit {
           this.readyToDisplay = true;
           Promise.all(getVotingPromises)
             .then(response => {
+              console.log('getVotingPoker response', response);
               response.forEach(item => {
                 item[1] = this.parseBigNumber(item[1]);
                 item[2] = this.parseBigNumber(item[2]);
               });
               this.tasks.forEach((item, i) => {
+                this.tasks[i].fields.votingWasNotCreated = response[i][0].length <= 0;
                 this.tasks[i].fields.votesCount = response[i][1];
                 this.tasks[i].fields.votesSum = response[i][2];
+                this.tasks[i].fields.isOpen = response[i][3];
                 getVotePromises.push(storyPointsVotingInstance.getVote(this.tasks[i].key, {from: web3.eth.accounts[0]}));
               });
               return Promise.all(getVotePromises)
@@ -94,6 +97,18 @@ export class TaskListComponent implements OnInit {
           item.storyPointsLoading = false;
         });
     });
+  }
+
+  calculateFirstVisibleItemIndex(): number {
+    let index;
+    let flag = true;
+    this.tasks.forEach((item, i) => {
+      if ((item.fields.votingWasNotCreated === true || item.fields.isOpen === true) && flag) {
+        index = i;
+        flag = !flag;
+      }
+    });
+    return index;
   }
 
   parseBigNumber(item: number): number {

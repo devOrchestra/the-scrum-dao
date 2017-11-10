@@ -3,49 +3,102 @@
 </div>
 <div fxLayout="column" *ngIf="readyToDisplay" [@shortEnterAnimation]>
   <h2 class="title">Workers</h2>
-  <div *ngFor="let worker of workers;">
-    {{worker}}
-  </div>
-
-  <div fxLayout="row">
-    <div fxLayout="row" fxFlex="30">
-      <div fxLayout="column">
-        <md-input-container [color]="'accent'">
-          <input mdInput placeholder="Jira username" [(ngModel)]="worker.login">
-        </md-input-container>
-        <md-input-container [color]="'accent'">
-          <input mdInput placeholder="ETH address" [(ngModel)]="worker.address">
-        </md-input-container>
+  <div class="workers">
+    <div fxLayout="row" fxLayoutAlign="space-between center" class="worker transition-fast" *ngFor="let worker of workers;"
+         [@controlledFadeOutHighlightAnimation]="worker.highlightAnimation" [@flashAnimation]="worker.flashAnimation">
+      <div class="left" fxLayout="column">
+        <h3 class="worker-name">{{worker.username}}</h3>
+        <p class="worker-address">{{worker.address}}</p>
       </div>
-      <button md-button (click)="addWorker()">Add</button>
+      <div class="right">
+        {{(worker.balance / decimals).toFixed(2)}} {{symbol}}
+      </div>
     </div>
   </div>
 
-  <h2 class="title">Oracle</h2>
-  <div>{{currentOracleAddress}}</div>
-
   <div fxLayout="row">
-    <div fxLayout="row" fxFlex="30">
-      <div fxLayout="column">
-        <md-input-container [color]="'accent'">
-          <input mdInput placeholder="Add oracle address" [(ngModel)]="newOracleAddress">
-        </md-input-container>
-      </div>
-      <button md-button (click)="addOracleAddress()">Add</button>
+    <div fxLayout="row" class="oracle-section">
+      <h3 class="title oracle-title">Oracle:</h3>
+      <p class="oracle-address" [@alternativeControlFlashAnimation]="oracleFlashAnimation">{{currentOracleAddress}}</p>
     </div>
   </div>
 
-  <h2 class="title">Crowdsale</h2>
-  <div>{{Crowdsale}}</div>
-
   <div fxLayout="row">
-    <div fxLayout="row" fxFlex="30">
-      <div fxLayout="column">
-        <md-input-container [color]="'accent'">
-          <input mdInput placeholder="Add crowdsale" [(ngModel)]="newCrowdsale">
-        </md-input-container>
+    <div fxLayout="row" class="crowdsale-section">
+      <h3 class="title crowdsale-title">Crowdsale:</h3>
+      <p class="crowdsale-address" [@alternativeControlFlashAnimation]="crowdsaleFlashAnimation">{{currentCrowdsale}}</p>
+    </div>
+  </div>
+
+  <div fxLayout="column" class="forms-section">
+    <h2 class="title">Actions</h2>
+    <div fxLayout="row" class="forms-section-content" fxLayoutWrap>
+      <div fxLayout="column" fxLayoutAlign="space-between" class="form">
+        <div fxLayout="column" fxLayoutAlign="center" class="inputs" *ngIf="!addWorkerLoading && !showWorkerWithSuchEthAddressExists"
+             [@shortEnterAnimation]>
+          <md-input-container [color]="'accent'">
+            <input mdInput placeholder="Jira username" [(ngModel)]="worker.login">
+          </md-input-container>
+          <md-input-container [color]="'accent'">
+            <input mdInput placeholder="ETH address" [(ngModel)]="worker.address">
+          </md-input-container>
+        </div>
+        <button md-button (click)="addWorker(worker.address)" class="confirm-button transition-fast" [@shortEnterAnimation]
+                *ngIf="!addWorkerLoading && !showWorkerWithSuchEthAddressExists"
+                [disabled]="!worker.login || worker.login.length === 0 ||
+                            !worker.address || worker.address.length === 0">
+          ADD WORKER
+        </button>
+        <div fxLayout="row" fxLayoutAlign="center center" class="form-additional-content-container" *ngIf="addWorkerLoading">
+          <md-spinner></md-spinner>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="center center" class="form-additional-content-container" *ngIf="showWorkerWithSuchEthAddressExists"
+             [@shortEnterAnimation]>
+          <p class="notification">A worker with this ETH address already exists</p>
+        </div>
       </div>
-      <button md-button (click)="addCrowdsale()">Add</button>
+
+      <div fxLayout="column" fxLayoutAlign="space-between" class="form">
+        <div fxLayout="column" fxLayoutAlign="center" class="inputs" *ngIf="!addOracleLoading && !showOracleExists"
+             [@shortEnterAnimation]>
+          <md-input-container [color]="'accent'">
+            <input mdInput placeholder="Oracle address" [(ngModel)]="newOracleAddress">
+          </md-input-container>
+        </div>
+        <button md-button (click)="addOracleAddress()" class="confirm-button transition-fast"
+                *ngIf="!addOracleLoading && !showOracleExists" [@shortEnterAnimation]
+                [disabled]="!newOracleAddress || newOracleAddress.length === 0">
+          ADD ORACLE
+        </button>
+        <div fxLayout="row" fxLayoutAlign="center center" class="form-additional-content-container" *ngIf="addOracleLoading">
+          <md-spinner></md-spinner>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="center center" class="form-additional-content-container" *ngIf="showOracleExists"
+             [@shortEnterAnimation]>
+          <p class="notification">The specified oracle address is equal to the current</p>
+        </div>
+      </div>
+
+      <div fxLayout="column" fxLayoutAlign="space-between" class="form">
+        <div fxLayout="column" fxLayoutAlign="center" class="inputs" *ngIf="!addCrowdsaleLoading && !showCrowdsaleExists"
+             [@shortEnterAnimation]>
+          <md-input-container [color]="'accent'">
+            <input mdInput placeholder="Crowdsale" [(ngModel)]="newCrowdsale">
+          </md-input-container>
+        </div>
+        <button md-button (click)="addCrowdsale()" class="confirm-button transition-fast"
+                *ngIf="!addCrowdsaleLoading && !showCrowdsaleExists" [@shortEnterAnimation]
+                [disabled]="!newCrowdsale || newCrowdsale.length === 0">
+          ADD CROWDSALE
+        </button>
+        <div fxLayout="row" fxLayoutAlign="center center" class="form-additional-content-container" *ngIf="addCrowdsaleLoading">
+          <md-spinner></md-spinner>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="center center" class="form-additional-content-container" *ngIf="showCrowdsaleExists"
+             [@shortEnterAnimation]>
+          <p class="notification">The specified crowdsale address is equal to the current</p>
+        </div>
+      </div>
     </div>
   </div>
 </div>

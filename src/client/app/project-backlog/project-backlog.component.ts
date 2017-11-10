@@ -7,7 +7,7 @@ import storyPoints_artifacts from '../../../../build/contracts/StoryPointsVoting
 import {MdDialog} from '@angular/material';
 import {ProjectBacklogAddTrackDialogComponent} from './project-backlog-add-track-dialog/project-backlog-add-track-dialog.component'
 import {JiraService} from '../core/jira.service'
-import {FlashAnimation, ShortEnterAnimation} from '../shared/animations'
+import {AlternativeControlFlashAnimation, ShortEnterAnimation} from '../shared/animations'
 
 import * as moment from 'moment';
 
@@ -15,7 +15,7 @@ import * as moment from 'moment';
   selector: 'app-project-backlog',
   templateUrl: './project-backlog.component.html',
   styleUrls: ['./project-backlog.component.css'],
-  animations: [FlashAnimation, ShortEnterAnimation]
+  animations: [AlternativeControlFlashAnimation, ShortEnterAnimation]
 })
 export class ProjectBacklogComponent implements OnInit {
   public items = [];
@@ -54,8 +54,10 @@ export class ProjectBacklogComponent implements OnInit {
               .then(response => {
                 console.log('getVotingBacklog response', response);
                 for (let i = 0; i < response.length; i++) {
+                  this.items[i].fields.votingWasNotCreated = response[i][0].length <= 0;
                   this.items[i].fields.totalSupply = this.parseBigNumber(response[i][1]);
                   this.items[i].fields.votingCount = this.parseBigNumber(response[i][2]);
+                  this.items[i].fields.isOpen = response[i][3];
                 }
                 return Promise.all(getVotingStoryPointsPromises)
               })
@@ -78,15 +80,7 @@ export class ProjectBacklogComponent implements OnInit {
     this.Backlog.deployed()
       .then(contractInstance => {
         console.log('id for voting', id);
-        contractInstance.getVote(id)
-          .then(getVoteResponse => {
-            console.log('this.parseBigNumber(getVoteResponse)', this.parseBigNumber(getVoteResponse));
-            if (this.parseBigNumber(getVoteResponse) === 0) {
-              return contractInstance.vote(id, {gas: 500000, from: web3.eth.accounts[0]});
-            } else {
-              alert('!');
-            }
-          })
+        contractInstance.vote(id, {gas: 500000, from: web3.eth.accounts[0]})
           .then(voteResponse => {
             console.log('vote response', voteResponse);
             this.getVotingToUpdate(contractInstance, id, index);
@@ -124,6 +118,18 @@ export class ProjectBacklogComponent implements OnInit {
           console.log("this.items[index] AFTER", this.items[index]);
         }
       })
+  }
+
+  calculateFirstVisibleItemIndex(): number {
+    let index;
+    let flag = true;
+    this.items.forEach((item, i) => {
+      if ((item.fields.votingWasNotCreated === true || item.fields.isOpen === true) && flag) {
+        index = i;
+        flag = !flag;
+      }
+    });
+    return index;
   }
 
   countTotalPercents(votingCount, totalSupply) {

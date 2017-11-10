@@ -3,7 +3,7 @@
 </div>
 <div fxLayout="row" fxLayoutAlign="center center" *ngIf="(!orders || orders.length === 0) && readyToDisplay" class="no-orders"
      [@shortEnterAnimation]>
-  <h2>No open orders!</h2>
+  <p>No open orders!</p>
 </div>
 <div *ngIf="readyToDisplay" [@shortEnterAnimation]>
   <div fxLayout="column" fxFill class="relative-container">

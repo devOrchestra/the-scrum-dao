@@ -22,7 +22,7 @@ contract Project is StandardToken, Ownable, TrustedOracle {
 
   StoryPointsVoting storyPointsVoting;
 
-  Crowdsale crowdsale;
+  Crowdsale public crowdsale;
 
   address trustedCrowdsale;
 

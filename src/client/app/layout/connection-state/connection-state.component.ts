@@ -43,9 +43,9 @@ export class ConnectionStateComponent implements OnInit {
     }, 5000);
     setTimeout(() => {
       this.backdropAnimation = "void";
-    }, 6000);
+    }, 5600);
     setTimeout(() => {
       this.backdrop = false;
-    }, 7000);
+    }, 6200);
   }
 }

@@ -1,5 +1,5 @@
-.title{
-  color:#000;
+.title {
+  color: #333333;
 }
 
 .main-spinner {
@@ -7,6 +7,111 @@
   height: 75px;
 }
 
+.workers {
+  margin-top: 16px;
+}
+
+.workers .worker {
+  padding: 8px 16px;
+}
+
+.workers .worker:hover {
+  background-color: #e1e1e1;
+}
+
+.workers .worker:not(first-child) {
+  border-left: 1px #e1e1e1 solid;
+  border-right: 1px #e1e1e1 solid;
+  border-bottom: 1px #e1e1e1 solid;
+}
+
+.workers .worker:first-child {
+  border-top: 1px #e1e1e1 solid;
+}
+
+.workers .worker .worker-address {
+  font-size: 13px;
+}
+
+.form {
+  border: 1px #e1e1e1 solid;
+  width: 267px;
+  margin-bottom: 16px;
+}
+
+.form {
+  margin-right: 32px;
+}
+
+.form:last-child {
+  margin-right: 0;
+}
+
+.form .inputs {
+  padding: 16px 32px;
+  height: 168px;
+}
+
+.form .confirm-button {
+  background-color: #e1e1e1;
+  border-radius: 0;
+}
+
+.oracle-section,
+.crowdsale-section {
+  padding: 8px 16px;
+  background-color: #333333;
+}
+
+.oracle-section {
+  margin-top: 32px;
+}
+
+.crowdsale-section {
+  margin-top: 1px;
+}
+
+.oracle-section .oracle-address,
+.crowdsale-section .crowdsale-address {
+  line-height: 24px;
+  margin-left: 8px;
+  color: white;
+}
+
+.oracle-section .oracle-title,
+.crowdsale-section .crowdsale-title {
+  font-size: 18px;
+  color: white;
+}
+
+.forms-section {
+  margin-top: 32px;
+}
+
+.forms-section .forms-section-content {
+  margin-top: 16px;
+}
+
+.forms-section .notification {
+  text-align: center;
+  color: #f30000;
+}
+
 /deep/ .main-spinner path {
+  stroke: #333333;
+}
+
+.forms-section .form-additional-content-container {
+  padding: 16px;
+  height: 204px;
+  width: 265px;
+}
+
+/deep/ .forms-section md-spinner {
+  width: 50px;
+  height: 50px;
+}
+
+/deep/ .forms-section md-spinner path {
   stroke: #333333;
 }

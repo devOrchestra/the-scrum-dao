@@ -1,6 +1,10 @@
 <div fxFlexFill fxLayout="row" fxLayoutAlign="center center" *ngIf="!readyToRenderPage">
   <md-spinner class="main-spinner"></md-spinner>
 </div>
+<div fxLayout="row" fxLayoutAlign="center center" *ngIf="(!contributors || contributors.length === 0) && readyToRenderPage"
+     class="no-contributors" [@shortEnterAnimation]>
+  <p>No contributors!</p>
+</div>
 <div fxFlex *ngIf="readyToRenderPage" [@shortEnterAnimation]>
   <div id="contributor-list" fxLayout="row" fxLayoutWrap fxLayoutAlign="center">
     <div class="item" *ngFor="let contributor of contributors | sortContributorsByBalancePipe" fxLayout="column" fxLayoutAlign="space-between" fxFlex>

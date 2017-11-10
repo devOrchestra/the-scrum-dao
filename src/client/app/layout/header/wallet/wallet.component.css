@@ -3,11 +3,9 @@
 }
 
 .balance {
-  padding: 8px 16px;
-  /*background-color: #239b23;*/
+  padding: 6px 12px;
   border: 1px white solid;
   border-radius: 6px;
-  height: 40px;
 }
 
 .balance-container .minus-tokens {
@@ -16,9 +14,10 @@
   margin-right: 16px;
 }
 
-.balance-container h2 {
+.balance-container .wallet-info {
   color: white;
   line-height: 22px;
+  font-size: 16px;
 }
 
 .form-container {

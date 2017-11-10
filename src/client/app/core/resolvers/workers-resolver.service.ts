@@ -19,34 +19,51 @@ export class WorkersResolverService {
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): void {
     this._web3Service.getConnectionState().subscribe(connectionState => {
       if (connectionState && (connectionState === "connected" || connectionState === "none")) {
-        let final = [];
-        let length;
+        let workersFinal = [];
+        let holdersFinal = [];
+        let workersLength;
+        let holdersLength;
         this.Project.setProvider(web3.currentProvider);
         return this.Project.deployed()
           .then(contractInstance => {
             contractInstance.getWorkersLength.call()
               .then(data => {
-                length = parseInt(data.toString(), 10);
-                const workerPromises = [];
-                for (let i = 0; i < length; i++) {
-                  workerPromises.push(contractInstance.getWorker.call(i));
+                workersLength = parseInt(data.toString(), 10);
+                const workersPromises = [];
+                for (let i = 0; i < workersLength; i++) {
+                  workersPromises.push(contractInstance.getWorker.call(i));
                 }
-                return Promise.all(workerPromises)
+                return Promise.all(workersPromises)
               })
               .then(value => {
-                final = value;
+                workersFinal = value;
+                console.log('workersFinal', workersFinal);
                 const balancePromises = [];
-                for (let i = 0; i < length; i++) {
+                for (let i = 0; i < workersLength; i++) {
                   balancePromises.push(contractInstance.balanceOf(value[i][0]))
                 }
                 return Promise.all(balancePromises)
               })
               .then(response => {
-                final.forEach((item, i) => {
+                workersFinal.forEach((item, i) => {
                   item.push(parseInt(response[i].toString(), 10))
                 });
-                this._workerService.setWorkers(final);
-                console.log("Workers resolver data:", final);
+                this._workerService.setWorkers(workersFinal);
+                console.log("Workers resolver data:", workersFinal);
+                return contractInstance.getHoldersLength()
+              })
+              .then(holdersLengthResponse => {
+                holdersLength = parseInt(holdersLengthResponse.toString(), 10);
+                console.log('holdersLength', holdersLength);
+                const holdersPromises = [];
+                for (let i = 0; i < holdersLength; i++) {
+                  holdersPromises.push(contractInstance.holders(i));
+                }
+                return Promise.all(holdersPromises)
+              })
+              .then(holdersResponse => {
+                holdersFinal = holdersResponse;
+                console.log('holdersFinal', holdersFinal);
               })
           });
       }
