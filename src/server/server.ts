@@ -34,7 +34,7 @@ if (cluster.isMaster) {
 
 } else {
   /**
-   * STARTS BACKGROUND TASKS HANDLER
+   * STARTS BACKGROUND ETHEREUM TASKS HANDLER
    */
   loadConfig(path.resolve(__dirname, 'config.ini'), (error, config) => {
     if (error) throw error;

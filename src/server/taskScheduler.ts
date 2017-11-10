@@ -15,7 +15,7 @@ class TaskScheduler {
   private scheduler: kue.Queue;
 
   // METHODS
-  public createTask(type: string, data: any, period: number, done): void {
+  public createTask(type: string, data: any, period: number, done: (error?: Error) => void): void {
     this.scheduler
       .create(type, data)
       .delay(period)

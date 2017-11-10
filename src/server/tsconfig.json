@@ -12,5 +12,8 @@
   },
   "exclude": [
     "node_modules"
+  ],
+  "include": [
+    "../../node_modules/types-ethereumjs-tx/index.d.ts"
   ]
 }
