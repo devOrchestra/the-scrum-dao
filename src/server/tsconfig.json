@@ -15,6 +15,8 @@
   ],
   "include": [
     "./",
-    "../../node_modules/types-ethereumjs-tx/index.d.ts"
+    "../../node_modules/types-ethereumjs-tx/index.d.ts",
+    "../../node_modules/types-ethereumjs-util/index.d.ts",
+    "../../node_modules/web3-typescript-typings/index.d.ts"
   ]
 }
