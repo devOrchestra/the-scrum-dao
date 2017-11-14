@@ -56,8 +56,8 @@ contract Project is StandardToken, Ownable, TrustedOracle {
   function transfer(address _to, uint256 _value) public returns (bool) {
     require(_to != address(0));
 
-    if (balanceOf(msg.sender) == 0) {
-      holders.push(msg.sender);
+    if (balanceOf(_to) == 0) {
+      holders.push(_to);
     }
     // SafeMath.sub will throw if there is not enough balance.
     balances[msg.sender] = balances[msg.sender].sub(_value);
