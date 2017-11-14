@@ -81,6 +81,7 @@ contract Crowdsale is TrustedOracle {
     uint256 weiAmount = order.value.mul(order.price);
     require(!order.isLocked && order.isOpen && order.value <= project.balanceOf(msg.sender));
 
+    order.isOpen = false;
     project.transferToCrowdsale(msg.sender, order.value);
     msg.sender.transfer(weiAmount);
     project.transfer(order.owner, order.value);
@@ -100,13 +101,13 @@ contract Crowdsale is TrustedOracle {
   function lockSellOrder(uint id){
     Order order = sellOrders[id];
     require(order.owner == msg.sender && order.isOpen);
-    order.isLocked == true;
+    order.isLocked = true;
   }
 
   function lockBuyOrder(uint id){
     Order order = buyOrders[id];
     require(order.owner == msg.sender && order.isOpen);
-    order.isLocked == true;
+    order.isLocked = true;
   }
 
   function closeSellOrder(uint id) onlyTrustedOracle {
