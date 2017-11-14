@@ -3,7 +3,7 @@ pragma solidity ^0.4.0;
 
 import 'zeppelin-solidity/contracts/math/SafeMath.sol';
 import './TrustedOracle.sol';
-import './StoryPointsVoting.sol';
+import './PlanningPoker.sol';
 
 
 contract ProductBacklog is TrustedOracle {
@@ -23,7 +23,6 @@ contract ProductBacklog is TrustedOracle {
   }
 
   modifier onlyTokenHolders {
-    bool result = false;
     require(project.balanceOf(msg.sender) > 0);
     _;
   }
@@ -59,5 +58,9 @@ contract ProductBacklog is TrustedOracle {
 
   function getVoting(string issue) public constant returns (string, uint, uint, bool) {
     return (votings[issue].issue, votings[issue].totalSupply, votings[issue].sum, votings[issue].isOpen);
+  }
+
+  function forTesting() public constant returns (uint) {
+    return project.balanceOf(msg.sender);
   }
 }

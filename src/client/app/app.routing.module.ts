@@ -3,7 +3,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {ShellComponent} from './layout/shell/shell.component';
 import {SettingsComponent} from './settings/settings.component';
 import {ProjectBacklogComponent} from './project-backlog/project-backlog.component';
-import {TaskListComponent} from './task-list/task-list.component';
+import {PlanningPokerComponent} from './planning-poker/planning-poker.component';
 import {ContributorListComponent} from './contributor-list/contributor-list.component';
 import {CrowdsaleComponent} from './crowdsale/crowdsale.component';
 
@@ -33,8 +33,8 @@ const routes: Routes = [
         component: ProjectBacklogComponent
       },
       {
-        path: 'task-list',
-        component: TaskListComponent
+        path: 'planning-poker',
+        component: PlanningPokerComponent
       },
       {
         path: 'contributor-list',

@@ -5,7 +5,7 @@ import 'zeppelin-solidity/contracts/token/StandardToken.sol';
 import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
 import 'zeppelin-solidity/contracts/math/SafeMath.sol';
 import './TrustedOracle.sol';
-import './StoryPointsVoting.sol';
+import './PlanningPoker.sol';
 import './Crowdsale.sol';
 
 
@@ -20,7 +20,7 @@ contract Project is StandardToken, Ownable, TrustedOracle {
 
   uint storyPointMultiplier = 1000000000000000000;
 
-  StoryPointsVoting storyPointsVoting;
+  PlanningPoker public planningPoker;
 
   Crowdsale public crowdsale;
 
@@ -66,8 +66,8 @@ contract Project is StandardToken, Ownable, TrustedOracle {
     return true;
   }
 
-  function initStoryPointsVoting(address _storyPointsVoting) onlyOwner {
-    storyPointsVoting = StoryPointsVoting(_storyPointsVoting);
+  function initPlanningPoker(address _planningPoker) onlyOwner {
+    planningPoker = PlanningPoker(_planningPoker);
   }
 
   function initCrowdsale(address _crowdsale) onlyOwner {
@@ -99,10 +99,10 @@ contract Project is StandardToken, Ownable, TrustedOracle {
 
   function payAward(string username, string issue) public onlyTrustedOracle {
     address recepient = usernames[username];
-    var (id, count, sum, isOpen, awardPaid) = storyPointsVoting.getVoting(issue);
+    var (id, count, sum, isOpen, awardPaid) = planningPoker.getVoting(issue);
     require(!isOpen);
     if (recepient != 0 && count > 0 && sum > 0 && !awardPaid) {
-      storyPointsVoting.markVotingAsPaid(issue);
+      planningPoker.markVotingAsPaid(issue);
       uint256 awardSupply = sum.mul(storyPointMultiplier).div(count);
       balances[recepient] = balances[recepient].add(awardSupply);
       totalSupply = totalSupply.add(awardSupply);

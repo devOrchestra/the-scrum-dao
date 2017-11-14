@@ -8,7 +8,7 @@
   font-weight: bold;
 }
 
-#task-list .item {
+#planning-poker .item {
   width: calc(100% - 16px);
   min-width: calc(100% - 16px);
   max-width: calc(100% - 16px);
@@ -20,29 +20,29 @@
   border-top: 1px #e1e1e1 solid;
 }
 
-#task-list .item {
+#planning-poker .item {
   border-left: 1px #e1e1e1 solid;
   border-right: 1px #e1e1e1 solid;
   border-bottom: 1px #e1e1e1 solid;
 }
 
-#task-list .item .left-side * {
+#planning-poker .item .left-side * {
   margin-left: 16px;
 }
 
-#task-list .item .right-side * {
+#planning-poker .item .right-side * {
   margin-left: 8px;
 }
 
-#task-list .item .left-side .first {
+#planning-poker .item .left-side .first {
   margin-left: 0;
 }
 
-#task-list .item .storyPointsUserChoiceBtn * {
+#planning-poker .item .storyPointsUserChoiceBtn * {
   margin-left: 0;
 }
 
-#task-list .item .story-points-user-choice-cloud {
+#planning-poker .item .story-points-user-choice-cloud {
   font-size: 12px;
   border-radius: 10px;
   padding: 5px 10px;
@@ -52,7 +52,7 @@
   color: white;
 }
 
-#task-list .item .assignee-cloud {
+#planning-poker .item .assignee-cloud {
   font-size: 12px;
   border-radius: 10px;
   padding: 5px 10px;
@@ -61,18 +61,18 @@
   color: white;
 }
 
-#task-list .item .story-points-user-choice-cloud i {
+#planning-poker .item .story-points-user-choice-cloud i {
   margin-left: 4px;
 }
 
-#task-list .item .story-points-user-choice-cloud span,
-#task-list .item .story-points-user-choice-cloud div,
-#task-list .item .story-points-cloud span {
+#planning-poker .item .story-points-user-choice-cloud span,
+#planning-poker .item .story-points-user-choice-cloud div,
+#planning-poker .item .story-points-cloud span {
   margin-left: 0;
 }
 
-#task-list .item .story-points-user-choice-cloud md-spinner,
-#task-list .item .story-points-cloud md-spinner {
+#planning-poker .item .story-points-user-choice-cloud md-spinner,
+#planning-poker .item .story-points-cloud md-spinner {
   margin-left: 0 !important;
   height: 14px;
 }
@@ -86,10 +86,10 @@
   stroke: #333333;
 }
 
-/deep/ #task-list .item .story-points-user-choice-cloud md-spinner path {
+/deep/ #planning-poker .item .story-points-user-choice-cloud md-spinner path {
   stroke: white !important;
 }
 
-/deep/ #task-list .item .story-points-cloud md-spinner path {
+/deep/ #planning-poker .item .story-points-cloud md-spinner path {
   stroke: #333333 !important;
 }

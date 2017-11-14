@@ -6,7 +6,7 @@
   <p>No open tasks!</p>
 </div>
 <div fxLayout="column" fxFill *ngIf="readyToDisplay" [@shortEnterAnimation]>
-  <div id="task-list" fxLayout="column">
+  <div id="project-backlog" fxLayout="column">
     <div class="item-wrapper" *ngFor="let item of items; let index = index">
       <div class="item" fxLayout="row" fxLayoutAlign="space-between" *ngIf="item.fields.votingWasNotCreated || item.fields.isOpen"
            [ngClass]="{'item-border-top': index === calculateFirstVisibleItemIndex()}">

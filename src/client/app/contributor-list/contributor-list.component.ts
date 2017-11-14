@@ -15,6 +15,7 @@ export class ContributorListComponent implements OnInit {
   public readyToRenderPage = false;
   public totalBalance: number;
   public contributors;
+  public holders = [];
   public tokenSymbol: string;
   public decimals: number;
 
@@ -23,73 +24,77 @@ export class ContributorListComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    console.log(web3.eth.accounts[0]);
     let workersWereSet = false;
     this.Project.setProvider(web3.currentProvider);
     this._workerService.getWorkers().subscribe(data => {
-      let currentWorkersArr;
-      const clone = [];
-      if (data) {
-        currentWorkersArr = data;
-        data.forEach(item => {
-          clone.push(item);
-        });
-        clone.forEach((item, i) => {
-          clone[i] = this.formatWorkers(item)
-        });
-        if (!this._workerService.workersAvatarsWereSet && !workersWereSet) {
-          this._workerService.getContributors()
-            .then(response => {
-              response.forEach((responseItem, i) => {
-                clone.forEach((cloneItem, j) => {
-                  if (responseItem.displayName.toLowerCase() === cloneItem.username.toLowerCase() ||
-                    responseItem.name.toLowerCase() === cloneItem.username.toLowerCase()) {
-                    cloneItem.avatar = responseItem.avatarUrl;
-                    currentWorkersArr[j].push(responseItem.avatarUrl);
-                  }
+      this._workerService.getHolders().subscribe(holders => {
+        let currentWorkersArr;
+        const clone = [];
+        if (data && holders) {
+          holders.forEach((item, i) => {
+            this.holders[i] = this.formatHolders(item);
+          });
+          currentWorkersArr = data;
+          data.forEach(item => {
+            clone.push(item);
+          });
+          clone.forEach((item, i) => {
+            clone[i] = this.formatWorkers(item);
+          });
+          if (!this._workerService.workersAvatarsWereSet && !workersWereSet) {
+            this._workerService.getContributors()
+              .then(response => {
+                response.forEach((responseItem, i) => {
+                  clone.forEach((cloneItem, j) => {
+                    if (responseItem.displayName.toLowerCase() === cloneItem.username.toLowerCase() ||
+                      responseItem.name.toLowerCase() === cloneItem.username.toLowerCase()) {
+                      cloneItem.avatar = responseItem.avatarUrl;
+                      currentWorkersArr[j].push(responseItem.avatarUrl);
+                    }
+                  });
                 });
+                this._workerService.workersAvatarsWereSet = true;
+                this.contributors = clone;
+                return this.Project.deployed();
+              })
+              .then(contractInstance => {
+                contractInstance.totalSupply()
+                  .then(totalSupplyResponse => {
+                    this.totalBalance = this.parseBigNumber(totalSupplyResponse);
+                    return contractInstance.symbol()
+                  })
+                  .then(symbol => {
+                    this.tokenSymbol = symbol;
+                    return contractInstance.decimals();
+                  })
+                  .then(decimalsResponse => {
+                    this.decimals = this.countDecimals(decimalsResponse);
+                    this.totalBalance = this.totalBalance / this.decimals;
+                    this._workerService.setTotalBalance(this.totalBalance);
+                    this.contributors.forEach(item => {
+                      item.balance = item.balance / this.decimals;
+                    });
+                    currentWorkersArr.forEach(item => {
+                      item[2] = item[2] / this.decimals;
+                    });
+                    this._workerService.setWorkers(currentWorkersArr);
+                    workersWereSet = true;
+                  })
+              })
+          } else {
+            this.contributors = clone;
+            this.totalBalance = this._workerService.getTotalBalance();
+            this.Project.deployed()
+              .then(contractInstance => {
+                return contractInstance.symbol()
+              })
+              .then(symbol => {
+                this.tokenSymbol = symbol;
+                this.readyToRenderPage = true;
               });
-              this._workerService.workersAvatarsWereSet = true;
-              this.contributors = clone;
-              return this.Project.deployed();
-            })
-            .then(contractInstance => {
-              contractInstance.totalSupply()
-                .then(totalSupplyResponse => {
-                  this.totalBalance = this.parseBigNumber(totalSupplyResponse);
-                  return contractInstance.symbol()
-                })
-                .then(symbol => {
-                  this.tokenSymbol = symbol;
-                  return contractInstance.decimals();
-                })
-                .then(decimalsResponse => {
-                  this.decimals = this.countDecimals(decimalsResponse);
-                  this.totalBalance = this.totalBalance / this.decimals;
-                  this._workerService.setTotalBalance(this.totalBalance);
-                  this.contributors.forEach(item => {
-                    item.balance = item.balance / this.decimals;
-                  });
-                  currentWorkersArr.forEach(item => {
-                    item[2] = item[2] / this.decimals;
-                  });
-                  this._workerService.setWorkers(currentWorkersArr);
-                  workersWereSet = true;
-                })
-            })
-        } else {
-          this.contributors = clone;
-          this.totalBalance = this._workerService.getTotalBalance();
-          this.Project.deployed()
-            .then(contractInstance => {
-              return contractInstance.symbol()
-            })
-            .then(symbol => {
-              this.tokenSymbol = symbol;
-              this.readyToRenderPage = true;
-            });
+          }
         }
-      }
+      })
     });
   }
 
@@ -112,9 +117,24 @@ export class ContributorListComponent implements OnInit {
     return obj;
   }
 
+  formatHolders(arr) {
+    const obj = {
+      walletAddress: null,
+      balance: null,
+    };
+    let count = 0;
+    for (const prop in obj) {
+      if (obj.hasOwnProperty(prop)) {
+        if (arr[count] !== undefined) {
+          obj[prop] = arr[count];
+          count++
+        }
+      }
+    }
+    return obj;
+  }
+
   countBalance(contributorBalance) {
-    console.log('contributorBalance', contributorBalance);
-    console.log('this.totalBalance', this.totalBalance);
     const calcVal = (contributorBalance * 100 / this.totalBalance).toFixed(2);
     const finalPercentsVal = parseInt(calcVal.toString(), 10);
     if (isNaN(finalPercentsVal)) {

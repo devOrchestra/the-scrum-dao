@@ -1,22 +1,22 @@
 import {Component, OnInit} from '@angular/core';
 import {JiraService} from '../core/jira.service'
-import storyPointsVoting_artifacts from '../../../../build/contracts/StoryPointsVoting.json';
+import planningPoker_artifacts from '../../../../build/contracts/PlanningPoker.json';
 import {default as contract} from 'truffle-contract'
 import * as _ from 'lodash'
 import {AlternativeControlFlashAnimation, ShortEnterAnimation} from '../shared/animations'
 
 @Component({
-  selector: 'app-task-list',
-  templateUrl: './task-list.component.html',
-  styleUrls: ['./task-list.component.css'],
+  selector: 'app-planning-poker',
+  templateUrl: './planning-poker.component.html',
+  styleUrls: ['./planning-poker.component.css'],
   animations: [AlternativeControlFlashAnimation, ShortEnterAnimation]
 })
-export class TaskListComponent implements OnInit {
+export class PlanningPokerComponent implements OnInit {
   public storyPointsOptions: number[] = [1, 2, 3, 5, 8, 13, 20, 40, 100];
   public tasks = [];
   public readyToDisplay = false;
 
-  StoryPointsVoting = contract(storyPointsVoting_artifacts);
+  PlanningPoker = contract(planningPoker_artifacts);
 
   constructor(public _jiraService: JiraService) {
   }
@@ -27,10 +27,10 @@ export class TaskListComponent implements OnInit {
     this._jiraService.getIssues().subscribe(data => {
       if (data) {
         this.tasks = _.cloneDeep(data);
-        this.StoryPointsVoting.setProvider(web3.currentProvider);
-        this.StoryPointsVoting.deployed().then(storyPointsVotingInstance => {
+        this.PlanningPoker.setProvider(web3.currentProvider);
+        this.PlanningPoker.deployed().then(planningPokerInstance => {
           this.tasks.forEach(item => {
-            getVotingPromises.push(storyPointsVotingInstance.getVoting(item.key));
+            getVotingPromises.push(planningPokerInstance.getVoting(item.key));
             item.votingLoading = true;
             item.storyPointsLoading = true;
           });
@@ -47,7 +47,7 @@ export class TaskListComponent implements OnInit {
                 this.tasks[i].fields.votesCount = response[i][1];
                 this.tasks[i].fields.votesSum = response[i][2];
                 this.tasks[i].fields.isOpen = response[i][3];
-                getVotePromises.push(storyPointsVotingInstance.getVote(this.tasks[i].key, {from: web3.eth.accounts[0]}));
+                getVotePromises.push(planningPokerInstance.getVote(this.tasks[i].key, {from: web3.eth.accounts[0]}));
               });
               return Promise.all(getVotePromises)
             })
@@ -67,11 +67,11 @@ export class TaskListComponent implements OnInit {
   changeStoryPointsUserChoice(item, id: string, val: number): void {
     item.votingLoading = true;
     item.storyPointsLoading = true;
-    this.StoryPointsVoting.deployed()
-      .then(storyPointsVotingInstance => {
-        storyPointsVotingInstance.vote(id, val, {from: web3.eth.accounts[0], gas: 235000})
+    this.PlanningPoker.deployed()
+      .then(planningPokerInstance => {
+        planningPokerInstance.vote(id, val, {from: web3.eth.accounts[0], gas: 235000})
         .then(res => {
-          return storyPointsVotingInstance.getVoting(item.key)
+          return planningPokerInstance.getVoting(item.key)
         })
         .then(response => {
           response[1] = this.parseBigNumber(response[1]);

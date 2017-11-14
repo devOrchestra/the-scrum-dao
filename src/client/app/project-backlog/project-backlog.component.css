@@ -8,7 +8,7 @@
   font-weight: bold;
 }
 
-#task-list .item {
+#project-backlog .item {
   width: calc(100% - 16px);
   min-width: calc(100% - 16px);
   max-width: calc(100% - 16px);
@@ -20,26 +20,26 @@
   border-top: 1px #e1e1e1 solid;
 }
 
-#task-list .item {
+#project-backlog .item {
   border-left: 1px #e1e1e1 solid;
   border-right: 1px #e1e1e1 solid;
   border-bottom: 1px #e1e1e1 solid;
 }
 
-#task-list .item .left-side * {
+#project-backlog .item .left-side * {
   margin-left: 16px;
 }
 
-#task-list .item .right-side * {
+#project-backlog .item .right-side * {
   margin-left: 8px;
 }
 
-#task-list .item .left-side .first,
-#task-list .item .vote-cloud span {
+#project-backlog .item .left-side .first,
+#project-backlog .item .vote-cloud span {
   margin-left: 0;
 }
 
-#task-list .item .vote-cloud {
+#project-backlog .item .vote-cloud {
   font-size: 12px;
   border-radius: 10px;
   padding: 5px 10px;
@@ -49,7 +49,7 @@
   color: white;
 }
 
-#task-list .item .assignee-cloud {
+#project-backlog .item .assignee-cloud {
   font-size: 12px;
   border-radius: 10px;
   padding: 5px 10px;
@@ -58,14 +58,14 @@
   color: white;
 }
 
-#task-list .item .story-points-cloud span,
-#task-list .item .story-points-cloud md-spinner,
-#task-list .item .vote-cloud md-spinner {
+#project-backlog .item .story-points-cloud span,
+#project-backlog .item .story-points-cloud md-spinner,
+#project-backlog .item .vote-cloud md-spinner {
   margin-left: 0;
 }
 
-#task-list .item .story-points-cloud md-spinner,
-#task-list .item .vote-cloud md-spinner {
+#project-backlog .item .story-points-cloud md-spinner,
+#project-backlog .item .vote-cloud md-spinner {
   height: 14px;
 }
 
@@ -87,15 +87,15 @@
   stroke: #333333;
 }
 
-/deep/ #task-list .item .vote-cloud md-spinner path {
+/deep/ #project-backlog .item .vote-cloud md-spinner path {
   stroke: white !important;
 }
 
-/deep/ #task-list .item .story-points-cloud md-spinner path {
+/deep/ #project-backlog .item .story-points-cloud md-spinner path {
   stroke: #333333 !important;
 }
 
-/deep/ #task-list .story-points-dropdown .mat-select-trigger {
+/deep/ #project-backlog .story-points-dropdown .mat-select-trigger {
   width: 50px;
   min-width: 50px;
   max-width: 50px;

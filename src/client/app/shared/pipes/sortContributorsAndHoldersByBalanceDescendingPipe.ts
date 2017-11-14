@@ -1,9 +1,9 @@
 import { Pipe, PipeTransform } from "@angular/core"
 
 @Pipe({
-  name: 'sortContributorsByBalancePipe'
+  name: 'sortContributorsAndHoldersByBalanceDescendingPipe'
 })
-export class SortContributorsByBalancePipe implements PipeTransform {
+export class SortContributorsAndHoldersByBalanceDescendingPipe implements PipeTransform {
   transform(value: any, args?: any): any {
     return value.sort((a: any, b: any) => {
       if (a.balance >= b.balance) {

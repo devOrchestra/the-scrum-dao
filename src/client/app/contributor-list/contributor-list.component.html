@@ -7,12 +7,13 @@
 </div>
 <div fxFlex *ngIf="readyToRenderPage" [@shortEnterAnimation]>
   <div id="contributor-list" fxLayout="row" fxLayoutWrap fxLayoutAlign="center">
-    <div class="item" *ngFor="let contributor of contributors | sortContributorsByBalancePipe" fxLayout="column" fxLayoutAlign="space-between" fxFlex>
+    <div class="item" *ngFor="let contributor of contributors | sortContributorsAndHoldersByBalanceDescendingPipe"
+         fxLayout="column" fxLayoutAlign="space-between" fxFlex>
       <div class="main-content" fxLayout="column" fxLayoutAlign="space-between center">
         <div fxLayout="column" fxLayoutAlign="space-between center">
           <img *ngIf="contributor.avatar" class="avatar unselectable" src="{{contributor.avatar}}" alt="">
           <div *ngIf="!contributor.avatar" class="fake-avatar unselectable" fxLayout="row" fxLayoutAlign="center center">
-            {{contributor.username[0]}}
+            {{contributor.username[0].toUpperCase()}}
           </div>
           <div class="info" fxLayout="column" fxLayoutAlign="center center">
             <h2>{{contributor.username}}</h2>
@@ -24,6 +25,28 @@
       <div>
         <p class="caption">DEVELOPER</p>
         <div class="bottom-line"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="holders-list" fxLayout="row" fxLayoutWrap fxLayoutAlign="center">
+    <div *ngFor="let holder of holders | sortContributorsAndHoldersByBalanceDescendingPipe">
+      <div class="item" fxLayout="column" fxLayoutAlign="space-between" fxFlex *ngIf="holder.balance > 0">
+        <div class="main-content" fxLayout="column" fxLayoutAlign="space-between center">
+          <div fxLayout="column" fxLayoutAlign="space-between center">
+            <div class="fake-avatar unselectable" fxLayout="row" fxLayoutAlign="center center">
+              H
+            </div>
+            <div class="info" fxLayout="column" fxLayoutAlign="center center">
+              <h4>{{holder.balance.toFixed(2)}} {{tokenSymbol}} ({{countBalance(holder.balance)}}%)</h4>
+              <p class="wallet-address">{{holder.walletAddress}}</p>
+            </div>
+          </div>
+        </div>
+        <div>
+          <p class="caption">HOLDER</p>
+          <div class="bottom-line"></div>
+        </div>
       </div>
     </div>
   </div>

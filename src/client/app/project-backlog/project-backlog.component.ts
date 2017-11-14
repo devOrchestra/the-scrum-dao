@@ -3,7 +3,7 @@ import {default as Web3} from 'web3';
 import {default as contract} from 'truffle-contract'
 import * as _ from 'lodash';
 import backlog_artifacts from '../../../../build/contracts/ProductBacklog.json';
-import storyPoints_artifacts from '../../../../build/contracts/StoryPointsVoting.json';
+import planningPoker_artifacts from '../../../../build/contracts/PlanningPoker.json';
 import {MdDialog} from '@angular/material';
 import {ProjectBacklogAddTrackDialogComponent} from './project-backlog-add-track-dialog/project-backlog-add-track-dialog.component'
 import {JiraService} from '../core/jira.service'
@@ -22,7 +22,7 @@ export class ProjectBacklogComponent implements OnInit {
   public readyToDisplay = false;
 
   Backlog = contract(backlog_artifacts);
-  StoryPoints = contract(storyPoints_artifacts);
+  StoryPoints = contract(planningPoker_artifacts);
 
   constructor(
     public dialog: MdDialog,

@@ -7,7 +7,7 @@ import './Project.sol';
 import './TrustedOracle.sol';
 
 
-contract StoryPointsVoting is Ownable, TrustedOracle {
+contract PlanningPoker is Ownable, TrustedOracle {
   using SafeMath for uint;
   mapping (string => Voting) votings;
 
@@ -39,7 +39,7 @@ contract StoryPointsVoting is Ownable, TrustedOracle {
     _;
   }
 
-  function StoryPointsVoting(address _projectContract){
+  function PlanningPoker(address _projectContract){
     project = Project(_projectContract);
     projectAddress = _projectContract;
   }

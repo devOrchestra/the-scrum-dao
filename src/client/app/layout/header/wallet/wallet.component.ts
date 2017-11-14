@@ -19,7 +19,6 @@ export class WalletComponent implements OnInit {
   readyToDisplay = false;
   sendTokensObj: { [key: string]: string | number } = {};
   workersAddresses: string[] = [];
-  isSendTokensRecipientExists = false;
   sentTokens;
   decimals: number;
   showSentTokens = false;
@@ -59,6 +58,7 @@ export class WalletComponent implements OnInit {
 
   sendTokens(): void {
     if (this.sendTokensObj.address && this.sendTokensObj.value && this.sendTokensObj.value > 0) {
+      console.log("START");
       this.sendTokensLoading = true;
       this.sendTokensObj.fadeAnimation = "void";
       this.Project.deployed()
@@ -85,23 +85,12 @@ export class WalletComponent implements OnInit {
                 this.showSentTokens = false;
               }, 6000);
             })
-            .catch(() => {
+            .catch((err) => {
+              console.log("ERR", err);
               this.sendTokensLoading = false;
             })
         })
     }
-  }
-
-  checkIsRecipientExists(): void {
-    let flag = true;
-    this.workersAddresses.forEach(item => {
-      if (flag && item === this.sendTokensObj.address) {
-        this.isSendTokensRecipientExists = true;
-        flag = false
-      } else if (flag && this.isSendTokensRecipientExists && item !== this.sendTokensObj.address) {
-        this.isSendTokensRecipientExists = false;
-      }
-    });
   }
 
   countDecimals(numberOfNulls: number): number {
