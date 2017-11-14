@@ -70,16 +70,15 @@ export class WorkersResolverService {
               })
               .then(holdersResponse => {
                 const balancePromises = [];
-                holdersAddresses = holdersResponse;
-                // holdersAddresses = _.remove(_.cloneDeep(holdersResponse), holder => {
-                //   let isNotInWorkers = true;
-                //   workersFinal.forEach(worker => {
-                //     if (holder === worker[0]) {
-                //       isNotInWorkers = false;
-                //     }
-                //   });
-                //   return isNotInWorkers;
-                // });
+                holdersAddresses = _.remove(_.cloneDeep(holdersResponse), holder => {
+                  let isNotInWorkers = true;
+                  workersFinal.forEach(worker => {
+                    if (holder === worker[0]) {
+                      isNotInWorkers = false;
+                    }
+                  });
+                  return isNotInWorkers;
+                });
                 for (let i = 0; i < holdersLength; i++) {
                   balancePromises.push(contractInstance.balanceOf(holdersResponse[i]))
                 }
