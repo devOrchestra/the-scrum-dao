@@ -13,11 +13,7 @@ contract Crowdsale is TrustedOracle {
 
   Order [] sellOrders;
 
-  uint minSellPrice;
-
   Order [] buyOrders;
-
-  uint maxBuyPrice = 0;
 
   struct Order {
   address owner;
@@ -34,15 +30,6 @@ contract Crowdsale is TrustedOracle {
 
   function addSellOrder(uint256 _value, uint256 _price){
     require(_price > 0 && _value > 0);
-    if (sellOrders.length == 0) {
-      minSellPrice = _price;
-    }
-    else {
-      require(_price > maxBuyPrice);
-      if (_price < minSellPrice) {
-        minSellPrice = _price;
-      }
-    }
     project.transferToCrowdsale(msg.sender, _value);
     sellOrders.push(Order(msg.sender, _value, _price, sellOrders.length - 1, true, false));
   }
@@ -57,12 +44,6 @@ contract Crowdsale is TrustedOracle {
 
   function addBuyOrder(uint _price) public payable {
     require(_price > 0);
-    if (sellOrders.length != 0) {
-      require(minSellPrice > _price);
-    }
-    if (_price > maxBuyPrice) {
-      maxBuyPrice = _price;
-    }
     uint256 weiAmount = msg.value;
     uint256 _value = weiAmount.div(_price);
     buyOrders.push(Order(msg.sender, _value, _price, buyOrders.length - 1, true, false));
