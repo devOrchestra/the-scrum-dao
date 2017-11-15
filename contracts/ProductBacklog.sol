@@ -14,12 +14,12 @@ contract ProductBacklog is TrustedOracle {
   Project project;
 
   struct Voting {
-  string issue;
-  uint sum;
-  uint256 totalSupply;
-  bool isValid;
-  bool isOpen;
-  mapping (address => uint256) votes;
+    string issue;
+    uint sum;
+    uint256 totalSupply;
+    bool isValid;
+    bool isOpen;
+    mapping (address => uint256) votes;
   }
 
   modifier onlyTokenHolders {
@@ -27,7 +27,7 @@ contract ProductBacklog is TrustedOracle {
     _;
   }
 
-  function ProductBacklog(address _projectContract){
+  function ProductBacklog(address _projectContract) public {
     project = Project(_projectContract);
   }
 

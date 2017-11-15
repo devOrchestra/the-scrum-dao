@@ -9,9 +9,9 @@ contract TrustedOracle {
     _;
   }
 
-  function TrustedOracle(){}
+  function TrustedOracle() public {}
 
-  function addTrustedOracle(address _trustedOracle) external{
+  function addTrustedOracle(address _trustedOracle) external {
     trustedOracle = _trustedOracle;
   }
 }

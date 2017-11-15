@@ -31,8 +31,8 @@ contract Project is StandardToken, Ownable, TrustedOracle {
   address[] public holders;
 
   struct Worker {
-  address _address;
-  string username;
+    address _address;
+    string username;
   }
 
   mapping (string => address) usernames;
@@ -42,7 +42,7 @@ contract Project is StandardToken, Ownable, TrustedOracle {
     _;
   }
 
-  function Project(string _name, string _symbol, uint8 _decimals) {
+  function Project(string _name, string _symbol, uint8 _decimals) public {
     name = _name;
     symbol = _symbol;
     decimals = _decimals;
@@ -104,15 +104,15 @@ contract Project is StandardToken, Ownable, TrustedOracle {
     return true;
   }
 
-  function getWorkersLength() public constant returns (uint){
+  function getWorkersLength() public constant returns (uint) {
     return workers.length;
   }
 
-  function getWorker(uint i) public constant returns (address, string){
+  function getWorker(uint i) public constant returns (address, string) {
     return (workers[i]._address, workers[i].username);
   }
 
-  function getHoldersLength() public constant returns (uint){
+  function getHoldersLength() public constant returns (uint) {
     return holders.length;
   }
 

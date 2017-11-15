@@ -16,13 +16,13 @@ contract PlanningPoker is Ownable, TrustedOracle {
   address projectAddress;
 
   struct Voting {
-  string issue;
-  uint votesCount;
-  uint sum;
-  bool isValid;
-  bool isOpen;
-  bool awardPaid;
-  mapping (address => uint) votes;
+    string issue;
+    uint votesCount;
+    uint sum;
+    bool isValid;
+    bool isOpen;
+    bool awardPaid;
+    mapping (address => uint) votes;
   }
 
   modifier onlyTeem {
@@ -39,7 +39,7 @@ contract PlanningPoker is Ownable, TrustedOracle {
     _;
   }
 
-  function PlanningPoker(address _projectContract){
+  function PlanningPoker(address _projectContract) public {
     project = Project(_projectContract);
     projectAddress = _projectContract;
   }
@@ -60,8 +60,7 @@ contract PlanningPoker is Ownable, TrustedOracle {
     require(votings[issue].isOpen);
     if (votings[issue].votes[msg.sender] > 0) {
       votings[issue].sum = votings[issue].sum.sub(votings[issue].votes[msg.sender]).add(points);
-    }
-    else {
+    } else {
       votings[issue].sum = votings[issue].sum.add(points);
       votings[issue].votesCount++;
     }
@@ -72,7 +71,7 @@ contract PlanningPoker is Ownable, TrustedOracle {
     return votings[issue].votes[msg.sender];
   }
 
-  function getVoting(string issue) public constant returns (string, uint, uint, bool, bool){
+  function getVoting(string issue) public constant returns (string, uint, uint, bool, bool) {
     return (votings[issue].issue, votings[issue].votesCount, votings[issue].sum, votings[issue].isOpen, votings[issue].awardPaid);
   }
 

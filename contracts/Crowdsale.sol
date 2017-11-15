@@ -11,20 +11,20 @@ contract Crowdsale is TrustedOracle {
 
   Project project;
 
-  Order [] sellOrders;
+  Order[] sellOrders;
 
-  Order [] buyOrders;
+  Order[] buyOrders;
 
   struct Order {
-  address owner;
-  uint256 value;
-  uint256 price;
-  uint256 id;
-  bool isOpen;
-  bool isLocked;
+    address owner;
+    uint256 value;
+    uint256 price;
+    uint256 id;
+    bool isOpen;
+    bool isLocked;
   }
 
-  function Crowdsale(address _projectContract){
+  function Crowdsale(address _projectContract) public {
     project = Project(_projectContract);
   }
 
@@ -90,19 +90,19 @@ contract Crowdsale is TrustedOracle {
     order.owner.transfer(weiAmount);
   }
 
-  function getSellOrderLength() public constant returns (uint){
+  function getSellOrderLength() public constant returns (uint) {
     return sellOrders.length;
   }
 
-  function getSellOrder(uint id) public constant returns (address, uint256, uint256, uint256, bool, bool){
+  function getSellOrder(uint id) public constant returns (address, uint256, uint256, uint256, bool, bool) {
     return (sellOrders[id].owner, sellOrders[id].value, sellOrders[id].price, sellOrders[id].id, sellOrders[id].isOpen, sellOrders[id].isLocked);
   }
 
-  function getBuyOrderLength() public constant returns (uint){
+  function getBuyOrderLength() public constant returns (uint) {
     return buyOrders.length;
   }
 
-  function getBuyOrder(uint id) public constant returns (address, uint256, uint256, uint256, bool, bool){
+  function getBuyOrder(uint id) public constant returns (address, uint256, uint256, uint256, bool, bool) {
     return (buyOrders[id].owner, buyOrders[id].value, buyOrders[id].price, buyOrders[id].id, buyOrders[id].isOpen, buyOrders[id].isLocked);
   }
 }
