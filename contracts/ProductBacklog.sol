@@ -31,7 +31,7 @@ contract ProductBacklog is TrustedOracle {
     project = Project(_projectContract);
   }
 
-  function addVoting(string issue) external onlyTokenHolders {
+  function addVoting(string issue) external onlyTrustedOracle {
     votings[issue] = Voting(issue, 0, 0, true, true);
   }
 

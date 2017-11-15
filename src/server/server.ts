@@ -39,7 +39,10 @@ if (cluster.isMaster) {
   loadConfig(path.resolve(__dirname, 'config.ini'), (error, config) => {
     if (error) throw error;
 
-    new TaskHandler(config);
+    new TaskHandler(config)
+      .init((error)=>{
+        if (error) throw error;
+      });
   });
 }
 

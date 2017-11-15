@@ -38,7 +38,7 @@ Promise
     projectContract = contracts[0];
     planningPokerContact = contracts[1];
     crowdsaleContract = contracts[2];
-    productBacklogContract = contracts[3]
+    productBacklogContract = contracts[3];
     return Promise.all([
       projectContract.initPlanningPoker(planningPokerContact.address, {from: accounts[0], gas: 150000}),
       projectContract.initCrowdsale(crowdsaleContract.address, {from: accounts[0], gas: 150000})
