@@ -30,10 +30,36 @@ In our plans do integration with most popular project management systems, eg JIR
 #Oracle
 
 #Project Contract
-The main contract implements ERC20 interface, store Workers and Holders arrays, pay award. 
+The main contract implements ERC20 interface. New Tokens generate only when some work has been done and represent the contribution of each participant.
+
+Project Owner deploys contracts, link all of them to Project contract and add Workers
+
+    struct Worker {
+      address _address;
+      string username; 	 //JIRA username
+      }
+
+Owner also initializes trustedOracle account, which can call payAward function. This is done for security purposes because oracle private key stored on the server and can be compromised but with this separations, it's not critical.
 
 #PlanningPoker Contract
 
-#ProductBacklog Contract
+Planning Poker is the main concept of scrum methodology. Team members estimate tasks and the final average result represents the award amount.
+When a new task added to a project management tool trustedOracle initializes new voting:
 
+      struct Voting {
+      string issue;
+      uint votesCount;
+      uint sum;
+      bool isValid;
+      bool isOpen;
+      bool awardPaid;
+      mapping (address => uint) votes;
+      }
+
+#ProductBacklog Contract
+Very similar to PlanningPoker. The first difference is any Tokens Holder can vote. The second is the weight of a vote depends on Holder's balance and the final result is calculated as a percentage of the total supply of Tokens.
 #Crowdsale Contract
+This contract allows Workers to sell the earned Tokens to anyone. It works like usual order book but with some limitations:
+ - You should fully fill order
+ - You can fill one order per transaction
+ - Cancel an order take some time
