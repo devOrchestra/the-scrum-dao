@@ -115,7 +115,7 @@ export class WalletComponent implements OnInit {
       }, 1000);
       setTimeout(() => {
         this.animateMyWalletCounter(newBalance);
-      }, 1000);
+      }, 2000);
       setTimeout(() => {
         this.showPositiveBalanceChange = false;
       }, 10000);
@@ -125,9 +125,10 @@ export class WalletComponent implements OnInit {
       }, 1000);
       setTimeout(() => {
         this.animateMyWalletCounter(newBalance);
-      }, 1000);
+      }, 2000);
       setTimeout(() => {
         this.showNegativeBalanceChange = false;
+        console.log('current balance:', this.currentBalance.balance);
       }, 10000);
       sessionStorage.setItem("lastBalance", JSON.stringify({lastBalance: newBalance}));
     }

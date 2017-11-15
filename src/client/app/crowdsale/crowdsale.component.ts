@@ -199,13 +199,28 @@ export class CrowdsaleComponent implements OnInit {
 
   excludeItemFromList(id, type) {
     const itemToExcludeFromList = _.find(this.orders, {id: id, orderType: type});
+    console.log("itemToExcludeFromList", itemToExcludeFromList);
     itemToExcludeFromList.flashAnimation = "void";
-    itemToExcludeFromList.isOpen = false;
-    const index = _.findIndex(this.orders, itemToExcludeFromList);
-    this.orders.splice(index, 1);
-    if (type === "sell") {
-      this.sellOrdersLength -= 1
-    }
+    setTimeout(() => {
+      itemToExcludeFromList.isOpen = false;
+      const index = _.findIndex(this.orders, itemToExcludeFromList);
+      this.orders.splice(index, 1);
+      if (type === "sell") {
+        this.sellOrdersLength -= 1
+      }
+    }, 750);
+  }
+
+  calculateFirstVisibleItemIndex(): number {
+    let index;
+    let flag = true;
+    this.orders.forEach((item, i) => {
+      if (!item.isLocked && item.isOpen && flag) {
+        index = i;
+        flag = !flag;
+      }
+    });
+    return index;
   }
 
   parseBigNumber(item: number): number {

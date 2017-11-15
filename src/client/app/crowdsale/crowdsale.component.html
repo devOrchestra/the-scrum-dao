@@ -12,12 +12,14 @@
     </div>
 
     <div fxLayout="column" id="orders">
-      <div fxLayout="row" fxFlex="100" class="item-wrapper unselectable pointer transition-fast" [@flashAnimation]="order.flashAnimation"
+      <div fxLayout="row" fxFlex="100" class="item-wrapper unselectable pointer transition-fast"
            *ngFor="let order of orders | sortBuyAndSellOrdersByTypeAndPriceDescendingPipe; let index = index;"
            (click)="tradeOrder(order.orderType, order.id)">
         <div fxLayout="row" fxFlex="100" class="item unselectable pointer item-background-transition-fast"
-             *ngIf="order.isOpen && !isLocked" (mouseenter)="styleRow($event)" (mouseleave)="styleRow($event)"
-             [ngClass]="{'fat-border-bottom': buyOrdersLength && buyOrdersLength > 0 && index === sellOrdersLength - 1}">
+             *ngIf="order.isOpen && !order.isLocked" (mouseenter)="styleRow($event)" (mouseleave)="styleRow($event)"
+             [@flashAnimation]="order.flashAnimation"
+             [ngClass]="{'fat-border-bottom': buyOrdersLength && buyOrdersLength > 0 && index === sellOrdersLength - 1,
+                         'item-border-top': index === calculateFirstVisibleItemIndex()}">
           <div fxLayout="row" fxLayoutAlign="space-between" fxFlex="100">
             <div fxLayout="row" class="break-long-words">
               <div class="buy-cloud" *ngIf="order.orderType === 'buy'" fxLayout="row">
