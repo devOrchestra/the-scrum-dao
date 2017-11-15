@@ -44,6 +44,7 @@
     "@types/kue": "^0.11.8",
     "@types/winston": "^2.3.7",
     "amdefine": "^1.0.1",
+    "animejs": "^2.2.0",
     "async": "^2.5.0",
     "body-parser": "^1.17.2",
     "chai": "^4.1.2",

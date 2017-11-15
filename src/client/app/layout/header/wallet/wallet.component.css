@@ -8,10 +8,22 @@
   border-radius: 6px;
 }
 
-.balance-container .minus-tokens {
-  font-size: 20px;
-  color: #ff0000;
+.balance-container .tokens-amount-change {
+  font-size: 14px;
+  color: white;
   margin-right: 16px;
+  height: 18px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  line-height: 18px;
+}
+
+.balance-container .minus-tokens {
+  background-color: #ff0000;
+}
+
+.balance-container .plus-tokens {
+  background-color: #239b23;
 }
 
 .balance-container .wallet-info {

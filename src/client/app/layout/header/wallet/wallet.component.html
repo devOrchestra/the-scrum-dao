@@ -1,9 +1,10 @@
 <div fxLayout="column" fxLayoutAlign="start start" *ngIf="readyToDisplay">
   <div fxLayout="row" fxLayoutAlign="center center" class="balance-container" [mdMenuTriggerFor]="sendTokensMenu"
        #sendTokensMenuTrigger="mdMenuTrigger">
-    <h2 class="minus-tokens" [@mediumEnterLeaveAnimation] *ngIf="showSentTokens">- {{sentTokens}}</h2>
+    <div class="minus-tokens tokens-amount-change" [@mediumEnterLeaveAnimation] *ngIf="showNegativeBalanceChange">- {{walletTokensAmountChange}}</div>
+    <div class="plus-tokens tokens-amount-change" [@mediumEnterLeaveAnimation] *ngIf="showPositiveBalanceChange">+ {{walletTokensAmountChange}}</div>
     <div fxLayout="row" class="balance">
-      <h2 class="unselectable wallet-info">MY WALLET : {{currentBalance.toFixed(2)}} {{tokenSymbol}}</h2>
+      <h2 class="unselectable wallet-info">MY WALLET : {{currentBalance.balance.toFixed(2)}} {{tokenSymbol}}</h2>
     </div>
   </div>
 

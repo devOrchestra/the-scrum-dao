@@ -10,6 +10,7 @@ import { LayoutModule } from './layout/layout.module';
 import { WorkersResolverService } from './core/resolvers/workers-resolver.service'
 import { JiraIssuesResolverService } from './core/resolvers/jira-issues-resolver.service';
 import { Web3ResolverService } from './core/resolvers/web3-resolver.service';
+import { WalletStateResolverService } from './core/resolvers/wallet-state-resolver.service';
 
 import { OwnerGuardService } from './owner-guard.service'
 
@@ -29,6 +30,7 @@ import { OwnerGuardService } from './owner-guard.service'
     WorkersResolverService,
     JiraIssuesResolverService,
     Web3ResolverService,
+    WalletStateResolverService,
 
     OwnerGuardService
   ],

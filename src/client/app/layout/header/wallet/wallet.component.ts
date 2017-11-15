@@ -1,9 +1,11 @@
 import { Component, OnInit, ViewChild, QueryList } from '@angular/core';
 import { MdMenuTrigger } from '@angular/material'
 import { WorkerService } from '../../../core/worker.service'
+import { WalletStateService } from '../../../core/wallet-state.service'
 import project_artifacts from '../../../../../../build/contracts/Project.json'
 import {default as contract} from 'truffle-contract'
 import {MediumEnterLeaveAnimation, MediumControlledEnterLeaveAnimation} from '../../../shared/animations'
+import anime from 'animejs'
 
 @Component({
   selector: 'app-wallet',
@@ -14,18 +16,20 @@ import {MediumEnterLeaveAnimation, MediumControlledEnterLeaveAnimation} from '..
 export class WalletComponent implements OnInit {
   @ViewChild('sendTokensMenuTrigger') sendTokensMenuTrigger: MdMenuTrigger;
   Project = contract(project_artifacts);
-  currentBalance: number;
+  currentBalance: { [key: string]: number } = { balance: null };
   tokenSymbol: string;
   readyToDisplay = false;
   sendTokensObj: { [key: string]: string | number } = {};
   workersAddresses: string[] = [];
-  sentTokens;
+  walletTokensAmountChange: number;
   decimals: number;
-  showSentTokens = false;
+  showNegativeBalanceChange = false;
+  showPositiveBalanceChange = false;
   sendTokensLoading = false;
 
   constructor(
-    private _workerService: WorkerService
+    private _workerService: WorkerService,
+    private _walletStateService: WalletStateService
   ) { }
 
   ngOnInit() {
@@ -39,7 +43,7 @@ export class WalletComponent implements OnInit {
           .then(contractInstance => {
             contractInstance.balanceOf(web3.eth.accounts[0])
               .then(balanceResponse => {
-                this.currentBalance = this.parseBigNumber(balanceResponse);
+                this.currentBalance.balance = this.parseBigNumber(balanceResponse);
                 return contractInstance.symbol();
               })
               .then(symbol => {
@@ -48,8 +52,22 @@ export class WalletComponent implements OnInit {
               })
               .then(decimalsResponse => {
                 this.decimals = this.countDecimals(decimalsResponse);
-                this.currentBalance = this.currentBalance / this.decimals;
-                this.readyToDisplay = true;
+                this._walletStateService.getLastAndCurrentBalances().subscribe(currentBalances => {
+                  const balanceDifference = currentBalances.currentBalance - currentBalances.lastBalanceFromStorage;
+                  if (balanceDifference && balanceDifference !== 0) {
+                    this.readyToDisplay = true;
+                    this.currentBalance.balance = currentBalances.lastBalanceFromStorage;
+                    console.log("BALANCE DIFFERENCE", balanceDifference);
+                    if (balanceDifference > 0) {
+                      this.showBalanceChange(currentBalances.currentBalance, balanceDifference, false, true);
+                    } else if (balanceDifference < 0) {
+                      this.showBalanceChange(currentBalances.currentBalance, balanceDifference, false, false);
+                    }
+                  } else {
+                    this.currentBalance.balance = this.currentBalance.balance / this.decimals;
+                    this.readyToDisplay = true;
+                  }
+                })
               })
           })
       }
@@ -68,22 +86,10 @@ export class WalletComponent implements OnInit {
               return contractInstance.balanceOf(web3.eth.accounts[0]);
             })
             .then(balanceResponse => {
-              this.sentTokens = this.sendTokensObj.value;
-              this.currentBalance = this.currentBalance - Number(this.sendTokensObj.value);
-              this.sendTokensObj.address = "";
-              this.sendTokensObj.value = "";
-              this.sendTokensMenuTrigger.closeMenu();
-              this.sendTokensLoading = false;
-              this.sendTokensObj.fadeAnimation = "animate";
-              setTimeout(() => {
-                this.sendTokensObj.fadeAnimation = "";
-              }, 500);
-              setTimeout(() => {
-                this.showSentTokens = true;
-              }, 1000);
-              setTimeout(() => {
-                this.showSentTokens = false;
-              }, 6000);
+              const balanceDifference = Number(this.sendTokensObj.value);
+              this.walletTokensAmountChange = balanceDifference;
+              const newBalance = this.currentBalance.balance - balanceDifference;
+              this.showBalanceChange(newBalance, balanceDifference, true, false);
             })
             .catch((err) => {
               console.log("ERR", err);
@@ -92,6 +98,54 @@ export class WalletComponent implements OnInit {
         })
     }
   }
+
+  showBalanceChange(newBalance: number, balanceDifference: number, isAfterSend: boolean, positive: boolean): void {
+    this.walletTokensAmountChange = balanceDifference < 0 ? balanceDifference * -1 : balanceDifference;
+    console.log("new balance", newBalance);
+    if (isAfterSend) {
+      this.sendTokensObj.address = "";
+      this.sendTokensObj.value = "";
+      this.sendTokensMenuTrigger.closeMenu();
+      this.sendTokensLoading = false;
+    }
+    this.sendTokensObj.fadeAnimation = "animate";
+    setTimeout(() => {
+      this.sendTokensObj.fadeAnimation = "";
+    }, 500);
+    if (positive) {
+      setTimeout(() => {
+        this.showPositiveBalanceChange = true;
+      }, 1000);
+      setTimeout(() => {
+        this.animateMyWalletCounter(newBalance);
+      }, 2000);
+      setTimeout(() => {
+        this.showPositiveBalanceChange = false;
+        console.log('current balance:', this.currentBalance.balance);
+      }, 10000);
+    } else if (!positive) {
+      setTimeout(() => {
+        this.showNegativeBalanceChange = true;
+      }, 1000);
+      setTimeout(() => {
+        this.animateMyWalletCounter(newBalance);
+      }, 2000);
+      setTimeout(() => {
+        this.showNegativeBalanceChange = false;
+        console.log('current balance:', this.currentBalance.balance);
+      }, 10000);
+      sessionStorage.setItem("lastBalance", JSON.stringify({lastBalance: newBalance}));
+    }
+  }
+
+  animateMyWalletCounter(toValue: number): void {
+    anime({
+      targets: this.currentBalance,
+      balance: toValue,
+      easing: 'easeInOutExpo',
+      duration: 3000
+    });
+  };
 
   countDecimals(numberOfNulls: number): number {
     let final = "1";
