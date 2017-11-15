@@ -30,8 +30,10 @@
               {{item.fields.storyPoints}}
             </span>
           </div>
-          <div mdTooltip="Vote for issue" mdTooltipPosition="after" class="vote-cloud unselectable pointer"
-               (click)="voteFor(item, item.key, index)" fxLayout="row" fxLayoutAlign="center center">
+          <div [mdTooltip]="item.userHasAlreadyVoted <= 0 ? 'Vote for issue' : null" mdTooltipPosition="after"
+               class="vote-cloud unselectable pointer"
+               (click)="voteFor(item, item.key, index, item.userHasAlreadyVoted <= 0)" fxLayout="row" fxLayoutAlign="center center"
+               [ngClass]="{'already-voted': item.userHasAlreadyVoted > 0, 'background-transition-fast': item.bgcEasingApplied}">
             <md-spinner *ngIf="item.totalPercentsLoading"></md-spinner>
             <span *ngIf="!item.totalPercentsLoading" [@alternativeControlFlashAnimation]="item.flashAnimation">
             {{countTotalPercents(item.fields.votingCount, item.fields.totalSupply)}}%

@@ -49,6 +49,11 @@
   color: white;
 }
 
+#project-backlog .item .vote-cloud.already-voted {
+  background-color: #769b74;
+  cursor: default;
+}
+
 #project-backlog .item .assignee-cloud {
   font-size: 12px;
   border-radius: 10px;
@@ -81,6 +86,13 @@
 .main-spinner {
   width: 75px;
   height: 75px;
+}
+
+.background-transition-fast {
+  -webkit-transition: background-color .2s ease-in-out !important;
+  -moz-transition: background-color .2s ease-in-out !important;
+  -o-transition: background-color .2s ease-in-out !important;
+  transition: background-color .2s ease-in-out !important;
 }
 
 /deep/ .main-spinner path {

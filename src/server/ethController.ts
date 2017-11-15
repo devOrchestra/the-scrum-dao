@@ -42,7 +42,7 @@ class EthController {
     this.web3 = new Web3(engine);
 
     let projectArtifact = require(path.resolve('./build/contracts/Project.json'));
-    let planningPokerArtifact = require(path.resolve('./build/contracts/StoryPointsVoting.json'));
+    let planningPokerArtifact = require(path.resolve('./build/contracts/PlanningPoker.json'));
     let crowdsaleArtifact = require(path.resolve('./build/contracts/Crowdsale.json'));
     let productBacklogArtifact = require(path.resolve('./build/contracts/ProductBacklog.json'));
 
