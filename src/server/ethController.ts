@@ -31,7 +31,7 @@ class EthController {
 
   // METHODS
   public init(done): void {
-    let walletData = require(this.config.ethereum.admin.walletPath);
+    let walletData = require(path.resolve(this.config.ethereum.admin.walletPath));
     let adminWallet = Wallet.fromV3(walletData, this.config.ethereum.admin.walletPassword);
 
     let engine = new ProviderEngine();
@@ -76,28 +76,28 @@ class EthController {
 
   }
 
-  public createIssueVoting(issueName: string, options: ContractMethodOptions, done): void {
+  public createStoryPointsVoting(issueName: string, options: ContractMethodOptions, done): void {
     this.planningPokerContact
       .addVoting(issueName, options)
       .then(() => {
-        logger.info(`Project ${this.projectName} issue ${issueName}. Voting has been added`);
+        logger.info(`Project ${this.projectName} issue ${issueName}. Story points voting  has been added`);
         done(null);
       })
       .catch((error: Error) => {
-        logger.error(`Project ${this.projectName} issue ${issueName}. Errors occurred during creating voting: ${error.message}`);
+        logger.error(`Project ${this.projectName} issue ${issueName}. Errors occurred during creating story points voting: ${error.message}`);
         done(error);
       });
   }
 
-  public closeIssueVoting(issueName: string, options: ContractMethodOptions, done): void {
+  public closeStoryPointsVoting(issueName: string, options: ContractMethodOptions, done): void {
     this.planningPokerContact
       .closeVoting(issueName, options)
       .then(() => {
-        logger.info(`Project ${this.projectName} issue ${issueName}. Voting has been closed`);
+        logger.info(`Project ${this.projectName} issue ${issueName}. Story points voting has been closed`);
         done(null);
       })
       .catch((error: Error) => {
-        logger.error(`Project ${this.projectName} issue ${issueName}. Errors occurred during closing voting: ${error.message}`);
+        logger.error(`Project ${this.projectName} issue ${issueName}. Errors occurred during closing story points voting: ${error.message}`);
         done(error);
       });
   }
@@ -115,15 +115,28 @@ class EthController {
       });
   }
 
-  public markIssueVotingAsPaid(issueName: string, options: ContractMethodOptions, done): void {
-    this.planningPokerContact
-      .markVotingAsPaid(issueName, options)
+  public createPriorityVoting(issueName: string, options: ContractMethodOptions, done): void {
+    this.productBacklogContract
+      .addVoting(issueName, options)
       .then(() => {
-        logger.info(`Project ${this.projectName} issue ${issueName}. Voting marked as payed`);
+        logger.info(`Project ${this.projectName} issue ${issueName}. Priority voting has been added`);
         done(null);
       })
       .catch((error: Error) => {
-        logger.error(`Project ${this.projectName} issue ${issueName}. Errors occurred during marking voting as payed: ${error.message}`);
+        logger.error(`Project ${this.projectName} issue ${issueName}. Errors occurred during creating priority voting: ${error.message}`);
+        done(error);
+      });
+  }
+
+  public closePriorityVoting(issueName: string, options: ContractMethodOptions, done): void {
+    this.productBacklogContract
+      .closeVoting(issueName, options)
+      .then(() => {
+        logger.info(`Project ${this.projectName} issue ${issueName}. Priority voting has been closed`);
+        done(null);
+      })
+      .catch((error: Error) => {
+        logger.error(`Project ${this.projectName} issue ${issueName}. Errors occurred during closing priority voting: ${error.message}`);
         done(error);
       });
   }

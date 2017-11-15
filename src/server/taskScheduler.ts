@@ -15,14 +15,16 @@ class TaskScheduler {
   private scheduler: kue.Queue;
 
   // METHODS
-  public createTask(type: string, data: any, period: number, done: (error?: Error) => void): void {
+  public createTask(type: string, data: any, period: number): void {
     this.scheduler
       .create(type, data)
       .delay(period)
       .save((error) => {
-        if (error) return done(error);
+        if (error) {
+          logger.error(`Errors occurred during creating task ${type} with payload ${JSON.stringify(data)}`);
+          return;
+        }
         logger.info(`Task ${type} with payload ${JSON.stringify(data)} and delay of ${period} has been created`);
-        done(null);
       });
   }
 }

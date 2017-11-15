@@ -16,7 +16,7 @@
   border-right: 1px #e1e1e1 solid;
 }
 
-#orders .item-wrapper:first-child .item {
+#orders .item-wrapper .item-border-top {
   border-top: 1px #e1e1e1 solid;
 }
 
