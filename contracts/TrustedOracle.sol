@@ -11,7 +11,7 @@ contract TrustedOracle {
 
   function TrustedOracle(){}
 
-  function addTrustedOracle(address _trustedOracle){
+  function addTrustedOracle(address _trustedOracle) external{
     trustedOracle = _trustedOracle;
   }
 }

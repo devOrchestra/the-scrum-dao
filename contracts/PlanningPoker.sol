@@ -44,16 +44,16 @@ contract PlanningPoker is Ownable, TrustedOracle {
     projectAddress = _projectContract;
   }
 
-  function addVoting(string issue) onlyTrustedOracle {
+  function addVoting(string issue) external onlyTrustedOracle {
     votings[issue] = Voting(issue, 0, 0, true, true, false);
   }
 
-  function closeVoting(string issue) onlyTrustedOracle {
+  function closeVoting(string issue) external onlyTrustedOracle {
     require(votings[issue].isValid);
     votings[issue].isOpen = false;
   }
 
-  function vote(string issue, uint points) onlyTeem {
+  function vote(string issue, uint points) external onlyTeem {
     if (!votings[issue].isValid) {
       votings[issue] = Voting(issue, 0, 0, true, true, false);
     }
@@ -76,7 +76,7 @@ contract PlanningPoker is Ownable, TrustedOracle {
     return (votings[issue].issue, votings[issue].votesCount, votings[issue].sum, votings[issue].isOpen, votings[issue].awardPaid);
   }
 
-  function markVotingAsPaid(string issue) {
+  function markVotingAsPaid(string issue) external {
     require(msg.sender == projectAddress);
     if (votings[issue].isValid) {
       votings[issue].awardPaid = true;

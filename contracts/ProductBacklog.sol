@@ -31,16 +31,16 @@ contract ProductBacklog is TrustedOracle {
     project = Project(_projectContract);
   }
 
-  function addVoting(string issue) onlyTokenHolders {
+  function addVoting(string issue) external onlyTokenHolders {
     votings[issue] = Voting(issue, 0, 0, true, true);
   }
 
-  function closeVoting(string issue) onlyTrustedOracle {
+  function closeVoting(string issue) external onlyTrustedOracle {
     require(votings[issue].isValid);
     votings[issue].isOpen = false;
   }
 
-  function vote(string issue) onlyTokenHolders {
+  function vote(string issue) external onlyTokenHolders {
     if (!votings[issue].isValid) {
       votings[issue] = Voting(issue, 0, 0, true, true);
     }
@@ -58,9 +58,5 @@ contract ProductBacklog is TrustedOracle {
 
   function getVoting(string issue) public constant returns (string, uint, uint, bool) {
     return (votings[issue].issue, votings[issue].totalSupply, votings[issue].sum, votings[issue].isOpen);
-  }
-
-  function forTesting() public constant returns (uint) {
-    return project.balanceOf(msg.sender);
   }
 }
