@@ -57,7 +57,6 @@ export class WalletComponent implements OnInit {
                   if (balanceDifference && balanceDifference !== 0) {
                     this.readyToDisplay = true;
                     this.currentBalance.balance = currentBalances.lastBalanceFromStorage;
-                    console.log("BALANCE DIFFERENCE", balanceDifference);
                     if (balanceDifference > 0) {
                       this.showBalanceChange(currentBalances.currentBalance, balanceDifference, false, true);
                     } else if (balanceDifference < 0) {
@@ -76,7 +75,6 @@ export class WalletComponent implements OnInit {
 
   sendTokens(): void {
     if (this.sendTokensObj.address && this.sendTokensObj.value && this.sendTokensObj.value > 0) {
-      console.log("START");
       this.sendTokensLoading = true;
       this.sendTokensObj.fadeAnimation = "void";
       this.Project.deployed()
@@ -101,7 +99,6 @@ export class WalletComponent implements OnInit {
 
   showBalanceChange(newBalance: number, balanceDifference: number, isAfterSend: boolean, positive: boolean): void {
     this.walletTokensAmountChange = balanceDifference < 0 ? balanceDifference * -1 : balanceDifference;
-    console.log("new balance", newBalance);
     if (isAfterSend) {
       this.sendTokensObj.address = "";
       this.sendTokensObj.value = "";
@@ -118,10 +115,9 @@ export class WalletComponent implements OnInit {
       }, 1000);
       setTimeout(() => {
         this.animateMyWalletCounter(newBalance);
-      }, 2000);
+      }, 1000);
       setTimeout(() => {
         this.showPositiveBalanceChange = false;
-        console.log('current balance:', this.currentBalance.balance);
       }, 10000);
     } else if (!positive) {
       setTimeout(() => {
@@ -129,10 +125,9 @@ export class WalletComponent implements OnInit {
       }, 1000);
       setTimeout(() => {
         this.animateMyWalletCounter(newBalance);
-      }, 2000);
+      }, 1000);
       setTimeout(() => {
         this.showNegativeBalanceChange = false;
-        console.log('current balance:', this.currentBalance.balance);
       }, 10000);
       sessionStorage.setItem("lastBalance", JSON.stringify({lastBalance: newBalance}));
     }

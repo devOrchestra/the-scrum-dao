@@ -15,7 +15,6 @@ export class WalletStateResolverService {
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): void {
     const lastBalance = JSON.parse(sessionStorage.getItem("lastBalance")).lastBalance;
-    console.log("**********lastBalance", lastBalance);
     this.Project.setProvider(web3.currentProvider);
     this.Project.deployed()
       .then(contractInstance => {
@@ -26,13 +25,10 @@ export class WalletStateResolverService {
           })
           .then(balanceOfResponse => {
             const currentBalance = this.parseBigNumber(balanceOfResponse) / this.decimals;
-            // sessionStorage.setItem("lastBalance", JSON.stringify({lastBalance: 15}));
+            // sessionStorage.setItem("lastBalance", JSON.stringify({lastBalance: 13.5}));
             if (!lastBalance || lastBalance !== currentBalance) {
               const balanceDifference = currentBalance - lastBalance;
-              console.log("**********currentBalance", currentBalance);
-              console.log("**********balanceDifference", balanceDifference);
               if (balanceDifference && !Number.isNaN(balanceDifference) && balanceDifference !== 0) {
-                console.log("**********************************************");
                 sessionStorage.setItem("lastBalance", JSON.stringify({lastBalance: currentBalance}));
                 this._walletStateService.setLastAndCurrentBalances({
                   currentBalance: currentBalance,
