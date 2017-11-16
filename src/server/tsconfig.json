@@ -2,7 +2,7 @@
   "compileOnSave": true,
   "compilerOptions": {
     "module": "commonjs",
-    "outDir": "../../web-app/server",
+    "outDir": "../../build/server",
     "target": "es6",
     "noImplicitAny": false,
     "sourceMap": false,
