@@ -9,7 +9,7 @@ import webhooksRouter from './webhooks';
 import logger from '../logger';
 
 const app = express();
-let webAppPath: string = path.resolve('./', 'web-app/client');
+let webAppPath: string = path.resolve('./', 'build/client');
 if (process.env.NODE_ENV === 'development') {
   app.use(morganLogger('dev'));
 }
