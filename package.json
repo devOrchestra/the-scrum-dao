@@ -7,6 +7,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "copy-data": "cpx \"src/server/*.ini\" \"build/server\"",
+    "compile-contracts": "truffle compile",
     "dev-migrate": "export NODE_ENV=development && truffle migrate --network development",
     "migrate": "export NODE_ENV=production && truffle migrate --network production",
     "prebuild-app": "rm -rf build/client",
@@ -19,7 +20,7 @@
     "dev-start-server": "export NODE_ENV=development && export LOG_LEVEL=debug && node build/server/server.js",
     "predev-start": "npm run dev-migrate && node ./populateContracts.js",
     "dev-start": "concurrently --kill-others-on-fail \"npm run dev-start-angular\" \"npm run dev-start-server\"",
-    "prestart": "npm run migrate",
+    "prestart": "npm run migrate && npm run build-app && npm run build-server",
     "start": "export NODE_ENV=production && node build/server/server.js"
   },
   "contributors": [

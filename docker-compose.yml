@@ -1,0 +1,37 @@
+version: '3'
+
+networks:
+  basic:
+
+volumes:
+  redis-scrum-data:
+  scrum-dao-credentials:
+  scrum-dao-contracts:
+
+
+services:
+  scrum-dao:
+    image: krabradosty/scrum-dao
+    environment:
+      - NODE_ENV=development
+      - LOG_LEVEL=debug
+    ports:
+      - "127.0.0.1:8021:8021"
+    volumes:
+      - "scrum-dao-credentials:/src/credentials/"
+      - "scrum-dao-contracts:/src/build/contracts/"
+    networks:
+      - basic
+
+  redis-scrum:
+    image: redis:3.2
+    command: ["redis-server", "--appendonly", "yes"]
+    environment:
+      - ORDERER_GENERAL_LOGLEVEL=debug
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/orderer
+    expose:
+      - 6379
+    volumes:
+        - "redis-scrum-data:/data"
+    networks:
+      - basic
