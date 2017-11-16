@@ -31,8 +31,8 @@ contract Project is StandardToken, Ownable, TrustedOracle {
   address[] public holders;
 
   struct Worker {
-    address _address;
-    string username;
+  address _address;
+  string username;
   }
 
   mapping (string => address) usernames;
@@ -70,13 +70,11 @@ contract Project is StandardToken, Ownable, TrustedOracle {
   function payAward(string username, string issue) external onlyTrustedOracle {
     address recepient = usernames[username];
     var (id, count, sum, isOpen, awardPaid) = planningPoker.getVoting(issue);
-    require(!isOpen);
-    if (recepient != 0 && count > 0 && sum > 0 && !awardPaid) {
-      planningPoker.markVotingAsPaid(issue);
-      uint256 awardSupply = sum.mul(storyPointMultiplier).div(count);
-      balances[recepient] = balances[recepient].add(awardSupply);
-      totalSupply = totalSupply.add(awardSupply);
-    }
+    require(!isOpen && recepient != 0 && count > 0 && sum > 0 && !awardPaid);
+    planningPoker.markVotingAsPaid(issue);
+    uint256 awardSupply = sum.mul(storyPointMultiplier).div(count);
+    balances[recepient] = balances[recepient].add(awardSupply);
+    totalSupply = totalSupply.add(awardSupply);
   }
 
   function transferToCrowdsale(address _from, uint _value) external onlyTrustedCrowdsale {
