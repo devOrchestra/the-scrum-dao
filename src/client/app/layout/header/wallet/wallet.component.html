@@ -1,8 +1,13 @@
 <div fxLayout="column" fxLayoutAlign="start start" *ngIf="readyToDisplay">
   <div fxLayout="row" fxLayoutAlign="center center" class="balance-container" [mdMenuTriggerFor]="sendTokensMenu"
        #sendTokensMenuTrigger="mdMenuTrigger">
-    <div class="minus-tokens tokens-amount-change" [@mediumEnterLeaveAnimation] *ngIf="showNegativeBalanceChange">- {{walletTokensAmountChange}}</div>
-    <div class="plus-tokens tokens-amount-change" [@mediumEnterLeaveAnimation] *ngIf="showPositiveBalanceChange">+ {{walletTokensAmountChange}}</div>
+    <div class="minus-tokens wallet-update" [@mediumEnterLeaveAnimation] *ngIf="showNegativeBalanceChange">
+      - {{walletTokensAmountChange.toFixed(2)}}
+    </div>
+    <div class="plus-tokens wallet-update" [@mediumEnterLeaveAnimation] *ngIf="showPositiveBalanceChange">
+      + {{walletTokensAmountChange.toFixed(2)}}
+    </div>
+    <div class="account-change wallet-update" [@mediumEnterLeaveAnimation] *ngIf="showAccountChange">Account was switched</div>
     <div fxLayout="row" class="balance">
       <h2 class="unselectable wallet-info">MY WALLET : {{currentBalance.balance.toFixed(2)}} {{tokenSymbol}}</h2>
     </div>
@@ -10,7 +15,7 @@
 
   <md-menu #sendTokensMenu="mdMenu" [overlapTrigger]="false" (click)="$event.stopPropagation()">
     <div fxLayout="column" class="form-container" (click)="$event.stopPropagation()">
-      <div fxLayout="row" fxLayoutAlign="center center">
+      <div fxLayout="row" fxLayoutAlign="center center" class="title-container">
         <h2>Send tokens</h2>
       </div>
       <div class="form" fxLayout="column">
@@ -19,7 +24,7 @@
             <input mdInput placeholder="Recipient address" [(ngModel)]="sendTokensObj.address">
           </md-input-container>
           <md-input-container [color]="'accent'">
-            <input mdInput type="number" placeholder="Quantity" [(ngModel)]="sendTokensObj.value">
+            <input mdInput type="number" placeholder="Quantity" min="0" [(ngModel)]="sendTokensObj.value">
           </md-input-container>
         </div>
         <button md-button class="button transition-fast" *ngIf="!sendTokensLoading" (click)="sendTokens()"

@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import {MD_DIALOG_DATA} from '@angular/material';
 
 @Component({
@@ -6,13 +6,8 @@ import {MD_DIALOG_DATA} from '@angular/material';
   templateUrl: './crowdsale-add-buy-order-error-dialog.component.html',
   styleUrls: ['./crowdsale-add-buy-order-error-dialog.component.css']
 })
-export class CrowdsaleAddBuyOrderErrorDialogComponent implements OnInit {
-
+export class CrowdsaleAddBuyOrderErrorDialogComponent {
   constructor(
     @Inject(MD_DIALOG_DATA) public data: any
   ) { }
-
-  ngOnInit() {
-  }
-
 }

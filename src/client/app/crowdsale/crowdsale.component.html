@@ -1,8 +1,9 @@
 <div fxFlexFill fxLayout="row" fxLayoutAlign="center center" *ngIf="!readyToDisplay">
   <md-spinner class="main-spinner"></md-spinner>
 </div>
-<div fxLayout="row" fxLayoutAlign="center center" *ngIf="(!orders || orders.length === 0) && readyToDisplay" class="no-orders"
-     [@shortEnterAnimation]>
+<div fxLayout="row" fxLayoutAlign="center center" *ngIf="(!orders || orders.length === 0 || (visibleBuyOrdersLength === 0 &&
+     visibleSellOrdersLength === 0)) && readyToDisplay"
+     class="no-orders" [@shortEnterAnimation]>
   <p>No open orders!</p>
 </div>
 <div *ngIf="readyToDisplay" [@shortEnterAnimation]>
@@ -17,9 +18,10 @@
            (click)="tradeOrder(order.orderType, order.id)">
         <div fxLayout="row" fxFlex="100" class="item unselectable pointer item-background-transition-fast"
              *ngIf="order.isOpen && !order.isLocked" (mouseenter)="styleRow($event)" (mouseleave)="styleRow($event)"
-             [@flashAnimation]="order.flashAnimation"
-             [ngClass]="{'fat-border-bottom': buyOrdersLength && buyOrdersLength > 0 && index === sellOrdersLength - 1,
-                         'item-border-top': index === calculateFirstVisibleItemIndex()}">
+             [@controlFlashAnimation]="order.flashAnimation"
+             [ngClass]="{'fat-border-bottom': visibleBuyOrdersLength && visibleBuyOrdersLength > 0 &&
+                        index === countIndexOfTheLastVisibleSellOrder(index, order),
+                        'item-border-top': index === calculateFirstVisibleItemIndex(index)}">
           <div fxLayout="row" fxLayoutAlign="space-between" fxFlex="100">
             <div fxLayout="row" class="break-long-words">
               <div class="buy-cloud" *ngIf="order.orderType === 'buy'" fxLayout="row">

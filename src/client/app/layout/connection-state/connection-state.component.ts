@@ -22,7 +22,6 @@ export class ConnectionStateComponent implements OnInit {
 
   ngOnInit() {
     this._web3Service.getConnectionState().subscribe(state => {
-      console.log('STATE:', state);
       if (state === 'connected') {
         this.showConnectionSuccess();
       } else if (state === 'not connected') {

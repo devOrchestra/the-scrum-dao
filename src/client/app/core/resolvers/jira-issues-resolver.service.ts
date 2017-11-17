@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Resolve, RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
+import { RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
 import { JiraService } from '../jira.service';
 import { Web3Service } from '../web3.service';
 
@@ -14,10 +14,13 @@ export class JiraIssuesResolverService {
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): void {
     this._web3Service.getConnectionState().subscribe(connectionState => {
       if (connectionState && (connectionState === "connected" || connectionState === "none")) {
-        this._jiraService.getIssueListFromApi().then(response => {
-          console.log('Issues resolver data:', response);
-          this._jiraService.setIssues(response);
-        })
+        this._jiraService.getIssueListFromApi()
+          .then(response => {
+            this._jiraService.setIssues(response);
+          })
+          .catch(err => {
+            console.error('An error occurred on jira-issues-resolver.service:', err);
+          });
       }
     });
   }

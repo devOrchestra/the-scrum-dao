@@ -15,9 +15,7 @@ export class WorkerService {
 
   constructor(
     private http: Http
-  ) {
-    console.log('WorkerService works');
-  }
+  ) { }
 
   public setWorkers(workers): void {
     this.workers = workers;
@@ -57,7 +55,7 @@ export class WorkerService {
   }
 
   private handleError(error: any): Promise<any> {
-    console.error('An error occurred (AuthService): ', error);
+    console.error('An error occurred (WorkerService): ', error);
     return Promise.reject(error.message || error._body || error);
   }
 }

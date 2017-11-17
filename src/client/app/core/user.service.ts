@@ -11,9 +11,7 @@ export class UserService {
 
   constructor(
     private http: Http
-  ) {
-    console.log('UserService works');
-  }
+  ) { }
 
   setCurrentUsername(username: string): void {
     this.currentUsername = username;
@@ -25,7 +23,6 @@ export class UserService {
   }
 
   getUser(userRequestData?): Promise<any> {
-    console.log('"getUser" in "UserService" starts working');
     return this.http.get(`/api/getUser`, userRequestData)
       .toPromise()
       .then(this.sendResponse)
@@ -37,7 +34,7 @@ export class UserService {
   }
 
   private handleError(error: any): Promise<any> {
-    console.error('An error occurred (AuthService): ', error);
+    console.error('An error occurred (UserService): ', error);
     return Promise.reject(error.message || error._body || error);
   }
 }

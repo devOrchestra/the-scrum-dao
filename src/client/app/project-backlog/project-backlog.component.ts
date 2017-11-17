@@ -1,5 +1,4 @@
 import {Component, OnInit, ViewChild, ElementRef} from '@angular/core';
-import {default as Web3} from 'web3';
 import {default as contract} from 'truffle-contract'
 import * as _ from 'lodash';
 import backlog_artifacts from '../../../../build/contracts/ProductBacklog.json';
@@ -8,9 +7,8 @@ import project_artifacts from '../../../../build/contracts/Project.json';
 import {MdDialog} from '@angular/material';
 import {ProjectBacklogAddTrackDialogComponent} from './project-backlog-add-track-dialog/project-backlog-add-track-dialog.component'
 import {JiraService} from '../core/jira.service'
+import {countStoryPoints, countDecimals, parseBigNumber} from '../shared/methods'
 import {AlternativeControlFlashAnimation, ShortEnterAnimation} from '../shared/animations'
-
-import * as moment from 'moment';
 
 @Component({
   selector: 'app-project-backlog',
@@ -20,13 +18,17 @@ import * as moment from 'moment';
 })
 export class ProjectBacklogComponent implements OnInit {
   @ViewChild('.vote-cloud') aUser: ElementRef;
-  public items = [];
-  public readyToDisplay = false;
-  public decimals: number;
-
   Project = contract(project_artifacts);
   Backlog = contract(backlog_artifacts);
   PlanningPoker = contract(planningPoker_artifacts);
+
+  countStoryPoints = countStoryPoints;
+  countDecimals = countDecimals;
+  parseBigNumber = parseBigNumber;
+
+  public items = [];
+  public readyToDisplay = false;
+  public decimals: number;
 
   constructor(
     private dialog: MdDialog,
@@ -74,62 +76,57 @@ export class ProjectBacklogComponent implements OnInit {
             return Promise.all(getVoteBacklog);
           })
           .then(getVoteResponse => {
-            console.log("getVoteResponse", getVoteResponse);
             getVoteResponse.forEach((item, i) => {
               this.items[i].userHasAlreadyVoted = this.parseBigNumber(item[0]) / this.decimals;
             });
-            console.log('items', this.items);
             this.readyToDisplay = true;
             return Promise.all(getVotingBacklogPromises)
           })
-          .then(response => {
-            console.log('getVotingBacklog response', response);
-            for (let i = 0; i < response.length; i++) {
-              this.items[i].fields.votingWasNotCreated = response[i][0].length <= 0;
-              this.items[i].fields.totalSupply = this.parseBigNumber(response[i][1]);
-              this.items[i].fields.votingCount = this.parseBigNumber(response[i][2]);
-              this.items[i].fields.isOpen = response[i][3];
+          .then(getVotingBacklogResponse => {
+            for (let i = 0; i < getVotingBacklogResponse.length; i++) {
+              this.items[i].fields.votingWasNotCreated = getVotingBacklogResponse[i][0].length <= 0;
+              this.items[i].fields.totalSupply = this.parseBigNumber(getVotingBacklogResponse[i][1]);
+              this.items[i].fields.votingCount = this.parseBigNumber(getVotingBacklogResponse[i][2]);
+              this.items[i].fields.isOpen = getVotingBacklogResponse[i][3];
             }
             return Promise.all(getVotingPlanningPokerPromises)
           })
-          .then(response => {
-            for (let i = 0; i < response.length; i++) {
-              this.items[i].fields.storyPoints = this.countStoryPoints(response[i][1], response[i][2]);
+          .then(getVotingPlanningPokerResponse => {
+            for (let i = 0; i < getVotingPlanningPokerResponse.length; i++) {
+              this.items[i].fields.storyPoints = this.countStoryPoints(
+                getVotingPlanningPokerResponse[i][1],
+                getVotingPlanningPokerResponse[i][2]
+              );
               this.items[i].storyPointsLoading = false;
               this.items[i].totalPercentsLoading = false;
               this.items[i].bgcEasingApplied = true;
             }
           })
+          .catch(err => {
+            console.error('An error occurred on project-backlog.component in "OnInit" block:', err);
+          });
       }
     })
   }
 
   voteFor(item, id, index, isOpenForVote) {
     if (isOpenForVote) {
+      let contractInstance;
       item.storyPointsLoading = true;
       item.totalPercentsLoading = true;
       this.Backlog.deployed()
-        .then(contractInstance => {
-          console.log('id for voting', id);
-          contractInstance.vote(id, {gas: 500000, from: web3.eth.accounts[0]})
-            .then(voteResponse => {
-              console.log('vote response', voteResponse);
-              this.getVotingToUpdate(contractInstance, id, index);
-            })
-            .catch(err => {
-              item.storyPointsLoading = false;
-              item.totalPercentsLoading = false;
-            })
+        .then(contractInstanceResponse => {
+          contractInstance = contractInstanceResponse;
+          return contractInstance.vote(id, {gas: 500000, from: web3.eth.accounts[0]});
         })
-    }
-  }
-
-  countStoryPoints(votesCount: number, votesSum: number): number {
-    const result = votesSum / votesCount;
-    if (!result) {
-      return 0;
-    } else {
-      return Math.round(result);
+        .then(voteResponse => {
+          this.getVotingToUpdate(contractInstance, id, index);
+        })
+        .catch(err => {
+          console.error('An error occurred on project-backlog.component in "voteFor":', err);
+          item.storyPointsLoading = false;
+          item.totalPercentsLoading = false;
+        })
     }
   }
 
@@ -140,20 +137,17 @@ export class ProjectBacklogComponent implements OnInit {
             this.parseBigNumber(getVotingResponse[2]) === this.items[index].fields.votingCount) {
           this.getVotingToUpdate(contractInstance, id, index);
         } else {
-          console.log("getVotingResponse", getVotingResponse);
-          console.log("this.items[index] BEFORE", this.items[index]);
           this.items[index].fields.totalSupply = this.parseBigNumber(getVotingResponse[1]);
           this.items[index].fields.votingCount = this.parseBigNumber(getVotingResponse[2]);
           contractInstance.getVote(id, {gas: 500000, from: web3.eth.accounts[0]})
             .then(getVoteResponse => {
-              console.log("getVoteResponse", getVoteResponse);
               this.items[index].userHasAlreadyVoted = this.parseBigNumber(getVoteResponse[0]) / this.decimals;
               this.items[index].storyPointsLoading = false;
               this.items[index].totalPercentsLoading = false;
               this.items[index].flashAnimation = "animate";
-              console.log("this.items[index] AFTER", this.items[index]);
             })
-            .catch(() => {
+            .catch(err => {
+              console.error('An error occurred on project-backlog.component in "getVotingToUpdate":', err);
               this.items[index].storyPointsLoading = false;
               this.items[index].totalPercentsLoading = false;
             })
@@ -173,15 +167,6 @@ export class ProjectBacklogComponent implements OnInit {
     return index;
   }
 
-  countDecimals(numberOfNulls: number): number {
-    let final = "1";
-    const parsedNumberOfNulls = this.parseBigNumber(numberOfNulls);
-    for (let i = 0; i < parsedNumberOfNulls; i++) {
-      final += "0";
-    }
-    return Number(final)
-  }
-
   countTotalPercents(votingCount, totalSupply) {
     const result = votingCount / totalSupply * 100;
     if (!result && result !== 0) {
@@ -189,10 +174,6 @@ export class ProjectBacklogComponent implements OnInit {
     } else {
       return result.toFixed(1);
     }
-  }
-
-  parseBigNumber(item: number): number {
-    return !parseInt(item.toString(), 10) ? 0 : parseInt(item.toString(), 10);
   }
 
   openDialog(): void {
@@ -206,10 +187,10 @@ export class ProjectBacklogComponent implements OnInit {
             return backlogContractInstance.addVoting(track, {gas: 500000, from: web3.eth.accounts[0]});
           })
           .then(addVotingResponse => {
-            console.log('addVotingResponse', addVotingResponse);
             this.readyToDisplay = true;
           })
-          .catch(() => {
+          .catch(err => {
+            console.error('An error occurred on project-backlog.component in "openDialog":', err);
             this.readyToDisplay = true;
           })
       }

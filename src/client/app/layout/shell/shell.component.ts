@@ -16,7 +16,6 @@ export class ShellComponent implements OnInit {
   ngOnInit() {
     this._web3Service.getConnectionState().subscribe(connectionState => {
       this.connectionState = connectionState;
-      console.log('this.connectionState', this.connectionState);
     })
   }
 

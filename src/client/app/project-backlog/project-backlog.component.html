@@ -11,11 +11,11 @@
       <div class="item" fxLayout="row" fxLayoutAlign="space-between" *ngIf="item.fields.votingWasNotCreated || item.fields.isOpen"
            [ngClass]="{'item-border-top': index === calculateFirstVisibleItemIndex()}">
         <div class="left-side" fxLayout="row" fxLayoutAlign="center center">
-          <img *ngIf="item.fields.issuetype.name === 'Bug'" class="first" src="../../assets/images/bug-icon.svg" alt="">
-          <img *ngIf="item.fields.issuetype.name === 'Task'" class="first" src="../../assets/images/task-icon.svg" alt="">
-          <img *ngIf="item.fields.issuetype.name === 'Subtask'" class="first" src="../../assets/images/subtask-icon.svg" alt="">
-          <img *ngIf="item.fields.issuetype.name === 'Story'" class="first" src="../../assets/images/story-icon.svg" alt="">
-          <img *ngIf="item.fields.issuetype.name === 'Epic'" class="first" src="../../assets/images/epic-icon.svg" alt="">
+          <img *ngIf="item.fields.issuetype.name === 'Bug'" class="first unselectable" src="../../assets/images/bug-icon.svg" alt="">
+          <img *ngIf="item.fields.issuetype.name === 'Task'" class="first unselectable" src="../../assets/images/task-icon.svg" alt="">
+          <img *ngIf="item.fields.issuetype.name === 'Subtask'" class="first unselectable" src="../../assets/images/subtask-icon.svg" alt="">
+          <img *ngIf="item.fields.issuetype.name === 'Story'" class="first unselectable" src="../../assets/images/story-icon.svg" alt="">
+          <img *ngIf="item.fields.issuetype.name === 'Epic'" class="first unselectable" src="../../assets/images/epic-icon.svg" alt="">
           <p>{{item.fields.summary}}</p>
           <div class="assignee-cloud" fxLayout="row" fxLayoutAlign="center center"
                *ngIf="item.fields.assignee && item.fields.assignee.displayName">

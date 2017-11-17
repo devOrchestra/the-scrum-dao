@@ -21,6 +21,27 @@ export const FlashAnimation = trigger(
     ])
   ]);
 
+export const ControlFlashAnimation = trigger(
+  'controlFlashAnimation',
+  [
+    transition('* => animate', [
+      animate('1s ease-in-out', keyframes([
+        style({opacity: 0}),
+        style({opacity: 1}),
+        style({opacity: 0}),
+        style({opacity: 1}),
+      ]))
+    ]),
+    transition('* => void', [
+      animate('1s ease-in-out', keyframes([
+        style({opacity: 1}),
+        style({opacity: 0}),
+        style({opacity: 1}),
+        style({opacity: 0}),
+      ]))
+    ])
+  ]);
+
 export const AlternativeControlFlashAnimation = trigger(
   'alternativeControlFlashAnimation',
   [

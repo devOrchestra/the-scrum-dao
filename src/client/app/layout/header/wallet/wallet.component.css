@@ -8,7 +8,7 @@
   border-radius: 6px;
 }
 
-.balance-container .tokens-amount-change {
+.balance-container .wallet-update {
   font-size: 14px;
   color: white;
   margin-right: 16px;
@@ -26,14 +26,20 @@
   background-color: #239b23;
 }
 
+.balance-container .account-change {
+  background-color: #fffa7a;
+  color: #333333;
+}
+
 .balance-container .wallet-info {
   color: white;
   line-height: 22px;
   font-size: 16px;
 }
 
-.form-container {
-  margin-top: 28px;
+.form-container .title-container {
+  padding-top: 14px;
+  background-color: white;
 }
 
 .form-container .form {
@@ -74,4 +80,8 @@
 
 /deep/ .form-container .inputs .mat-input-underline {
   background-color: #333333;
+}
+
+/deep/ .mat-menu-panel {
+  margin-top: 14px;
 }

@@ -1,14 +1,5 @@
-export interface IRegisterUserFromForm {
-    username: string
-    email: string
-    password: string
-    passwordConfirmation: string
-}
-
-export interface IRegisterUser {
-    username: string
-    email: {
-        address: string
-    }
-    password: string
+export interface IBalances {
+  currentBalance: number;
+  lastBalanceFromStorage: number;
+  accountWasNotChanged: boolean;
 }

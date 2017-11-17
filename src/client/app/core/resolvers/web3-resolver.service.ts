@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Resolve, RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
+import { RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
 import { Web3Service } from '../web3.service';
 import project_artifacts from '../../../../../build/contracts/Project.json'
 import {default as contract} from 'truffle-contract'
@@ -10,31 +10,27 @@ export class Web3ResolverService {
 
   constructor(
     private _web3Service: Web3Service
-  ) { console.log('project_artifacts', project_artifacts) }
+  ) { }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): void {
     const connectionStateIsSet = JSON.parse(sessionStorage.getItem("connectionStateIsSet"));
-    console.log('connectionStateIsSet', connectionStateIsSet);
     this.Project.setProvider(web3.currentProvider);
     this.Project.deployed()
       .then(contractInstance => {
-        contractInstance.balanceOf(web3.eth.accounts[0])
-          .then(balanceResponse => {
-            if (!connectionStateIsSet || connectionStateIsSet.connectionStateIsSet === false) {
-              this._web3Service.setConnectionState("connected");
-              sessionStorage.setItem("connectionStateIsSet", JSON.stringify({connectionStateIsSet: true}));
-            } else if (connectionStateIsSet) {
-              this._web3Service.setConnectionState("none");
-            }
-          })
-          .catch(err => {
-            sessionStorage.setItem("connectionStateIsSet", JSON.stringify({connectionStateIsSet: false}));
-            this._web3Service.setConnectionState("not connected")
-          })
+        return contractInstance.balanceOf(web3.eth.accounts[0]);
       })
-      .catch(() => {
+      .then(balanceResponse => {
+        if (!connectionStateIsSet || connectionStateIsSet.connectionStateIsSet === false) {
+          this._web3Service.setConnectionState("connected");
+          sessionStorage.setItem("connectionStateIsSet", JSON.stringify({connectionStateIsSet: true}));
+        } else if (connectionStateIsSet) {
+          this._web3Service.setConnectionState("none");
+        }
+      })
+      .catch(err => {
+        console.error('An error occurred on web3-resolver.service:', err);
         sessionStorage.setItem("connectionStateIsSet", JSON.stringify({connectionStateIsSet: false}));
         this._web3Service.setConnectionState("not connected")
-      })
+      });
   }
 }

@@ -12,7 +12,7 @@ import { MdMenuModule, MdButtonModule, MdToolbarModule, MdCardModule, MdSidenavM
   MdDialogModule, MdSelectModule, MdTooltipModule, MdProgressSpinnerModule} from '@angular/material';
 
 import {SortContributorsAndHoldersByBalanceDescendingPipe} from './pipes/sortContributorsAndHoldersByBalanceDescendingPipe'
-import {SortBuyAndSellOrdersByTypeAndPriceDescendingPipe} from './pipes/sortBuyAndSellOrdersByTypeAndPriceDescendingPipe'
+import {SortBuyAndSellOrdersByTypeAndPriceDescendingPipe} from './pipes/sortBuyAndSellOrdersByTypeAndPriceDescendingPipe';
 
 @NgModule({
   imports: [
