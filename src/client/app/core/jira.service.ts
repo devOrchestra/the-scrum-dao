@@ -6,7 +6,7 @@ import 'rxjs/add/operator/toPromise';
 @Injectable()
 export class JiraService {
   public issues;
-  public issues$: BehaviorSubject<any> = new BehaviorSubject<any>('');
+  public issues$: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
   constructor(
     private http: Http
@@ -21,7 +21,7 @@ export class JiraService {
     return this.issues$.asObservable();
   }
 
-  getIssueListFromApi() {
+  getIssueListFromApi(): Promise<any> {
     return this.http.get(`/api/issues`)
       .toPromise()
       .then(this.sendResponse)

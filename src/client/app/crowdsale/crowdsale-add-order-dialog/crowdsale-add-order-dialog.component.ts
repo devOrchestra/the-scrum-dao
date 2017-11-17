@@ -8,7 +8,7 @@ import { ShortEnterAnimation } from '../../shared/animations';
   animations: [ShortEnterAnimation]
 })
 export class CrowdsaleAddOrderDialogComponent {
-  orderTypes = [
+  orderTypes: { [key: string]: string }[] = [
     {
       value: 'buy',
       viewValue: 'Buy order'
@@ -23,7 +23,7 @@ export class CrowdsaleAddOrderDialogComponent {
   val: number;
   eth: number;
 
-  resetHiddenInputs() {
+  resetHiddenInputs(): void {
     if (this.type === 'buy') {
       this.val = null;
     } else if (this.type === 'sell') {
@@ -31,7 +31,7 @@ export class CrowdsaleAddOrderDialogComponent {
     }
   }
 
-  sendData() {
+  sendData(): { [key: string]: string | number } {
     return {
       type: this.type,
       price: this.price,

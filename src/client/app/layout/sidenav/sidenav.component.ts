@@ -9,6 +9,7 @@ import {default as contract} from 'truffle-contract'
 })
 export class SidenavComponent implements OnInit {
   Project = contract(project_artifacts);
+
   showSettingsLink: boolean;
   readyToRender = false;
 

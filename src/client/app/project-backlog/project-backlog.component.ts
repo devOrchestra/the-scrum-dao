@@ -9,6 +9,7 @@ import {ProjectBacklogAddTrackDialogComponent} from './project-backlog-add-track
 import {JiraService} from '../core/jira.service'
 import {countStoryPoints, countDecimals, parseBigNumber} from '../shared/methods'
 import {AlternativeControlFlashAnimation, ShortEnterAnimation} from '../shared/animations'
+import { IBacklogTask } from "../shared/interfaces";
 
 @Component({
   selector: 'app-project-backlog',
@@ -26,7 +27,7 @@ export class ProjectBacklogComponent implements OnInit {
   countDecimals = countDecimals;
   parseBigNumber = parseBigNumber;
 
-  public items = [];
+  public items: IBacklogTask[] = [];
   public readyToDisplay = false;
   public decimals: number;
 
@@ -109,7 +110,7 @@ export class ProjectBacklogComponent implements OnInit {
     })
   }
 
-  voteFor(item, id, index, isOpenForVote) {
+  voteFor(item: IBacklogTask, id: string, index: number, isOpenForVote: boolean): void {
     if (isOpenForVote) {
       let contractInstance;
       item.storyPointsLoading = true;
@@ -130,7 +131,7 @@ export class ProjectBacklogComponent implements OnInit {
     }
   }
 
-  getVotingToUpdate(contractInstance, id, index) {
+  getVotingToUpdate(contractInstance, id: string, index: number): void {
     contractInstance.getVoting(id)
       .then(getVotingResponse => {
         if (this.parseBigNumber(getVotingResponse[1]) === this.items[index].fields.totalSupply &&
@@ -167,12 +168,12 @@ export class ProjectBacklogComponent implements OnInit {
     return index;
   }
 
-  countTotalPercents(votingCount, totalSupply) {
+  countTotalPercents(votingCount: number, totalSupply: number): number {
     const result = votingCount / totalSupply * 100;
     if (!result && result !== 0) {
       return 0;
     } else {
-      return result.toFixed(1);
+      return Number(result.toFixed(1));
     }
   }
 

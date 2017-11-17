@@ -8,6 +8,7 @@ import {default as contract} from 'truffle-contract'
 import {parseBigNumber, countDecimals} from '../shared/methods'
 import {ControlFlashAnimation, ShortEnterAnimation} from '../shared/animations'
 import * as _ from 'lodash'
+import { IOrder } from "../shared/interfaces";
 
 @Component({
   selector: 'app-crowdsale',
@@ -22,7 +23,7 @@ export class CrowdsaleComponent implements OnInit {
   parseBigNumber = parseBigNumber;
   countDecimals = countDecimals;
 
-  orders: { [key: string]: string | number | boolean }[] = [];
+  orders: IOrder[] = [];
   tokenSymbol: string;
   readyToDisplay = false;
   buyOrdersLength: number;
@@ -140,7 +141,7 @@ export class CrowdsaleComponent implements OnInit {
     });
   }
 
-  getBuyOrderToUpdate(contractInstance, index) {
+  getBuyOrderToUpdate(contractInstance, index: number): void {
     contractInstance.getBuyOrder.call(index)
       .then(buyOrder => {
         if (!buyOrder[0] || buyOrder[0].length === 0) {
@@ -156,7 +157,7 @@ export class CrowdsaleComponent implements OnInit {
       })
   }
 
-  getSellOrderToUpdate(contractInstance, index) {
+  getSellOrderToUpdate(contractInstance, index: number): void {
     index = index ? index : 0;
     contractInstance.getSellOrder.call(index)
       .then(sellOrder => {
@@ -211,7 +212,7 @@ export class CrowdsaleComponent implements OnInit {
       });
   }
 
-  lockOrder(e, type: string, id: number): void {
+  lockOrder(e: MouseEvent, type: string, id: number): void {
     let crowdsaleContractInstance;
     e.stopPropagation();
     this.Crowdsale.deployed()
@@ -243,11 +244,11 @@ export class CrowdsaleComponent implements OnInit {
     });
   }
 
-  checkShouldOrderBeVisible(order): boolean {
+  checkShouldOrderBeVisible(order: IOrder): boolean {
     return order.isOpen && !order.isLocked;
   }
 
-  countIndexOfTheLastVisibleSellOrder(index, order) {
+  countIndexOfTheLastVisibleSellOrder(index: number, order: IOrder): number {
     let allSellOrdersHaveIndexProperty = true;
     order.index = index;
     const visibleSellOrders = _.filter(this.orders, {
@@ -265,7 +266,7 @@ export class CrowdsaleComponent implements OnInit {
     }
   }
 
-  excludeItemFromList(id, type) {
+  excludeItemFromList(id: number, type: string): void {
     const itemToExcludeFromList = _.find(this.orders, {id: id, orderType: type});
     itemToExcludeFromList.flashAnimation = "void";
     setTimeout(() => {
@@ -292,7 +293,7 @@ export class CrowdsaleComponent implements OnInit {
     return index;
   }
 
-  findTheSmallestPriceOfSellOrders() {
+  findTheSmallestPriceOfSellOrders(): void {
     const sellOrders = _.filter(this.orders, {orderType: 'sell'});
     let minPriceOfSellOrders;
     sellOrders.forEach(item => {
@@ -305,7 +306,7 @@ export class CrowdsaleComponent implements OnInit {
     return minPriceOfSellOrders;
   }
 
-  formatOrder(item, type) {
+  formatOrder(item: IOrder, type: string): IOrder {
     for (let i = 1; i <= 3; i++) {
       item[i] = this.parseBigNumber(item[i]);
     }
@@ -314,7 +315,7 @@ export class CrowdsaleComponent implements OnInit {
     return item;
   }
 
-  transformOrderToObject (item: string | number | boolean[], orderType: string): { [key: string]: string | number | boolean } {
+  transformOrderToObject(item: IOrder, orderType: string): IOrder {
     return {
       owner: item[0],
       value: item[1],
@@ -326,7 +327,7 @@ export class CrowdsaleComponent implements OnInit {
     }
   }
 
-  styleRow(e): void {
+  styleRow(e: any): void {
     let isRow = false;
     e.target.classList.forEach(i => {
       if (i === "item") { isRow = true }

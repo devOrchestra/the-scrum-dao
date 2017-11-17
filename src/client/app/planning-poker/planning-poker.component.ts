@@ -5,6 +5,7 @@ import {default as contract} from 'truffle-contract'
 import {parseBigNumber, countStoryPoints} from '../shared/methods'
 import * as _ from 'lodash'
 import {AlternativeControlFlashAnimation, ShortEnterAnimation} from '../shared/animations'
+import { IPlanningPokerTask } from "../shared/interfaces";
 
 @Component({
   selector: 'app-planning-poker',
@@ -19,7 +20,7 @@ export class PlanningPokerComponent implements OnInit {
   countStoryPoints = countStoryPoints;
 
   public storyPointsOptions: number[] = [1, 2, 3, 5, 8, 13, 20, 40, 100];
-  public tasks = [];
+  public tasks: IPlanningPokerTask[] = [];
   public readyToDisplay = false;
 
   constructor(
@@ -73,7 +74,7 @@ export class PlanningPokerComponent implements OnInit {
     })
   }
 
-  changeStoryPointsUserChoice(item, id: string, val: number): void {
+  changeStoryPointsUserChoice(item: IPlanningPokerTask, id: string, val: number): void {
     let planningPokerInstance;
     item.votingLoading = true;
     item.storyPointsLoading = true;

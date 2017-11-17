@@ -4,6 +4,7 @@ import project_artifacts from '../../../../build/contracts/Project.json'
 import {default as contract} from 'truffle-contract'
 import { ShortEnterAnimation } from '../shared/animations'
 import { countDecimals, parseBigNumber } from '../shared/methods'
+import { IContributor, IHolder } from "../shared/interfaces";
 
 @Component({
   selector: 'app-contributor-list',
@@ -19,8 +20,8 @@ export class ContributorListComponent implements OnInit {
 
   public readyToRenderPage = false;
   public totalBalance: number;
-  public contributors;
-  public holders = [];
+  public contributors: IContributor[];
+  public holders: IHolder[] = [];
   public tokenSymbol: string;
   public decimals: number;
 
@@ -111,7 +112,7 @@ export class ContributorListComponent implements OnInit {
     });
   }
 
-  formatWorkers(arr) {
+  formatWorkers(itemArr: string | number[]): IContributor {
     const obj = {
       walletAddress: null,
       username: null,
@@ -121,8 +122,8 @@ export class ContributorListComponent implements OnInit {
     let count = 0;
     for (const prop in obj) {
       if (obj.hasOwnProperty(prop)) {
-        if (arr[count] !== undefined) {
-          obj[prop] = arr[count];
+        if (itemArr[count] !== undefined) {
+          obj[prop] = itemArr[count];
           count++
         }
       }
@@ -130,7 +131,7 @@ export class ContributorListComponent implements OnInit {
     return obj;
   }
 
-  formatHolders(arr) {
+  formatHolders(itemArr): IHolder {
     const obj = {
       walletAddress: null,
       balance: null,
@@ -138,8 +139,8 @@ export class ContributorListComponent implements OnInit {
     let count = 0;
     for (const prop in obj) {
       if (obj.hasOwnProperty(prop)) {
-        if (arr[count] !== undefined) {
-          obj[prop] = arr[count];
+        if (itemArr[count] !== undefined) {
+          obj[prop] = itemArr[count];
           count++
         }
       }
@@ -147,7 +148,7 @@ export class ContributorListComponent implements OnInit {
     return obj;
   }
 
-  countBalance(contributorBalance) {
+  countBalance(contributorBalance: number): number {
     const calcVal = (contributorBalance * 100 / this.totalBalance).toFixed(2);
     const finalPercentsVal = parseInt(calcVal.toString(), 10);
     if (isNaN(finalPercentsVal)) {

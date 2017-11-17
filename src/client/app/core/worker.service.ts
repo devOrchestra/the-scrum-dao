@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
+import { IHolder } from "../shared/interfaces";
 
 @Injectable()
 export class WorkerService {
-  public workers;
-  public workers$: BehaviorSubject<any> = new BehaviorSubject<any>('');
-  public holders;
-  public holders$: BehaviorSubject<any> = new BehaviorSubject<any>('');
+  public workers: (string | number)[];
+  public workers$: BehaviorSubject<(string | number)[]> = new BehaviorSubject<(string | number)[]>(null);
+  public holders: IHolder[];
+  public holders$: BehaviorSubject<IHolder[]> = new BehaviorSubject<IHolder[]>(null);
   private totalBalance: number;
 
   public workersAvatarsWereSet = false;
@@ -17,21 +18,21 @@ export class WorkerService {
     private http: Http
   ) { }
 
-  public setWorkers(workers): void {
+  public setWorkers(workers: (string | number)[]): void {
     this.workers = workers;
     this.workers$.next(workers);
   }
 
-  public getWorkers(): Observable<any> {
+  public getWorkers(): Observable<(string | number)[]> {
     return this.workers$.asObservable();
   }
 
-  public setHolders(holders): void {
+  public setHolders(holders: IHolder[]): void {
     this.holders = holders;
     this.holders$.next(holders);
   }
 
-  public getHolders(): Observable<any> {
+  public getHolders(): Observable<IHolder[]> {
     return this.holders$.asObservable();
   }
 

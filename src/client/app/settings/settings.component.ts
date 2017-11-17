@@ -4,6 +4,7 @@ import project_artifacts from '../../../../build/contracts/Project.json'
 import {default as contract} from 'truffle-contract'
 import {countDecimals} from '../shared/methods'
 import {ShortEnterAnimation, FlashAnimation, AlternativeControlFlashAnimation, ControlledFadeOutHighlightAnimation} from '../shared/animations'
+import { ISettingsWorker } from "../shared/interfaces";
 
 @Component({
   selector: 'app-settings',
@@ -16,8 +17,8 @@ export class SettingsComponent implements OnInit {
 
   countDecimals = countDecimals;
 
-  worker: any = {};
-  workers: any[] = [];
+  worker: { [key: string]: string } = {};
+  workers: ISettingsWorker[] = [];
   newOracleAddress: string;
   currentOracleAddress: string;
   newCrowdsale: string;
@@ -72,7 +73,7 @@ export class SettingsComponent implements OnInit {
       });
   }
 
-  addWorker(address) {
+  addWorker(address: string): void {
     const ethAddressAlreadyExists = this.checkIsWorkersEthAddressAlreadyExists(address);
     if (!ethAddressAlreadyExists) {
       let contractInstance;
@@ -113,7 +114,7 @@ export class SettingsComponent implements OnInit {
   }
 
 
-  addOracleAddress() {
+  addOracleAddress(): void {
     const specifiedOracleAlreadyExists = this.currentOracleAddress === this.newOracleAddress;
     if (!specifiedOracleAlreadyExists) {
       let contractInstance;
@@ -151,7 +152,7 @@ export class SettingsComponent implements OnInit {
     }
   }
 
-  addCrowdsale() {
+  addCrowdsale(): void {
     const specifiedCrowdsaleAlreadyExists = this.currentCrowdsale === this.newCrowdsale;
     if (!specifiedCrowdsaleAlreadyExists) {
       let contractInstance;
@@ -189,7 +190,7 @@ export class SettingsComponent implements OnInit {
     }
   }
 
-  formatWorkers(arr: [string | number]): { [key: string]: string | number }[] {
+  formatWorkers(arr: (string | number)[]): ISettingsWorker[] {
     const newArr = [];
     arr.forEach(item => {
       newArr.push({
@@ -201,7 +202,7 @@ export class SettingsComponent implements OnInit {
     return newArr;
   }
 
-  checkIsWorkersEthAddressAlreadyExists(currentAddress): boolean {
+  checkIsWorkersEthAddressAlreadyExists(currentAddress: string): boolean {
     let exists = false;
     if (this.workers.length && this.workers.length > 0) {
       this.workers.forEach(item => {
