@@ -4,26 +4,28 @@ networks:
   basic:
 
 volumes:
-  redis-scrum-data:
-  scrum-dao-credentials:
-  scrum-dao-contracts:
+  redis-data:
+  credentials:
+  contracts:
 
 
 services:
   scrum-dao:
     image: krabradosty/scrum-dao
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=production
       - LOG_LEVEL=debug
     ports:
       - "127.0.0.1:8021:8021"
     volumes:
-      - "scrum-dao-credentials:/src/credentials/"
-      - "scrum-dao-contracts:/src/build/contracts/"
+      - "credentials:/src/credentials/"
+      - "contracts:/src/build/contracts/"
     networks:
       - basic
+    depends_on:
+      - redis
 
-  redis-scrum:
+  redis:
     image: redis:3.2
     command: ["redis-server", "--appendonly", "yes"]
     environment:
@@ -32,6 +34,6 @@ services:
     expose:
       - 6379
     volumes:
-        - "redis-scrum-data:/data"
+        - "redis-data:/data"
     networks:
       - basic
