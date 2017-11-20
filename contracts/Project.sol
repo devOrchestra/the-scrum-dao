@@ -78,7 +78,7 @@ contract Project is StandardToken, Ownable, TrustedOracle {
   }
 
   function transferToCrowdsale(address _from, uint _value) external onlyTrustedCrowdsale {
-    require(balanceOf(_from) >= _value);
+    require(balanceOf(_from) >= _value && balanceOf(_from) > balances[_from].sub(_value));
     balances[_from] = balances[_from].sub(_value);
     balances[trustedCrowdsale] = balances[trustedCrowdsale].add(_value);
     Transfer(_from, trustedCrowdsale, _value);

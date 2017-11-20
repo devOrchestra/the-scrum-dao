@@ -205,7 +205,19 @@ contract('Project', function (accounts) {
       });
     });
 
-    it("should throw error if not trusted crowdsale call function", function () {
+    it("should throw error if balance of account less than value", function () {
+      let projectInstance;
+      return Project.deployed().then(function (instance) {
+        projectInstance = instance
+        return projectInstance.transferToCrowdsale(accounts[1],110000000000000000000, {from: accounts[5], gas: 150000}).should.be.rejected;
+      }).then(function () {
+        return projectContract.balanceOf(accounts[1]);
+      }).then(data => {
+        parseBigNumber(data).should.equal(100000000000000000000)
+      });
+    });
+
+    it("Should transfer tokens from account to crowdsale ", function () {
       let projectInstance;
       return Project.deployed().then(function (instance) {
         projectInstance = instance

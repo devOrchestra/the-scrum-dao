@@ -3,24 +3,17 @@ let Web3 = require('web3');
 
 
 let accounts = web3.eth.accounts;
-let names = ['admin','username'];
-let issues = ['NORMAL','CLOSED','NOTCOLOSED'];
+let names = ['admin', 'username'];
+let issues = ['NORMAL', 'CLOSED', 'NOTCOLOSED'];
 let votedIssueIndex = 0;
 let storyPoints = [100];
 
 
-// Promise
-//   .then(function () {
-//     console.log(`Issue ${issues[votedIssueIndex]}. Voting has been closed`);
-//     return projectContract.payAward('krabradosty', issues[votedIssueIndex], {from: accounts[0], gas: 150000});
-//   })
-//   .then(function () {
-//     console.log(`Issue ${issues[votedIssueIndex]}. Award has been payed`);
-//   })
-
 let service = {
-  initialSetupToPayAward:initialSetupToPayAward
+  initialSetupToPayAward: initialSetupToPayAward,
+  initialSetupAwardPayed: initialSetupAwardPayed
 }
+
 function initialSetupToPayAward(contracts, accounts) {
   projectContract = contracts[0];
   planningPokerContact = contracts[1];
@@ -73,6 +66,21 @@ function initialSetupToPayAward(contracts, accounts) {
     .then(function () {
       return Promise.all([planningPokerContact.closeVoting(issues[0], {from: accounts[0], gas: 150000}),
         planningPokerContact.closeVoting(issues[1], {from: accounts[0], gas: 150000})]);
+    })
+    .catch(function (error) {
+      console.log(`Errors occurred: ${error.message}`);
+    });
+}
+
+function initialSetupAwardPayed(contracts, accounts) {
+  return initialSetupToPayAward(contracts, accounts)
+    .then(function () {
+      console.log(`Issue ${issues[0]}. Voting has been closed`);
+      return contracts[0].payAward('username', issues[0], {from: accounts[0], gas: 150000});
+    })
+    .then(function () {
+      console.log(`Issue ${issues[0]}. Award has been payed`);
+      return true;
     })
     .catch(function (error) {
       console.log(`Errors occurred: ${error.message}`);
