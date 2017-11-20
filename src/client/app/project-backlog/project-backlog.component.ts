@@ -188,6 +188,7 @@ export class ProjectBacklogComponent implements OnInit {
             return backlogContractInstance.addVoting(track, {gas: 500000, from: web3.eth.accounts[0]});
           })
           .then(addVotingResponse => {
+            console.log("addVotingResponse", addVotingResponse);
             this.readyToDisplay = true;
           })
           .catch(err => {

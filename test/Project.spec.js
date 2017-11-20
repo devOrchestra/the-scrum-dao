@@ -187,7 +187,7 @@ contract('Project', function (accounts) {
 
     it("should throw error if award already payed", function () {
       return Promise.resolve().then(function () {
-        return projectContract.payAward('username', 'NORMAL', {from: accounts[0], gas: 150000}).should.be.rejected;;
+        return projectContract.payAward('username', 'NORMAL', {from: accounts[0], gas: 150000}).should.be.rejected;
       })
     });
   })

@@ -13,13 +13,12 @@ export class OwnerGuardService {
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     this.Project.setProvider(web3.currentProvider);
-    // return this.Project.deployed()
-    //   .then(contractInstance => {
-    //     return contractInstance.owner();
-    //   })
-    //   .then(ownerResponse => {
-    //     return ownerResponse === web3.eth.accounts[0];
-    //   })
-    return true;
+    return this.Project.deployed()
+      .then(contractInstance => {
+        return contractInstance.owner();
+      })
+      .then(ownerResponse => {
+        return ownerResponse === web3.eth.accounts[0];
+      });
   }
 }
