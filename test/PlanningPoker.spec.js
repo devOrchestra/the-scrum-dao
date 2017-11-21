@@ -22,7 +22,7 @@ contract('PlanningPoker', accounts => {
         });
     });
 
-    it("should deploy 'PlanningPoker' properly", done => {
+    it("should deploy PlanningPoker properly", done => {
       PlanningPoker.deployed()
         .then(instance => {
           should.exist(instance.contract);
@@ -36,22 +36,12 @@ contract('PlanningPoker', accounts => {
     before(done => {
       projectContract.addTrustedOracle(accounts[1], {from: accounts[0], gas: 150000})
         .then(() => {
-          projectContract.trustedOracle();
-        })
-        .then(() => {
           done();
         })
     });
 
-    it("should throw error if not Owner call addTrustedOracle for PlanningPoker", done => {
-      planningPokerContact.addTrustedOracle(accounts[1], {from: accounts[5], gas: 150000}).should.be.rejected
-        .then(() => {
-          return planningPokerContact.trustedOracle();
-        })
-        .then(data => {
-          data.should.equal('0x0000000000000000000000000000000000000000');
-          done();
-        });
+    it("should throw error if not Owner call addTrustedOracle for PlanningPoker", () => {
+      return planningPokerContact.addTrustedOracle(accounts[1], {from: accounts[5], gas: 150000}).should.be.rejected
     });
 
     it("should set trustedOracle address for PlanningPoker", done => {

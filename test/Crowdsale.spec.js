@@ -258,7 +258,6 @@ contract('Crowdsale', function (accounts) {
     it("should throw error if no owner tries to close order", function () {
       return Crowdsale.deployed()
         .then(function (instance) {
-          console.log(parseBigNumber(instance))
           return crowdsaleContract.addSellOrder(
             5000000000000000000, // 5 Tokens
             100000000000000000, // 0.1 ETH
@@ -313,7 +312,6 @@ contract('Crowdsale', function (accounts) {
     it("should throw error if no owner tries to close order", function () {
       return Crowdsale.deployed()
         .then(function (instance) {
-          console.log(parseBigNumber(instance))
           return crowdsaleContract.addBuyOrder(250000000000000000, {
             from: accounts[2],
             gas: 500000,
