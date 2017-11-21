@@ -2,20 +2,33 @@ import {Component, OnInit} from '@angular/core';
 import {WorkerService} from '../core/worker.service'
 import project_artifacts from '../../../../build/contracts/Project.json'
 import {default as contract} from 'truffle-contract'
-import {countDecimals} from '../shared/methods'
-import {ShortEnterAnimation, FlashAnimation, AlternativeControlFlashAnimation, ControlledFadeOutHighlightAnimation} from '../shared/animations'
+import {countDecimals, gas} from '../shared/methods'
 import { ISettingsWorker } from "../shared/interfaces";
+import {
+  ShortEnterAnimation,
+  FlashAnimation,
+  AlternativeControlFlashAnimation,
+  ControlledFadeOutHighlightAnimation,
+  ControlFlashAnimation
+} from '../shared/animations'
 
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.css'],
-  animations: [ShortEnterAnimation, FlashAnimation, AlternativeControlFlashAnimation, ControlledFadeOutHighlightAnimation]
+  animations: [
+    ShortEnterAnimation,
+    FlashAnimation,
+    AlternativeControlFlashAnimation,
+    ControlledFadeOutHighlightAnimation,
+    ControlFlashAnimation
+  ]
 })
 export class SettingsComponent implements OnInit {
   Project = contract(project_artifacts);
 
   countDecimals = countDecimals;
+  gas = gas;
 
   worker: { [key: string]: string } = {};
   workers: ISettingsWorker[] = [];
@@ -82,8 +95,7 @@ export class SettingsComponent implements OnInit {
         .then(contractInstanceResponse => {
           contractInstance = contractInstanceResponse;
           return contractInstance.addWorker(this.worker.address, this.worker.login, {
-            from: web3.eth.accounts[0],
-            gas: 150000
+            from: web3.eth.accounts[0]
           });
         })
         .then(() => {
@@ -95,8 +107,8 @@ export class SettingsComponent implements OnInit {
         })
         .then(worker => {
           worker = this.formatWorkers([worker]);
-          this.worker.flashAnimation = "animate";
-          this.workers.push(worker);
+          worker[0].flashAnimation = "animate";
+          this.workers.push(worker[0]);
           this.worker = {};
           this.addWorkerLoading = false;
         })
@@ -124,7 +136,7 @@ export class SettingsComponent implements OnInit {
           contractInstance = contractInstanceResponse;
           return contractInstance.addTrustedOracle(this.newOracleAddress, {
             from: web3.eth.accounts[0],
-            gas: 150000
+            gas: this.gas
           });
         })
         .then(() => {
@@ -162,7 +174,7 @@ export class SettingsComponent implements OnInit {
           contractInstance = contractInstanceResponse;
           return contractInstance.initCrowdsale(this.newCrowdsale, {
             from: web3.eth.accounts[0],
-            gas: 150000
+            gas: this.gas
           });
         })
         .then(() => {
@@ -196,7 +208,7 @@ export class SettingsComponent implements OnInit {
       newArr.push({
         address: item[0],
         username: item[1],
-        balance: item[2]
+        balance: item[2] || 0
       })
     });
     return newArr;

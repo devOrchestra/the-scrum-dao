@@ -35,13 +35,6 @@ contract('ProductBacklog', accounts => {
   });
 
   describe('addTrustedOracle', () => {
-    before(done => {
-      projectContract.addTrustedOracle(accounts[1], {from: accounts[0], gas: 150000})
-        .then(() => {
-          done();
-        })
-    });
-
     it("should set trustedOracle address for ProductBacklog", done => {
       productBacklogContract.addTrustedOracle(accounts[1], {from: accounts[0], gas: 150000})
         .then(() => {

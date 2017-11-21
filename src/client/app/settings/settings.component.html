@@ -5,7 +5,7 @@
   <h2 class="title">Workers</h2>
   <div class="workers">
     <div fxLayout="row" fxLayoutAlign="space-between center" class="worker transition-fast" *ngFor="let worker of workers;"
-         [@controlledFadeOutHighlightAnimation]="worker.highlightAnimation" [@flashAnimation]="worker.flashAnimation">
+         [@controlledFadeOutHighlightAnimation]="worker.highlightAnimation" [@controlFlashAnimation]="worker.flashAnimation">
       <div class="left" fxLayout="column">
         <h3 class="worker-name">{{worker.username}}</h3>
         <p class="worker-address">{{worker.address}}</p>

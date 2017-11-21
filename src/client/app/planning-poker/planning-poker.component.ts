@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {JiraService} from '../core/jira.service'
 import planningPoker_artifacts from '../../../../build/contracts/PlanningPoker.json';
 import {default as contract} from 'truffle-contract'
-import {parseBigNumber, countStoryPoints} from '../shared/methods'
+import {parseBigNumber, countStoryPoints, gas} from '../shared/methods'
 import * as _ from 'lodash'
 import {AlternativeControlFlashAnimation, ShortEnterAnimation} from '../shared/animations'
 import { IPlanningPokerTask } from "../shared/interfaces";
@@ -18,6 +18,7 @@ export class PlanningPokerComponent implements OnInit {
 
   parseBigNumber = parseBigNumber;
   countStoryPoints = countStoryPoints;
+  gas = gas;
 
   public storyPointsOptions: number[] = [1, 2, 3, 5, 8, 13, 20, 40, 100];
   public tasks: IPlanningPokerTask[] = [];
@@ -81,7 +82,7 @@ export class PlanningPokerComponent implements OnInit {
     this.PlanningPoker.deployed()
       .then(planningPokerInstanceResponse => {
         planningPokerInstance = planningPokerInstanceResponse;
-        return planningPokerInstance.vote(id, val, {from: web3.eth.accounts[0], gas: 235000});
+        return planningPokerInstance.vote(id, val, {from: web3.eth.accounts[0], gas: this.gas});
       })
       .then(() => {
         return planningPokerInstance.getVoting(item.key)

@@ -7,7 +7,7 @@ import project_artifacts from '../../../../build/contracts/Project.json';
 import {MdDialog} from '@angular/material';
 import {ProjectBacklogAddTrackDialogComponent} from './project-backlog-add-track-dialog/project-backlog-add-track-dialog.component'
 import {JiraService} from '../core/jira.service'
-import {countStoryPoints, countDecimals, parseBigNumber} from '../shared/methods'
+import {countStoryPoints, countDecimals, parseBigNumber, gas} from '../shared/methods'
 import {AlternativeControlFlashAnimation, ShortEnterAnimation} from '../shared/animations'
 import { IBacklogTask } from "../shared/interfaces";
 
@@ -26,6 +26,7 @@ export class ProjectBacklogComponent implements OnInit {
   countStoryPoints = countStoryPoints;
   countDecimals = countDecimals;
   parseBigNumber = parseBigNumber;
+  gas = gas;
 
   public items: IBacklogTask[] = [];
   public readyToDisplay = false;
@@ -72,7 +73,7 @@ export class ProjectBacklogComponent implements OnInit {
             });
             const getVoteBacklog = [];
             this.items.forEach(item => {
-              getVoteBacklog.push(backlogContractInstance.getVote(item.key, {gas: 500000, from: web3.eth.accounts[0]}));
+              getVoteBacklog.push(backlogContractInstance.getVote(item.key, {gas: this.gas, from: web3.eth.accounts[0]}));
             });
             return Promise.all(getVoteBacklog);
           })
@@ -118,7 +119,7 @@ export class ProjectBacklogComponent implements OnInit {
       this.Backlog.deployed()
         .then(contractInstanceResponse => {
           contractInstance = contractInstanceResponse;
-          return contractInstance.vote(id, {gas: 500000, from: web3.eth.accounts[0]});
+          return contractInstance.vote(id, {gas: this.gas, from: web3.eth.accounts[0]});
         })
         .then(voteResponse => {
           this.getVotingToUpdate(contractInstance, id, index);
@@ -140,7 +141,7 @@ export class ProjectBacklogComponent implements OnInit {
         } else {
           this.items[index].fields.totalSupply = this.parseBigNumber(getVotingResponse[1]);
           this.items[index].fields.votingCount = this.parseBigNumber(getVotingResponse[2]);
-          contractInstance.getVote(id, {gas: 500000, from: web3.eth.accounts[0]})
+          contractInstance.getVote(id, {gas: this.gas, from: web3.eth.accounts[0]})
             .then(getVoteResponse => {
               this.items[index].userHasAlreadyVoted = this.parseBigNumber(getVoteResponse[0]) / this.decimals;
               this.items[index].storyPointsLoading = false;
@@ -185,7 +186,7 @@ export class ProjectBacklogComponent implements OnInit {
         this.Backlog.setProvider(web3.currentProvider);
         this.Backlog.deployed()
           .then(backlogContractInstance => {
-            return backlogContractInstance.addVoting(track, {gas: 500000, from: web3.eth.accounts[0]});
+            return backlogContractInstance.addVoting(track, {gas: this.gas, from: web3.eth.accounts[0]});
           })
           .then(addVotingResponse => {
             console.log("addVotingResponse", addVotingResponse);

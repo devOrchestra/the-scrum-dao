@@ -38,8 +38,8 @@
             </div>
             <div fxLayout="row">
               <div *ngIf="currentOwner === order.owner" class="lock-button transition-fast" (mouseenter)="styleRow($event)"
-                      (mouseleave)="styleRow($event)" (click)="lockOrder($event, order.orderType, order.id)">
-                CANCEL
+                      (mouseleave)="styleRow($event)" (click)="closeOrder($event, order.orderType, order.id)">
+                CLOSE
               </div>
               <span fxLayout="column" fxLayoutAlign="center">{{order.price}} {{tokenSymbol}}/ETH</span>
             </div>
@@ -49,5 +49,5 @@
     </div>
   </div>
 
-  <button id="add-order-button" md-fab (click)="openAddOrderDialog()">+</button>
+  <!--<button id="add-order-button" md-fab (click)="openAddOrderDialog()">+</button>-->
 </div>

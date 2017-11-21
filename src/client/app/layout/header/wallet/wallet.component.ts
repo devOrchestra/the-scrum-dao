@@ -4,7 +4,7 @@ import { WorkerService } from '../../../core/worker.service'
 import { WalletStateService } from '../../../core/wallet-state.service'
 import project_artifacts from '../../../../../../build/contracts/Project.json'
 import {default as contract} from 'truffle-contract'
-import { parseBigNumber, countDecimals } from '../../../shared/methods'
+import { parseBigNumber, countDecimals, gas } from '../../../shared/methods'
 import {MediumEnterLeaveAnimation, MediumControlledEnterLeaveAnimation} from '../../../shared/animations'
 import anime from 'animejs'
 
@@ -20,6 +20,7 @@ export class WalletComponent implements OnInit {
 
   parseBigNumber = parseBigNumber;
   countDecimals = countDecimals;
+  gas = gas;
 
   currentBalance: { [key: string]: number } = { balance: null };
   tokenSymbol: string;
@@ -97,7 +98,7 @@ export class WalletComponent implements OnInit {
         .then(contractInstanceResponse => {
           contractInstance = contractInstanceResponse;
           return contractInstance.transfer(this.sendTokensObj.address, Number(this.sendTokensObj.value) * this.decimals, {
-            gas: 500000,
+            gas: this.gas,
             from: web3.eth.accounts[0]
           });
         })
@@ -164,7 +165,6 @@ export class WalletComponent implements OnInit {
     anime({
       targets: this.currentBalance,
       balance: toValue,
-      easing: 'easeInOutExpo',
       duration: 3000
     });
   };
