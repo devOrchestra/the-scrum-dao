@@ -3,15 +3,16 @@ import EthereumTx = require('ethereumjs-tx');
 import ethUtils = require('ethereumjs-util');
 import Wallet = require('ethereumjs-wallet');
 import contract = require('truffle-contract');
-import fs = require('fs');
 import path = require('path');
 import ProviderEngine = require("web3-provider-engine");
 import WalletSubprovider = require('web3-provider-engine/subproviders/wallet.js');
 import Web3Subprovider = require("web3-provider-engine/subproviders/web3.js");
 import FilterSubprovider = require('web3-provider-engine/subproviders/filters.js');
 import Promise = require('bluebird');
+import fs = require('fs');
 
 import logger from './logger';
+let deleteFile = Promise.promisify(fs.unlink);
 
 class EthController {
 
@@ -24,6 +25,7 @@ class EthController {
   public projectName: string;
   private config: any;
   private web3: Web3;
+  private oracleAddress: string;
   private projectContract;
   private planningPokerContact;
   private crowdsaleContract;
@@ -31,15 +33,15 @@ class EthController {
 
   // METHODS
   public init(done): void {
-    let walletData = require(path.resolve(this.config.ethereum.admin.walletPath));
-    let adminWallet = Wallet.fromV3(walletData, this.config.ethereum.admin.walletPassword);
-
-    let engine = new ProviderEngine();
-    engine.addProvider(new FilterSubprovider());
-    engine.addProvider(new WalletSubprovider(adminWallet, {}));
-    engine.addProvider(new Web3Subprovider(new Web3.providers.HttpProvider(this.config.ethereum.url)));
-    engine.start();
-    this.web3 = new Web3(engine);
+    // OWNER WALLET
+    let walletData = require(path.resolve(this.config.ethereum.owner.walletPath));
+    let ownerWallet = Wallet.fromV3(walletData, this.config.ethereum.owner.walletPassword);
+    let ownerAddress = `0x${ownerWallet.getAddress().toString("hex")}`;
+    this.setWeb3Engine(ownerWallet);
+    // TRUSTED ORACLE WALLET
+    walletData = require(path.resolve(this.config.ethereum.oracle.walletPath));
+    let oracleWallet = Wallet.fromV3(walletData, this.config.ethereum.oracle.walletPassword);
+    this.oracleAddress = `0x${oracleWallet.getAddress().toString("hex")}`;
 
     let projectArtifact = require(path.resolve('./build/contracts/Project.json'));
     let planningPokerArtifact = require(path.resolve('./build/contracts/PlanningPoker.json'));
@@ -67,7 +69,21 @@ class EthController {
         this.planningPokerContact = contracts[1];
         this.crowdsaleContract = contracts[2];
         this.productBacklogContract = contracts[3];
-        logger.info(`Ethereum Controller has been connected to ${this.config.ethereum.url} and account 0x${adminWallet.getAddress().toString("hex")}`);
+        logger.info(`Ethereum Controller has been connected to ${this.config.ethereum.url} node`);
+
+        let addOracleTasks = [];
+        for (let contract of contracts) {
+          addOracleTasks.push(contract.addTrustedOracle(this.oracleAddress, {from: ownerAddress}));
+        }
+        return Promise.all(addOracleTasks);
+      })
+      .then(() => {
+        logger.info(`Trusted oracle ${this.oracleAddress} has been added for all contracts`);
+        this.setWeb3Engine(oracleWallet);
+        return deleteFile(path.resolve(this.config.ethereum.owner.walletPath));
+      })
+      .then(() => {
+        logger.info(`Owner wallet V3 file has been removed from server`);
         done(null);
       })
       .catch((error) => {
@@ -76,7 +92,17 @@ class EthController {
 
   }
 
+  private setWeb3Engine(wallet){
+    let engine = new ProviderEngine();
+    engine.addProvider(new FilterSubprovider());
+    engine.addProvider(new WalletSubprovider(wallet, {}));
+    engine.addProvider(new Web3Subprovider(new Web3.providers.HttpProvider(this.config.ethereum.url)));
+    engine.start();
+    this.web3 = new Web3(engine);
+  }
+
   public createStoryPointsVoting(issueName: string, options: ContractMethodOptions, done): void {
+    options.from = this.oracleAddress;
     this.planningPokerContact
       .addVoting(issueName, options)
       .then(() => {
@@ -90,6 +116,7 @@ class EthController {
   }
 
   public closeStoryPointsVoting(issueName: string, options: ContractMethodOptions, done): void {
+    options.from = this.oracleAddress;
     this.planningPokerContact
       .closeVoting(issueName, options)
       .then(() => {
@@ -103,6 +130,7 @@ class EthController {
   }
 
   public payIssueAward(username: string, issueName: string, options: ContractMethodOptions, done): void {
+    options.from = this.oracleAddress;
     this.projectContract
       .payAward(username, issueName, options)
       .then(() => {
@@ -116,6 +144,7 @@ class EthController {
   }
 
   public createPriorityVoting(issueName: string, options: ContractMethodOptions, done): void {
+    options.from = this.oracleAddress;
     this.productBacklogContract
       .addVoting(issueName, options)
       .then(() => {
@@ -129,6 +158,7 @@ class EthController {
   }
 
   public closePriorityVoting(issueName: string, options: ContractMethodOptions, done): void {
+    options.from = this.oracleAddress;
     this.productBacklogContract
       .closeVoting(issueName, options)
       .then(() => {
@@ -146,6 +176,7 @@ class EthController {
 interface ContractMethodOptions {
   gasLimit?: string;
   gas?: string;
+  from?: string;
 }
 
 export default EthController

@@ -41,6 +41,7 @@ if (cluster.isMaster) {
 
     new TaskHandler(config)
       .init((error)=>{
+        logger.error('Errors occurred during task handler initialization');
         if (error) throw error;
       });
   });
