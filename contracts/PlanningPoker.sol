@@ -82,7 +82,7 @@ contract PlanningPoker is Ownable, TrustedOracle {
     }
   }
 
-  function setAddress(address _planningPokerContract) external onlyOwner {
+  function initProject(address _planningPokerContract) external onlyOwner {
     project = Project(_planningPokerContract);
     projectAddress = _planningPokerContract;
   }
