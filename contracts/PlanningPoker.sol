@@ -13,7 +13,7 @@ contract PlanningPoker is Ownable, TrustedOracle {
 
   Project project;
 
-  address projectAddress;
+  address public projectAddress;
 
   struct Voting {
     string issue;
@@ -80,5 +80,10 @@ contract PlanningPoker is Ownable, TrustedOracle {
     if (votings[issue].isValid) {
       votings[issue].awardPaid = true;
     }
+  }
+
+  function setAddress(address _planningPokerContract) external onlyOwner {
+    project = Project(_planningPokerContract);
+    projectAddress = _planningPokerContract;
   }
 }

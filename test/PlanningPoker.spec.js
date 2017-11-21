@@ -198,7 +198,7 @@ contract('PlanningPoker', accounts => {
     });
 
     describe("close voting", () => {
-      it("should close voting without trusted oracle", () => {
+      it("should throw error when trying to close voting without trusted oracle", () => {
         return planningPokerContact.closeVoting("SD-TEST", {from: accounts[3], gas: 150000}).should.be.rejected
       });
 
@@ -214,18 +214,34 @@ contract('PlanningPoker', accounts => {
           });
       });
 
+      it("should set address for Planning Poker", done => {
+        planningPokerContact.setAddress(accounts[0], {from: accounts[0], gas: 150000})
+          .then(() => {
+            return planningPokerContact.projectAddress();
+          })
+          .then(projectAddressResponse => {
+            projectAddressResponse.should.equal(accounts[0]);
+            done();
+          })
+      });
+
+      it("should throw error when not Owner is trying to mark voting as paid", () => {
+        return planningPokerContact.markVotingAsPaid("SD-TEST", {from: accounts[1], gas: 150000}).should.be.rejected
+      });
+
       it("should mark voting as paid", done => {
         planningPokerContact.markVotingAsPaid("SD-TEST", {from: accounts[0], gas: 150000})
-          .then((res) => {
-            console.log("*********************************");
-            console.log("RES", res);
+          .then(() => {
             return planningPokerContact.getVoting("SD-TEST", {from: accounts[0], gas: 150000});
           })
-          .then(getVotingResponse => {
-            console.log("getVotingResponse", getVotingResponse);
+          .then(() => {
+            return planningPokerContact.projectAddress();
+          })
+          .then(projectAddressResponse => {
+            projectAddressResponse.should.equal(accounts[0]);
             done();
           });
-      })
+      });
     });
   });
 });
