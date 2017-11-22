@@ -6,23 +6,26 @@ var Web3 = require("web3");
 var FilterSubprovider = require('web3-provider-engine/subproviders/filters.js');
 
 
+let address;
 let providerUrl;
-let walletPass;
+let engine;
 if (process.env.NODE_ENV === 'production') {
+  let ownerWalletData = require('./credentials/ownerWallet.json');
+  let ownerWallet = Wallet.fromV3(ownerWalletData, process.env.OWNER_WALLET_SECRET);
+  address = "0x" + ownerWallet.getAddress().toString("hex");
   providerUrl = process.env.ETH_NODE_URL;
-  walletPass = process.env.OWNER_WALLET_SECRET;
+  engine = new ProviderEngine();
+  engine.addProvider(new FilterSubprovider());
+  engine.addProvider(new WalletSubprovider(ownerWallet, {}));
+  engine.addProvider(new Web3Subprovider(new Web3.providers.HttpProvider(providerUrl)));
+  engine.start(); // Required by the provider engine.
+
 } else {
   providerUrl = 'http://localhost:8545';
-  walletPass = 'semen';
+  let web3 = new Web3(new Web3.providers.HttpProvider(providerUrl));
+  address = web3.eth.accounts[0];
+  engine = web3.currentProvider;
 }
-let ownerWalletData = require('./credentials/ownerWallet.json');
-let ownerWallet = Wallet.fromV3(ownerWalletData, walletPass);
-let address = "0x" + ownerWallet.getAddress().toString("hex");
-let engine = new ProviderEngine();
-engine.addProvider(new FilterSubprovider());
-engine.addProvider(new WalletSubprovider(ownerWallet, {}));
-engine.addProvider(new Web3Subprovider(new Web3.providers.HttpProvider(providerUrl)));
-engine.start(); // Required by the provider engine.
 
 module.exports = {
   networks: {

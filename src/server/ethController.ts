@@ -1,5 +1,4 @@
 import Web3 = require('web3');
-import EthereumTx = require('ethereumjs-tx');
 import ethUtils = require('ethereumjs-util');
 import Wallet = require('ethereumjs-wallet');
 import contract = require('truffle-contract');
@@ -19,45 +18,146 @@ class EthController {
   constructor(projectName, config) {
     this.projectName = projectName;
     this.config = config;
+    this.contracts = {};
   }
 
   // FIELDS
   public projectName: string;
   private config: any;
   private web3: Web3;
-  private oracleAddress: string;
-  private projectContract;
-  private planningPokerContact;
-  private crowdsaleContract;
-  private productBacklogContract;
+  private contracts: any;
+  private ethAddress: string;
 
   // METHODS
   public init(done): void {
-    // OWNER WALLET
-    let walletData = require(path.resolve(this.config.ethereum.owner.walletPath));
-    let ownerWallet = Wallet.fromV3(walletData, this.config.ethereum.owner.walletPassword);
-    let ownerAddress = `0x${ownerWallet.getAddress().toString("hex")}`;
-    this.setWeb3Engine(ownerWallet);
-    // TRUSTED ORACLE WALLET
-    walletData = require(path.resolve(this.config.ethereum.oracle.walletPath));
-    let oracleWallet = Wallet.fromV3(walletData, this.config.ethereum.oracle.walletPassword);
-    this.oracleAddress = `0x${oracleWallet.getAddress().toString("hex")}`;
 
-    let projectArtifact = require(path.resolve('./build/contracts/Project.json'));
-    let planningPokerArtifact = require(path.resolve('./build/contracts/PlanningPoker.json'));
-    let crowdsaleArtifact = require(path.resolve('./build/contracts/Crowdsale.json'));
-    let productBacklogArtifact = require(path.resolve('./build/contracts/ProductBacklog.json'));
+    let artifacts: any = {};
+    let isExist;
+    try {
+      artifacts.project = require(path.resolve('./build/contracts/Project.json'));
+      artifacts.planningPoker = require(path.resolve('./build/contracts/PlanningPoker.json'));
+      artifacts.crowdsale = require(path.resolve('./build/contracts/Crowdsale.json'));
+      artifacts.productBacklog = require(path.resolve('./build/contracts/ProductBacklog.json'));
+      isExist = fs.existsSync(this.config.ethereum.owner.walletPath);
+    } catch (error) {
+      return process.nextTick(()=>{done(error)});
+    }
 
-    let project = contract(projectArtifact);
+    let chain = Promise.resolve();
+    if (isExist === true || this.config.environment === 'development') {
+      chain = chain.then(() => this.initWithOwnerWallet(artifacts));
+    } else {
+      chain = chain.then(() => this.initWithOracleWallet(artifacts));
+    }
+    chain
+      .then(this.postInitializationAction())
+      .then(() => {
+        done();
+      })
+      .catch((error) => {
+        done(error);
+      });
+
+  }
+
+  private initWithOwnerWallet(artifacts): Promise {
+    let ownerWallet;
+    let oracleWallet;
+
+    return Promise
+      .resolve()
+      .then(() => {
+        ownerWallet = this.loadWallet('owner');
+        oracleWallet = this.loadWallet('oracle');
+        this.setWeb3Engine(ownerWallet);
+        return this.initContractInstances(artifacts);
+      })
+      .then(() => {
+        let addOracleTasks = [];
+        for (let contractName of Object.keys(this.contracts)) {
+          addOracleTasks.push(this.contracts[contractName].addTrustedOracle(oracleWallet.address, {from: this.ethAddress}));
+        }
+        return Promise.all(addOracleTasks);
+      })
+      .then(() => {
+        logger.info(`Trusted oracle ${oracleWallet.address} has been added for all contracts`);
+        this.setWeb3Engine(oracleWallet);
+        return this.initContractInstances(artifacts);
+      });
+  }
+
+  private initWithOracleWallet(artifacts): Promise {
+    let oracleWallet: LoadedWallet;
+    return Promise
+      .resolve()
+      .then(() => {
+        oracleWallet = this.loadWallet('oracle');
+        this.setWeb3Engine(oracleWallet);
+        return this.initContractInstances(artifacts);
+      });
+  }
+
+  private loadWallet(entity: string): LoadedWallet {
+    let wallet: any = {entity};
+    switch (this.config.environment) {
+
+      case 'development':
+        let web3 = new Web3(new Web3.providers.HttpProvider(this.config.ethereum.url));
+        if (entity === 'owner') {
+          wallet.address = web3.eth.accounts[0];
+        } else {
+          wallet.address = web3.eth.accounts[1];
+        }
+        break;
+
+      case 'production':
+        let walletData = require(path.resolve(this.config.ethereum[entity].walletPath));
+        wallet.v3Wallet = Wallet.fromV3(walletData, this.config.ethereum[entity].walletPassword);
+        wallet.address = `0x${wallet.v3Wallet.getAddress().toString("hex")}`;
+        break;
+
+      default:
+        throw Error(`unknown environment: ${this.config.environment}`);
+    }
+    logger.info(`Wallet of ${entity} with address ${wallet.address} has been loaded`);
+    return wallet;
+  }
+
+  private setWeb3Engine(wallet: LoadedWallet): void {
+    switch (this.config.environment) {
+
+      case 'development':
+        this.ethAddress = wallet.address;
+        this.web3 = new Web3(new Web3.providers.HttpProvider(this.config.ethereum.url));
+        break;
+
+      case 'production':
+        this.ethAddress = wallet.address;
+        let engine = new ProviderEngine();
+        engine.addProvider(new FilterSubprovider());
+        engine.addProvider(new WalletSubprovider(wallet.v3Wallet, {}));
+        engine.addProvider(new Web3Subprovider(new Web3.providers.HttpProvider(this.config.ethereum.url)));
+        engine.start();
+        this.web3 = new Web3(engine);
+        break;
+
+      default:
+        throw Error(`unknown environment: ${this.config.environment}`);
+    }
+    logger.info(`Ethereum Controller has been connected to ${this.config.ethereum.url} node as ${wallet.entity} with address ${this.ethAddress}`);
+  }
+
+  private initContractInstances(artifacts: any): Promise {
+    let project = contract(artifacts.project);
     project.setProvider(this.web3.currentProvider);
-    let planningPoker = contract(planningPokerArtifact);
+    let planningPoker = contract(artifacts.planningPoker);
     planningPoker.setProvider(this.web3.currentProvider);
-    let crowdsale = contract(crowdsaleArtifact);
+    let crowdsale = contract(artifacts.crowdsale);
     crowdsale.setProvider(this.web3.currentProvider);
-    let productBacklog = contract(productBacklogArtifact);
+    let productBacklog = contract(artifacts.productBacklog);
     productBacklog.setProvider(this.web3.currentProvider);
 
-    Promise
+    return Promise
       .all([
         project.deployed(),
         planningPoker.deployed(),
@@ -65,45 +165,29 @@ class EthController {
         productBacklog.deployed()
       ])
       .then((contracts) => {
-        this.projectContract = contracts[0];
-        this.planningPokerContact = contracts[1];
-        this.crowdsaleContract = contracts[2];
-        this.productBacklogContract = contracts[3];
-        logger.info(`Ethereum Controller has been connected to ${this.config.ethereum.url} node`);
-
-        let addOracleTasks = [];
-        for (let contract of contracts) {
-          addOracleTasks.push(contract.addTrustedOracle(this.oracleAddress, {from: ownerAddress}));
-        }
-        return Promise.all(addOracleTasks);
-      })
-      .then(() => {
-        logger.info(`Trusted oracle ${this.oracleAddress} has been added for all contracts`);
-        this.setWeb3Engine(oracleWallet);
-        return deleteFile(path.resolve(this.config.ethereum.owner.walletPath));
-      })
-      .then(() => {
-        logger.info(`Owner wallet V3 file has been removed from server`);
-        done(null);
-      })
-      .catch((error) => {
-        done(error);
-      })
-
+        this.contracts.project = contracts[0];
+        this.contracts.planningPoker = contracts[1];
+        this.contracts.crowdsale = contracts[2];
+        this.contracts.productBacklog = contracts[3];
+      });
   }
 
-  private setWeb3Engine(wallet){
-    let engine = new ProviderEngine();
-    engine.addProvider(new FilterSubprovider());
-    engine.addProvider(new WalletSubprovider(wallet, {}));
-    engine.addProvider(new Web3Subprovider(new Web3.providers.HttpProvider(this.config.ethereum.url)));
-    engine.start();
-    this.web3 = new Web3(engine);
+  private postInitializationAction(): Promise {
+    return Promise
+      .resolve()
+      .then(() => {
+        if (this.config.environment === 'production') {
+          return deleteFile(this.config.ethereum.owner.walletPath)
+            .then(() => {
+              logger.info(`Owner wallet V3 file has been removed from server`);
+            });
+        }
+      });
   }
 
   public createStoryPointsVoting(issueName: string, options: ContractMethodOptions, done): void {
-    options.from = this.oracleAddress;
-    this.planningPokerContact
+    options.from = this.ethAddress;
+    this.contracts.planningPoker
       .addVoting(issueName, options)
       .then(() => {
         logger.info(`Project ${this.projectName} issue ${issueName}. Story points voting  has been added`);
@@ -116,8 +200,8 @@ class EthController {
   }
 
   public closeStoryPointsVoting(issueName: string, options: ContractMethodOptions, done): void {
-    options.from = this.oracleAddress;
-    this.planningPokerContact
+    options.from = this.ethAddress;
+    this.contracts.planningPoker
       .closeVoting(issueName, options)
       .then(() => {
         logger.info(`Project ${this.projectName} issue ${issueName}. Story points voting has been closed`);
@@ -130,8 +214,8 @@ class EthController {
   }
 
   public payIssueAward(username: string, issueName: string, options: ContractMethodOptions, done): void {
-    options.from = this.oracleAddress;
-    this.projectContract
+    options.from = this.ethAddress;
+    this.contracts.project
       .payAward(username, issueName, options)
       .then(() => {
         logger.info(`Project ${this.projectName} issue ${issueName}. Award has been payed`);
@@ -144,8 +228,8 @@ class EthController {
   }
 
   public createPriorityVoting(issueName: string, options: ContractMethodOptions, done): void {
-    options.from = this.oracleAddress;
-    this.productBacklogContract
+    options.from = this.ethAddress;
+    this.contracts.productBacklog
       .addVoting(issueName, options)
       .then(() => {
         logger.info(`Project ${this.projectName} issue ${issueName}. Priority voting has been added`);
@@ -158,8 +242,8 @@ class EthController {
   }
 
   public closePriorityVoting(issueName: string, options: ContractMethodOptions, done): void {
-    options.from = this.oracleAddress;
-    this.productBacklogContract
+    options.from = this.ethAddress;
+    this.contracts.productBacklog
       .closeVoting(issueName, options)
       .then(() => {
         logger.info(`Project ${this.projectName} issue ${issueName}. Priority voting has been closed`);
@@ -177,6 +261,12 @@ interface ContractMethodOptions {
   gasLimit?: string;
   gas?: string;
   from?: string;
+}
+
+interface LoadedWallet {
+  address: string;
+  entity: string;
+  v3Wallet?: any;
 }
 
 export default EthController
