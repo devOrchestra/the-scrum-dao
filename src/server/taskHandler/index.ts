@@ -33,9 +33,9 @@ class TaskHandler {
       this.createHandler('issue.storyPointsVoting.finished', getSPVotingFinishedHandler(this));
       logger.info('Task Handler is initialized');
     });
-    
+
   }
-  
+
   private createHandler(eventName: string, handler: (job, done) => void): void {
     this.handler.process(eventName, handler);
     logger.info(`Handler for ${eventName} has been added`)
