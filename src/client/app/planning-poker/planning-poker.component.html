@@ -1,15 +1,18 @@
 <div fxFlexFill fxLayout="row" fxLayoutAlign="center center" *ngIf="!readyToDisplay">
   <md-spinner class="main-spinner"></md-spinner>
 </div>
-<div fxLayout="row" fxLayoutAlign="center center" *ngIf="(!tasks || tasks.length === 0) && readyToDisplay" class="no-tasks"
+<div fxLayout="row" fxLayoutAlign="center center" *ngIf="((!openedTasks || openedTasks.length === 0) &&
+     (!closedTasks || closedTasks.length === 0)) && readyToDisplay"
+     class="no-tasks"
      [@shortEnterAnimation]>
-  <p>No open tasks!</p>
+  <p>No ussues!</p>
 </div>
 <div fxFlex *ngIf="readyToDisplay" [@shortEnterAnimation]>
-  <div id="planning-poker" fxLayout="column">
-    <div class="item-wrapper" *ngFor="let task of tasks; let index = index">
+  <h2 class="heading" *ngIf="openedTasks && openedTasks.length > 0">Opened issues</h2>
+  <div id="planning-poker" fxLayout="column" [ngClass]="{'bottom-margin': openedTasks && openedTasks.length > 0}">
+    <div class="item-wrapper" *ngFor="let task of openedTasks; let index = index">
       <div class="item" fxLayout="row" fxLayoutAlign="space-between" *ngIf="task.fields.votingWasNotCreated || task.fields.isOpen"
-           [ngClass]="{'item-border-top': index === calculateFirstVisibleItemIndex()}">
+           [ngClass]="{'item-border-top': index === 0}">
         <div class="left-side" fxLayout="row" fxLayoutAlign="center center">
           <img *ngIf="task.fields.issuetype.name === 'Bug'" class="first unselectable" src="../../assets/images/bug-icon.svg" alt="">
           <img *ngIf="task.fields.issuetype.name === 'Task'" class="first unselectable" src="../../assets/images/task-icon.svg" alt="">
@@ -25,7 +28,7 @@
           <h3>{{task.key}}</h3>
           <div class="story-points-cloud" fxLayout="row" fxLayoutAlign="center center">
             <md-spinner *ngIf="task.storyPointsLoading"></md-spinner>
-            <span *ngIf="!task.storyPointsLoading" [@alternativeControlFlashAnimation]="task.flashAnimation">
+            <span *ngIf="!task.storyPointsLoading" [@alternativeControlFlashAnimation]="task.flashAnimation" class="default-cursor unselectable">
             {{countStoryPoints(task.fields.votesCount, task.fields.votesSum)}}
           </span>
           </div>
@@ -43,6 +46,45 @@
               {{option}}
             </button>
           </md-menu>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="heading" *ngIf="closedTasks && closedTasks.length > 0">Closed issues</h2>
+  <div id="planning-poker-closed" fxLayout="column">
+    <div class="item-wrapper" *ngFor="let task of closedTasks; let index = index">
+      <div class="item" fxLayout="row" fxLayoutAlign="space-between"
+           [ngClass]="{'item-border-top': index === 0}">
+        <div class="left-side" fxLayout="row" fxLayoutAlign="center center">
+          <img *ngIf="task.fields.issuetype.name === 'Bug'" class="first unselectable" src="../../assets/images/bug-icon.svg" alt="">
+          <img *ngIf="task.fields.issuetype.name === 'Task'" class="first unselectable" src="../../assets/images/task-icon.svg" alt="">
+          <img *ngIf="task.fields.issuetype.name === 'Subtask'" class="first unselectable" src="../../assets/images/subtask-icon.svg" alt="">
+          <img *ngIf="task.fields.issuetype.name === 'Story'" class="first unselectable" src="../../assets/images/story-icon.svg" alt="">
+          <img *ngIf="task.fields.issuetype.name === 'Epic'" class="first unselectable" src="../../assets/images/epic-icon.svg" alt="">
+          <p>{{task.fields.summary}}</p>
+          <div class="assignee-cloud" fxLayout="row" fxLayoutAlign="center center" *ngIf="task.fields.assignee && task.fields.assignee.displayName">
+            {{task.fields.assignee.displayName}}
+          </div>
+        </div>
+        <div class="right-side" fxLayout="row" fxLayoutAlign="center center">
+          <h3>{{task.key}}</h3>
+          <div class="story-points-cloud" fxLayout="row" fxLayoutAlign="center center">
+            <md-spinner *ngIf="task.storyPointsLoading"></md-spinner>
+            <span *ngIf="!task.storyPointsLoading" [@alternativeControlFlashAnimation]="task.flashAnimation" class="default-cursor unselectable">
+            {{countStoryPoints(task.fields.votesCount, task.fields.votesSum)}}
+          </span>
+          </div>
+          <div class="story-points-user-choice-cloud unselectable" fxLayout="row" fxLayoutAlign="center center">
+            <md-spinner *ngIf="task.votingLoading"></md-spinner>
+            <span *ngIf="!task.fields.votesUserChoice && !task.votingLoading" [@alternativeControlFlashAnimation]="task.flashAnimation"
+              class="unselectable default-cursor">
+              -
+            </span>
+            <span *ngIf="task.fields.votesUserChoice && !task.votingLoading" [@alternativeControlFlashAnimation]="task.flashAnimation">
+            {{task.fields.votesUserChoice}}
+          </span>
+          </div>
         </div>
       </div>
     </div>

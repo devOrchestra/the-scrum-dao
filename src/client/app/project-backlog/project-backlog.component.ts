@@ -28,7 +28,8 @@ export class ProjectBacklogComponent implements OnInit {
   parseBigNumber = parseBigNumber;
   gas = gas;
 
-  public items: IBacklogTask[] = [];
+  public openedTasks: IBacklogTask[] = [];
+  public closedTasks: IBacklogTask[] = [];
   public readyToDisplay = false;
   public decimals: number;
 
@@ -45,8 +46,8 @@ export class ProjectBacklogComponent implements OnInit {
             backlogContractInstance,
             projectContractInstance;
         const getVotingBacklogPromises = [],
-              getVotingPlanningPokerPromises = [];
-        this.items = _.cloneDeep(data);
+              getVotingPlanningPokerPromises = [],
+              tasks: IBacklogTask[] = _.cloneDeep(data);
         this.Project.setProvider(web3.currentProvider);
         this.Project.deployed()
           .then(projectContractInstanceResponse => {
@@ -65,44 +66,45 @@ export class ProjectBacklogComponent implements OnInit {
           })
           .then(planningPokerContractInstanceResponse => {
             planningPokerContractInstance = planningPokerContractInstanceResponse;
-            this.items.forEach(item => {
+            tasks.forEach(item => {
               getVotingBacklogPromises.push(backlogContractInstance.getVoting(item.key));
               getVotingPlanningPokerPromises.push(planningPokerContractInstance.getVoting(item.key));
               item.storyPointsLoading = true;
               item.totalPercentsLoading = true;
             });
             const getVoteBacklog = [];
-            this.items.forEach(item => {
+            tasks.forEach(item => {
               getVoteBacklog.push(backlogContractInstance.getVote(item.key, {gas: this.gas, from: web3.eth.accounts[0]}));
             });
             return Promise.all(getVoteBacklog);
           })
           .then(getVoteResponse => {
             getVoteResponse.forEach((item, i) => {
-              this.items[i].userHasAlreadyVoted = this.parseBigNumber(item[0]) / this.decimals;
+              tasks[i].userHasAlreadyVoted = this.parseBigNumber(item[0]) / this.decimals;
             });
-            this.readyToDisplay = true;
             return Promise.all(getVotingBacklogPromises)
           })
           .then(getVotingBacklogResponse => {
             for (let i = 0; i < getVotingBacklogResponse.length; i++) {
-              this.items[i].fields.votingWasNotCreated = getVotingBacklogResponse[i][0].length <= 0;
-              this.items[i].fields.totalSupply = this.parseBigNumber(getVotingBacklogResponse[i][1]);
-              this.items[i].fields.votingCount = this.parseBigNumber(getVotingBacklogResponse[i][2]);
-              this.items[i].fields.isOpen = getVotingBacklogResponse[i][3];
+              tasks[i].fields.votingWasNotCreated = getVotingBacklogResponse[i][0].length <= 0;
+              tasks[i].fields.totalSupply = this.parseBigNumber(getVotingBacklogResponse[i][1]);
+              tasks[i].fields.votingCount = this.parseBigNumber(getVotingBacklogResponse[i][2]);
+              tasks[i].fields.isOpen = getVotingBacklogResponse[i][3];
             }
             return Promise.all(getVotingPlanningPokerPromises)
           })
           .then(getVotingPlanningPokerResponse => {
             for (let i = 0; i < getVotingPlanningPokerResponse.length; i++) {
-              this.items[i].fields.storyPoints = this.countStoryPoints(
+              tasks[i].fields.storyPoints = this.countStoryPoints(
                 getVotingPlanningPokerResponse[i][1],
                 getVotingPlanningPokerResponse[i][2]
               );
-              this.items[i].storyPointsLoading = false;
-              this.items[i].totalPercentsLoading = false;
-              this.items[i].bgcEasingApplied = true;
+              tasks[i].storyPointsLoading = false;
+              tasks[i].totalPercentsLoading = false;
+              tasks[i].bgcEasingApplied = true;
             }
+            this.sortOpenedAndClosedTasks(tasks);
+            this.readyToDisplay = true;
           })
           .catch(err => {
             console.error('An error occurred on project-backlog.component in "OnInit" block:', err);
@@ -122,7 +124,7 @@ export class ProjectBacklogComponent implements OnInit {
           return contractInstance.vote(id, {gas: this.gas, from: web3.eth.accounts[0]});
         })
         .then(voteResponse => {
-          this.getVotingToUpdate(contractInstance, id, index);
+          this.getVotingToUpdate(contractInstance, id, index, item);
         })
         .catch(err => {
           console.error('An error occurred on project-backlog.component in "voteFor":', err);
@@ -132,41 +134,34 @@ export class ProjectBacklogComponent implements OnInit {
     }
   }
 
-  getVotingToUpdate(contractInstance, id: string, index: number): void {
+  getVotingToUpdate(contractInstance, id: string, index: number, item: IBacklogTask): void {
     contractInstance.getVoting(id)
       .then(getVotingResponse => {
-        if (this.parseBigNumber(getVotingResponse[1]) === this.items[index].fields.totalSupply &&
-            this.parseBigNumber(getVotingResponse[2]) === this.items[index].fields.votingCount) {
-          this.getVotingToUpdate(contractInstance, id, index);
+        if (this.parseBigNumber(getVotingResponse[1]) === item.fields.totalSupply &&
+            this.parseBigNumber(getVotingResponse[2]) === item.fields.votingCount) {
+          this.getVotingToUpdate(contractInstance, id, index, item);
         } else {
-          this.items[index].fields.totalSupply = this.parseBigNumber(getVotingResponse[1]);
-          this.items[index].fields.votingCount = this.parseBigNumber(getVotingResponse[2]);
+          item.fields.totalSupply = this.parseBigNumber(getVotingResponse[1]);
+          item.fields.votingCount = this.parseBigNumber(getVotingResponse[2]);
           contractInstance.getVote(id, {gas: this.gas, from: web3.eth.accounts[0]})
             .then(getVoteResponse => {
-              this.items[index].userHasAlreadyVoted = this.parseBigNumber(getVoteResponse[0]) / this.decimals;
-              this.items[index].storyPointsLoading = false;
-              this.items[index].totalPercentsLoading = false;
-              this.items[index].flashAnimation = "animate";
+              item.userHasAlreadyVoted = this.parseBigNumber(getVoteResponse[0]) / this.decimals;
+              item.storyPointsLoading = false;
+              item.totalPercentsLoading = false;
+              item.flashAnimation = "animate";
             })
             .catch(err => {
               console.error('An error occurred on project-backlog.component in "getVotingToUpdate":', err);
-              this.items[index].storyPointsLoading = false;
-              this.items[index].totalPercentsLoading = false;
+              item.storyPointsLoading = false;
+              item.totalPercentsLoading = false;
             })
         }
       })
   }
 
-  calculateFirstVisibleItemIndex(): number {
-    let index;
-    let flag = true;
-    this.items.forEach((item, i) => {
-      if ((item.fields.votingWasNotCreated === true || item.fields.isOpen === true) && flag) {
-        index = i;
-        flag = !flag;
-      }
-    });
-    return index;
+  sortOpenedAndClosedTasks(tasks: IBacklogTask[]): void {
+    this.openedTasks = _.filter(tasks, (o) => o.fields.isOpen || o.fields.votingWasNotCreated);
+    this.closedTasks = _.filter(tasks, (o) => !o.fields.isOpen && !o.fields.votingWasNotCreated);
   }
 
   countTotalPercents(votingCount: number, totalSupply: number): number {

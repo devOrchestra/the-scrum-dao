@@ -21,7 +21,8 @@ export class PlanningPokerComponent implements OnInit {
   gas = gas;
 
   public storyPointsOptions: number[] = [1, 2, 3, 5, 8, 13, 20, 40, 100];
-  public tasks: IPlanningPokerTask[] = [];
+  public openedTasks: IPlanningPokerTask[] = [];
+  public closedTasks: IPlanningPokerTask[] = [];
   public readyToDisplay = false;
 
   constructor(
@@ -34,17 +35,16 @@ export class PlanningPokerComponent implements OnInit {
     const getVotePromises = [];
     this._jiraService.getIssues().subscribe(data => {
       if (data) {
-        this.tasks = _.cloneDeep(data);
+        const tasks = _.cloneDeep(data);
         this.PlanningPoker.setProvider(web3.currentProvider);
         this.PlanningPoker.deployed()
           .then(planningPokerInstanceResponse => {
             planningPokerInstance = planningPokerInstanceResponse;
-            this.tasks.forEach(item => {
+            tasks.forEach(item => {
               getVotingPromises.push(planningPokerInstance.getVoting(item.key));
               item.votingLoading = true;
               item.storyPointsLoading = true;
             });
-            this.readyToDisplay = true;
             return Promise.all(getVotingPromises);
           })
           .then(getVotingPromisesResponse => {
@@ -52,21 +52,23 @@ export class PlanningPokerComponent implements OnInit {
               item[1] = this.parseBigNumber(item[1]);
               item[2] = this.parseBigNumber(item[2]);
             });
-            this.tasks.forEach((item, i) => {
-              this.tasks[i].fields.votingWasNotCreated = getVotingPromisesResponse[i][0].length <= 0;
-              this.tasks[i].fields.votesCount = getVotingPromisesResponse[i][1];
-              this.tasks[i].fields.votesSum = getVotingPromisesResponse[i][2];
-              this.tasks[i].fields.isOpen = getVotingPromisesResponse[i][3];
-              getVotePromises.push(planningPokerInstance.getVote(this.tasks[i].key, {from: web3.eth.accounts[0]}));
+            tasks.forEach((item, i) => {
+              tasks[i].fields.votingWasNotCreated = getVotingPromisesResponse[i][0].length <= 0;
+              tasks[i].fields.votesCount = getVotingPromisesResponse[i][1];
+              tasks[i].fields.votesSum = getVotingPromisesResponse[i][2];
+              tasks[i].fields.isOpen = getVotingPromisesResponse[i][3];
+              getVotePromises.push(planningPokerInstance.getVote(tasks[i].key, {from: web3.eth.accounts[0]}));
             });
             return Promise.all(getVotePromises)
           })
           .then(getVotePromisesResponse => {
             getVotePromisesResponse.forEach((item, i) => {
-              this.tasks[i].fields.votesUserChoice = this.parseBigNumber(item);
-              this.tasks[i].votingLoading = false;
-              this.tasks[i].storyPointsLoading = false;
+              tasks[i].fields.votesUserChoice = this.parseBigNumber(item);
+              tasks[i].votingLoading = false;
+              tasks[i].storyPointsLoading = false;
             });
+            this.sortOpenedAndClosedTasks(tasks);
+            this.readyToDisplay = true;
           })
           .catch(err => {
             console.error('An error occurred on planning-poker.component in "OnInit" block:', err);
@@ -112,15 +114,8 @@ export class PlanningPokerComponent implements OnInit {
       });
   }
 
-  calculateFirstVisibleItemIndex(): number {
-    let index;
-    let flag = true;
-    this.tasks.forEach((item, i) => {
-      if ((item.fields.votingWasNotCreated === true || item.fields.isOpen === true) && flag) {
-        index = i;
-        flag = !flag;
-      }
-    });
-    return index;
+  sortOpenedAndClosedTasks(tasks: IPlanningPokerTask[]): void {
+    this.openedTasks = _.filter(tasks, (o) => o.fields.isOpen || o.fields.votingWasNotCreated);
+    this.closedTasks = _.filter(tasks, (o) => !o.fields.isOpen && !o.fields.votingWasNotCreated);
   }
 }

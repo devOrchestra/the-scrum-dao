@@ -1,50 +1,90 @@
 <div fxFlexFill fxLayout="row" fxLayoutAlign="center center" *ngIf="!readyToDisplay">
   <md-spinner class="main-spinner"></md-spinner>
 </div>
-<div fxLayout="row" fxLayoutAlign="center center" *ngIf="(!items || items.length === 0) && readyToDisplay" class="no-tasks"
-     [@shortEnterAnimation]>
-  <p>No open tasks!</p>
-</div>
-<div fxLayout="column" fxFill *ngIf="readyToDisplay" [@shortEnterAnimation]>
-  <div id="project-backlog" fxLayout="column">
-    <div class="item-wrapper" *ngFor="let item of items; let index = index">
-      <div class="item" fxLayout="row" fxLayoutAlign="space-between" *ngIf="item.fields.votingWasNotCreated || item.fields.isOpen"
-           [ngClass]="{'item-border-top': index === calculateFirstVisibleItemIndex()}">
-        <div class="left-side" fxLayout="row" fxLayoutAlign="center center">
-          <img *ngIf="item.fields.issuetype.name === 'Bug'" class="first unselectable" src="../../assets/images/bug-icon.svg" alt="">
-          <img *ngIf="item.fields.issuetype.name === 'Task'" class="first unselectable" src="../../assets/images/task-icon.svg" alt="">
-          <img *ngIf="item.fields.issuetype.name === 'Subtask'" class="first unselectable" src="../../assets/images/subtask-icon.svg" alt="">
-          <img *ngIf="item.fields.issuetype.name === 'Story'" class="first unselectable" src="../../assets/images/story-icon.svg" alt="">
-          <img *ngIf="item.fields.issuetype.name === 'Epic'" class="first unselectable" src="../../assets/images/epic-icon.svg" alt="">
-          <p>{{item.fields.summary}}</p>
-          <div class="assignee-cloud" fxLayout="row" fxLayoutAlign="center center"
-               *ngIf="item.fields.assignee && item.fields.assignee.displayName">
-            {{item.fields.assignee.displayName}}
+<div>
+  <div fxLayout="row" fxLayoutAlign="center center" *ngIf="(!openedTasks || openedTasks.length === 0) &&
+       (!closedTasks || closedTasks.length === 0) && readyToDisplay" class="no-tasks"
+       [@shortEnterAnimation]>
+    <p>No issues!</p>
+  </div>
+  <div fxLayout="column" fxFill *ngIf="readyToDisplay" [@shortEnterAnimation]>
+    <h2 class="heading" *ngIf="openedTasks && openedTasks.length > 0">Opened issues</h2>
+    <div id="project-backlog" fxLayout="column" [ngClass]="{'bottom-margin': openedTasks && openedTasks.length > 0}">
+      <div class="item-wrapper" *ngFor="let item of openedTasks; let index = index">
+        <div class="item" fxLayout="row" fxLayoutAlign="space-between" *ngIf="item.fields.votingWasNotCreated || item.fields.isOpen"
+             [ngClass]="{'item-border-top': index === 0}">
+          <div class="left-side" fxLayout="row" fxLayoutAlign="center center">
+            <img *ngIf="item.fields.issuetype.name === 'Bug'" class="first unselectable" src="../../assets/images/bug-icon.svg" alt="">
+            <img *ngIf="item.fields.issuetype.name === 'Task'" class="first unselectable" src="../../assets/images/task-icon.svg" alt="">
+            <img *ngIf="item.fields.issuetype.name === 'Subtask'" class="first unselectable" src="../../assets/images/subtask-icon.svg" alt="">
+            <img *ngIf="item.fields.issuetype.name === 'Story'" class="first unselectable" src="../../assets/images/story-icon.svg" alt="">
+            <img *ngIf="item.fields.issuetype.name === 'Epic'" class="first unselectable" src="../../assets/images/epic-icon.svg" alt="">
+            <p>{{item.fields.summary}}</p>
+            <div class="assignee-cloud" fxLayout="row" fxLayoutAlign="center center"
+                 *ngIf="item.fields.assignee && item.fields.assignee.displayName">
+              {{item.fields.assignee.displayName}}
+            </div>
           </div>
-        </div>
-        <div class="right-side" fxLayout="row" fxLayoutAlign="center center">
-          <h3>{{item.key}}</h3>
-          <div class="story-points-cloud" fxLayout="row" fxLayoutAlign="center center">
-            <md-spinner *ngIf="item.storyPointsLoading"></md-spinner>
-            <span *ngIf="!item.storyPointsLoading" [@alternativeControlFlashAnimation]="item.flashAnimation">
-              {{item.fields.storyPoints}}
+          <div class="right-side" fxLayout="row" fxLayoutAlign="center center">
+            <h3>{{item.key}}</h3>
+            <div class="story-points-cloud unselectable default-cursor" fxLayout="row" fxLayoutAlign="center center">
+              <md-spinner *ngIf="item.storyPointsLoading"></md-spinner>
+              <span *ngIf="!item.storyPointsLoading" [@alternativeControlFlashAnimation]="item.flashAnimation">
+                {{item.fields.storyPoints}}
+              </span>
+            </div>
+            <div [mdTooltip]="item.userHasAlreadyVoted <= 0 ? 'Vote for issue' : null" mdTooltipPosition="after"
+                 class="vote-cloud unselectable pointer"
+                 (click)="voteFor(item, item.key, index, item.userHasAlreadyVoted <= 0)" fxLayout="row" fxLayoutAlign="center center"
+                 [ngClass]="{'already-voted': item.userHasAlreadyVoted > 0, 'background-transition-fast': item.bgcEasingApplied}">
+              <md-spinner *ngIf="item.totalPercentsLoading"></md-spinner>
+              <span *ngIf="!item.totalPercentsLoading" [@alternativeControlFlashAnimation]="item.flashAnimation">
+              {{countTotalPercents(item.fields.votingCount, item.fields.totalSupply)}}%
             </span>
-          </div>
-          <div [mdTooltip]="item.userHasAlreadyVoted <= 0 ? 'Vote for issue' : null" mdTooltipPosition="after"
-               class="vote-cloud unselectable pointer"
-               (click)="voteFor(item, item.key, index, item.userHasAlreadyVoted <= 0)" fxLayout="row" fxLayoutAlign="center center"
-               [ngClass]="{'already-voted': item.userHasAlreadyVoted > 0, 'background-transition-fast': item.bgcEasingApplied}">
-            <md-spinner *ngIf="item.totalPercentsLoading"></md-spinner>
-            <span *ngIf="!item.totalPercentsLoading" [@alternativeControlFlashAnimation]="item.flashAnimation">
-            {{countTotalPercents(item.fields.votingCount, item.fields.totalSupply)}}%
-          </span>
-            <i *ngIf="!item.totalPercentsLoading" [@alternativeControlFlashAnimation]="item.flashAnimation"
-               class="fa fa-angle-double-up first" aria-hidden="true"></i>
+              <i *ngIf="!item.totalPercentsLoading" [@alternativeControlFlashAnimation]="item.flashAnimation"
+                 class="fa fa-angle-double-up first" aria-hidden="true"></i>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!--<button class="add-button" md-fab (click)="openDialog()">+</button>-->
+    <h2 class="heading" *ngIf="closedTasks && closedTasks.length > 0">Closed issues</h2>
+    <div id="project-backlog-closed" fxLayout="column">
+      <div class="item-wrapper" *ngFor="let item of closedTasks; let index = index">
+        <div class="item" fxLayout="row" fxLayoutAlign="space-between"
+             [ngClass]="{'item-border-top': index === 0}">
+          <div class="left-side" fxLayout="row" fxLayoutAlign="center center">
+            <img *ngIf="item.fields.issuetype.name === 'Bug'" class="first unselectable" src="../../assets/images/bug-icon.svg" alt="">
+            <img *ngIf="item.fields.issuetype.name === 'Task'" class="first unselectable" src="../../assets/images/task-icon.svg" alt="">
+            <img *ngIf="item.fields.issuetype.name === 'Subtask'" class="first unselectable" src="../../assets/images/subtask-icon.svg" alt="">
+            <img *ngIf="item.fields.issuetype.name === 'Story'" class="first unselectable" src="../../assets/images/story-icon.svg" alt="">
+            <img *ngIf="item.fields.issuetype.name === 'Epic'" class="first unselectable" src="../../assets/images/epic-icon.svg" alt="">
+            <p>{{item.fields.summary}}</p>
+            <div class="assignee-cloud" fxLayout="row" fxLayoutAlign="center center"
+                 *ngIf="item.fields.assignee && item.fields.assignee.displayName">
+              {{item.fields.assignee.displayName}}
+            </div>
+          </div>
+          <div class="right-side" fxLayout="row" fxLayoutAlign="center center">
+            <h3>{{item.key}}</h3>
+            <div class="story-points-cloud unselectable default-cursor" fxLayout="row" fxLayoutAlign="center center">
+              <md-spinner *ngIf="item.storyPointsLoading"></md-spinner>
+              <span *ngIf="!item.storyPointsLoading" [@alternativeControlFlashAnimation]="item.flashAnimation">
+                {{item.fields.storyPoints}}
+              </span>
+            </div>
+            <div class="vote-cloud unselectable pointer already-voted" fxLayout="row" fxLayoutAlign="center center">
+              <md-spinner *ngIf="item.totalPercentsLoading"></md-spinner>
+              <span *ngIf="!item.totalPercentsLoading" [@alternativeControlFlashAnimation]="item.flashAnimation">
+              {{countTotalPercents(item.fields.votingCount, item.fields.totalSupply)}}%
+            </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--<button class="add-button" md-fab (click)="openDialog()">+</button>-->
+  </div>
 </div>
