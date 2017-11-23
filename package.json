@@ -7,7 +7,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "copy-data": "cpx \"src/server/*.ini\" \"build/server\"",
-    "compile-contracts": "truffle compile",
+    "compile-contracts": "truffle compile --network stub",
     "dev-migrate": "export NODE_ENV=development && truffle migrate --network development",
     "migrate": "export NODE_ENV=production && truffle migrate --network production",
     "prebuild-app": "rm -rf build/client",
@@ -20,7 +20,7 @@
     "dev-start-server": "export NODE_ENV=development && export LOG_LEVEL=debug && node build/server/server.js",
     "predev-start": "npm run dev-migrate && node ./populateContracts.js",
     "dev-start": "concurrently --kill-others-on-fail \"npm run dev-start-angular\" \"npm run dev-start-server\"",
-    "prestart": "npm run migrate && npm run build-app && npm run build-server",
+    "prestart": "npm run migrate",
     "start": "export NODE_ENV=production && node build/server/server.js"
   },
   "contributors": [
@@ -40,10 +40,6 @@
     "@angular/platform-browser": "^4.3.6",
     "@angular/platform-browser-dynamic": "^4.3.6",
     "@angular/router": "^4.3.6",
-    "@types/async": "^2.0.44",
-    "@types/express": "^4.0.38",
-    "@types/kue": "^0.11.8",
-    "@types/winston": "^2.3.7",
     "amdefine": "^1.0.1",
     "animejs": "^2.2.0",
     "async": "^2.5.0",
@@ -83,12 +79,12 @@
     "@angular/cli": "^1.1.0",
     "@angular/compiler-cli": "^4.3.6",
     "@angular/language-service": "^4.3.6",
-    "@types/async": "^2.0.44",
     "@types/core-js": "^0.9.43",
-    "@types/express": "^4.0.38",
     "@types/jasmine": "^2.5.45",
-    "@types/kue": "^0.11.8",
     "@types/node": "^6.0.90",
+    "@types/async": "^2.0.44",
+    "@types/express": "^4.0.38",
+    "@types/kue": "^0.11.8",
     "@types/winston": "^2.3.7",
     "bluebird": "^3.5.1",
     "chai-as-promised": "^7.1.1",
@@ -108,7 +104,7 @@
     "ts-node": "^3.0.6",
     "tslint": "^5.3.2",
     "types-ethereumjs-util": "0.0.5",
-    "typescript": "^2.4.2",
+    "typescript": "2.6.1",
     "web3-typescript-typings": "^0.7.1"
   }
 }

@@ -20,7 +20,7 @@ if (process.env.NODE_ENV === 'production') {
   engine.addProvider(new Web3Subprovider(new Web3.providers.HttpProvider(providerUrl)));
   engine.start(); // Required by the provider engine.
 
-} else {
+} else if (process.env.NODE_ENV === 'development') {
   providerUrl = 'http://localhost:8545';
   let web3 = new Web3(new Web3.providers.HttpProvider(providerUrl));
   address = web3.eth.accounts[0];
@@ -38,6 +38,7 @@ module.exports = {
       network_id: 3,    // Official ropsten network id
       provider: engine, // Use our custom provider
       from: address     // Use the address we derived
-    }
+    },
+    stub: {}
   }
 };

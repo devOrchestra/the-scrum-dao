@@ -50,13 +50,9 @@ class EthController {
       chain = chain.then(() => this.initWithOracleWallet(artifacts));
     }
     chain
-      .then(this.postInitializationAction())
-      .then(() => {
-        done();
-      })
-      .catch((error) => {
-        done(error);
-      });
+      .then(() => this.postInitializationAction())
+      .then(() => done())
+      .catch((error) => done(error));
 
   }
 
