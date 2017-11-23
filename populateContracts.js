@@ -73,7 +73,7 @@ Promise
     return Promise.all(addVotingTasks);
   })
   .then(function () {
-    console.log(`Votings have been added`);
+    console.log(`Votings have been added on Planning Poker`);
     let voteTasks = [];
     for (let i = 1; i < names.length; i++) {
       voteTasks.push(planningPokerContact.vote(issues[votedIssueIndex], storyPoints[Math.floor(Math.random()*storyPoints.length)],{from: accounts[i], gas: 150000}));
@@ -81,15 +81,34 @@ Promise
     return Promise.all(voteTasks);
   })
   .then(function () {
-    console.log(`Issue ${issues[votedIssueIndex]}. All workers have been voted`);
+    console.log(`Issue ${issues[votedIssueIndex]}. All workers have been voted on Planning Poker issues`);
     return planningPokerContact.closeVoting(issues[votedIssueIndex], {from: accounts[0], gas: 150000});
   })
   .then(function () {
-    console.log(`Issue ${issues[votedIssueIndex]}. Voting has been closed`);
+    console.log(`Issue ${issues[votedIssueIndex]}. Voting has been closed on Planning Poker`);
     return projectContract.payAward('krabradosty', issues[votedIssueIndex], {from: accounts[0], gas: 150000});
   })
   .then(function () {
-    console.log(`Issue ${issues[votedIssueIndex]}. Award has been payed`);
+    console.log(`Issue ${issues[votedIssueIndex]}. Award has been payed for "krabradosty"`);
+    let addVotingTasks = [];
+    for (let issueName of issues) {
+      addVotingTasks.push(productBacklogContract.addVoting(issueName, {from: accounts[0], gas: 150000}));
+    }
+    return Promise.all(addVotingTasks);
+  })
+  .then(function () {
+    console.log(`Votings have been added on Product Backlog`);
+    let voteTasks = [];
+    voteTasks.push(productBacklogContract.vote(issues[votedIssueIndex], {from: accounts[1], gas: 150000}));
+    return Promise.all(voteTasks);
+  })
+  .then(function () {
+    console.log(`Issue ${issues[votedIssueIndex]}. Token holder have been voted on Product Backlog`);
+    return productBacklogContract.closeVoting(issues[votedIssueIndex], {from: accounts[0], gas: 150000});
+  })
+  .then(function () {
+    console.log(`Issue ${issues[votedIssueIndex]}. Voting has been closed on Product Backlog`);
+    console.log(`***SUCCESS***`);
   })
   .catch(function (error) {
     console.log(`Errors occurred: ${error.message}`);
