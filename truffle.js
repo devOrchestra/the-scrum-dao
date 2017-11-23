@@ -11,7 +11,7 @@ let providerUrl;
 let engine;
 if (process.env.NODE_ENV === 'production') {
   let ownerWalletData = require('./credentials/ownerWallet.json');
-  let ownerWallet = Wallet.fromV3(ownerWalletData, process.env.OWNER_WALLET_SECRET);
+  let ownerWallet = Wallet.fromV3(ownerWalletData, process.env.OWNER_WALLET_PASSWORD);
   address = "0x" + ownerWallet.getAddress().toString("hex");
   providerUrl = process.env.ETH_NODE_URL;
   engine = new ProviderEngine();
