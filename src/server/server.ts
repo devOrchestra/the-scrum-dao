@@ -23,7 +23,7 @@ if (cluster.isMaster) {
     let port: number = config.port;
     let server: http.Server = http.createServer(expressServer);
     server.listen(port, function () {
-      logger.info("Express server listening on port " + port);
+      logger.info(`Express server listening on port ${port} in ${config.environment} mode`);
     });
 
     // RUN TASK HANDLER

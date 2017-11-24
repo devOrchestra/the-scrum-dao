@@ -30,10 +30,7 @@ app.use('/api/issues', issueRouter);
 app.use('/api/contributors', contributorRouter);
 app.use('/api/webhooks', webhooksRouter);
 
-if (process.env.NODE_ENV === 'production') {
-  app.use('*', express.static(path.resolve(webAppPath, 'index.html')));
-}
-
+app.use('/*', express.static(path.resolve(webAppPath, 'index.html')));
 
 app.use(function (req: express.Request, res: express.Response, next) {
   logger.debug(`${req.path} not found`);
