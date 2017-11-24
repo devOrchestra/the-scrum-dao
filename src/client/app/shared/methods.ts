@@ -1,4 +1,4 @@
-export const gas = 140000;
+export const gas = 200000;
 
 export const countDecimals = (numberOfNulls: number): number => {
   let final = "1";

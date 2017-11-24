@@ -1,8 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {WorkerService} from '../core/worker.service'
-import project_artifacts from '../../../../build/contracts/Project.json'
-import {default as contract} from 'truffle-contract'
-import {countDecimals, gas} from '../shared/methods'
+import {ProjectService} from '../core/contracts/project.service'
+import {countDecimals} from '../shared/methods'
 import { ISettingsWorker } from "../shared/interfaces";
 import {
   ShortEnterAnimation,
@@ -25,10 +24,7 @@ import {
   ]
 })
 export class SettingsComponent implements OnInit {
-  Project = contract(project_artifacts);
-
   countDecimals = countDecimals;
-  gas = gas;
 
   worker: { [key: string]: string } = {};
   workers: ISettingsWorker[] = [];
@@ -49,28 +45,23 @@ export class SettingsComponent implements OnInit {
   showCrowdsaleExists = false;
 
   constructor(
-    private _workerService: WorkerService
+    private _workerService: WorkerService,
+    private _projectService: ProjectService
   ) { }
 
   ngOnInit() {
-    let contractInstance;
-    this.Project.setProvider(web3.currentProvider);
-    this.Project.deployed()
-      .then(contractInstanceResponse => {
-        contractInstance = contractInstanceResponse;
-        return contractInstance.trustedOracle()
-      })
+    this._projectService.trustedOracle()
       .then(trustedOracleResponse => {
         this.currentOracleAddress = trustedOracleResponse;
-        return contractInstance.crowdsale();
+        return this._projectService.crowdsale();
       })
       .then(crowdsaleResponse => {
         this.currentCrowdsale = crowdsaleResponse;
-        return contractInstance.symbol();
+        return this._projectService.symbol();
       })
       .then(symbolResponse => {
         this.symbol = symbolResponse;
-        return contractInstance.decimals();
+        return this._projectService.decimals();
       })
       .then(decimalsResponse => {
         this.decimals = this.countDecimals(decimalsResponse);
@@ -89,21 +80,14 @@ export class SettingsComponent implements OnInit {
   addWorker(address: string): void {
     const ethAddressAlreadyExists = this.checkIsWorkersEthAddressAlreadyExists(address);
     if (!ethAddressAlreadyExists) {
-      let contractInstance;
       this.addWorkerLoading = true;
-      this.Project.deployed()
-        .then(contractInstanceResponse => {
-          contractInstance = contractInstanceResponse;
-          return contractInstance.addWorker(this.worker.address, this.worker.login, {
-            from: web3.eth.accounts[0]
-          });
-        })
+      this._projectService.addWorker(this.worker.address, this.worker.login)
         .then(() => {
-          return contractInstance.getWorkersLength.call();
+          return this._projectService.getWorkersLength();
         })
         .then(data => {
           const length = parseInt(data.toString(), 10);
-          return contractInstance.getWorker.call(length);
+          return this._projectService.getWorker(length);
         })
         .then(worker => {
           worker = this.formatWorkers([worker]);
@@ -129,18 +113,10 @@ export class SettingsComponent implements OnInit {
   addOracleAddress(): void {
     const specifiedOracleAlreadyExists = this.currentOracleAddress === this.newOracleAddress;
     if (!specifiedOracleAlreadyExists) {
-      let contractInstance;
       this.addOracleLoading = true;
-      this.Project.deployed()
-        .then(contractInstanceResponse => {
-          contractInstance = contractInstanceResponse;
-          return contractInstance.addTrustedOracle(this.newOracleAddress, {
-            from: web3.eth.accounts[0],
-            gas: this.gas
-          });
-        })
+      this._projectService.addTrustedOracle(this.newOracleAddress)
         .then(() => {
-          return contractInstance.trustedOracle();
+          return this._projectService.trustedOracle();
         })
         .then(newOracle => {
           this.oracleFlashAnimation = "animate";
@@ -167,18 +143,10 @@ export class SettingsComponent implements OnInit {
   addCrowdsale(): void {
     const specifiedCrowdsaleAlreadyExists = this.currentCrowdsale === this.newCrowdsale;
     if (!specifiedCrowdsaleAlreadyExists) {
-      let contractInstance;
       this.addCrowdsaleLoading = true;
-      this.Project.deployed()
-        .then(contractInstanceResponse => {
-          contractInstance = contractInstanceResponse;
-          return contractInstance.initCrowdsale(this.newCrowdsale, {
-            from: web3.eth.accounts[0],
-            gas: this.gas
-          });
-        })
+      this._projectService.initCrowdsale(this.newCrowdsale)
         .then(() => {
-          return contractInstance.crowdsale();
+          return this._projectService.crowdsale();
         })
         .then(newCrowdsale => {
           this.crowdsaleFlashAnimation = "animate";

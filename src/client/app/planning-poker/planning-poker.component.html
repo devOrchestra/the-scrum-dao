@@ -81,7 +81,8 @@
               class="unselectable default-cursor">
               -
             </span>
-            <span *ngIf="task.fields.votesUserChoice && !task.votingLoading" [@alternativeControlFlashAnimation]="task.flashAnimation">
+            <span *ngIf="task.fields.votesUserChoice && !task.votingLoading" [@alternativeControlFlashAnimation]="task.flashAnimation"
+                  class="unselectable default-cursor">
             {{task.fields.votesUserChoice}}
           </span>
           </div>

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { WorkerService } from '../core/worker.service';
-import project_artifacts from '../../../../build/contracts/Project.json'
-import {default as contract} from 'truffle-contract'
+import { ProjectService } from '../core/contracts/project.service'
 import { ShortEnterAnimation } from '../shared/animations'
 import { countDecimals, parseBigNumber } from '../shared/methods'
 import { IContributor, IHolder } from "../shared/interfaces";
@@ -13,8 +12,6 @@ import { IContributor, IHolder } from "../shared/interfaces";
   animations: [ShortEnterAnimation]
 })
 export class ContributorListComponent implements OnInit {
-  Project = contract(project_artifacts);
-
   countDecimals = countDecimals;
   parseBigNumber = parseBigNumber;
 
@@ -26,12 +23,12 @@ export class ContributorListComponent implements OnInit {
   public decimals: number;
 
   constructor(
-    private _workerService: WorkerService
+    private _workerService: WorkerService,
+    private _projectService: ProjectService
   ) { }
 
   ngOnInit() {
     let workersWereSet = false;
-    this.Project.setProvider(web3.currentProvider);
     this._workerService.getWorkers().subscribe(data => {
       this._workerService.getHolders().subscribe(holders => {
         if (data && holders) {
@@ -48,7 +45,6 @@ export class ContributorListComponent implements OnInit {
             clone[i] = this.formatWorkers(item);
           });
           if (!this._workerService.workersAvatarsWereSet && !workersWereSet) {
-            let contractInstance;
             this._workerService.getContributors()
               .then(response => {
                 response.forEach((responseItem, i) => {
@@ -62,19 +58,15 @@ export class ContributorListComponent implements OnInit {
                 });
                 this._workerService.workersAvatarsWereSet = true;
                 this.contributors = clone;
-                return this.Project.deployed();
-              })
-              .then(contractInstanceResponse => {
-                contractInstance = contractInstanceResponse;
-                return contractInstance.totalSupply();
+                return this._projectService.totalSupply();
               })
               .then(totalSupplyResponse => {
                 this.totalBalance = this.parseBigNumber(totalSupplyResponse);
-                return contractInstance.symbol()
+                return this._projectService.symbol()
               })
               .then(symbol => {
                 this.tokenSymbol = symbol;
-                return contractInstance.decimals();
+                return this._projectService.decimals();
               })
               .then(decimalsResponse => {
                 this.decimals = this.countDecimals(decimalsResponse);
@@ -95,10 +87,7 @@ export class ContributorListComponent implements OnInit {
           } else {
             this.contributors = clone;
             this.totalBalance = this._workerService.getTotalBalance();
-            this.Project.deployed()
-              .then(contractInstance => {
-                return contractInstance.symbol()
-              })
+            this._projectService.symbol()
               .then(symbol => {
                 this.tokenSymbol = symbol;
                 this.readyToRenderPage = true;

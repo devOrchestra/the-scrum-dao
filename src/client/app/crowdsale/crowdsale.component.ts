@@ -2,10 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import {CrowdsaleAddOrderDialogComponent} from './crowdsale-add-order-dialog/crowdsale-add-order-dialog.component'
 import {CrowdsaleAddBuyOrderErrorDialogComponent} from './crowdsale-add-buy-order-error-dialog/crowdsale-add-buy-order-error-dialog.component'
 import {MdDialog} from '@angular/material';
-import crowdsale_artifacts from '../../../../build/contracts/Crowdsale.json';
-import project_artifacts from '../../../../build/contracts/Project.json';
-import {default as contract} from 'truffle-contract'
-import {parseBigNumber, countDecimals, gas} from '../shared/methods'
+import {CrowdsaleService} from '../core/contracts/crowdsale.service'
+import {ProjectService} from '../core/contracts/project.service'
+import {parseBigNumber, countDecimals} from '../shared/methods'
 import {ControlFlashAnimation, ShortEnterAnimation} from '../shared/animations'
 import * as _ from 'lodash'
 import { IOrder } from "../shared/interfaces";
@@ -17,12 +16,8 @@ import { IOrder } from "../shared/interfaces";
   animations: [ControlFlashAnimation, ShortEnterAnimation]
 })
 export class CrowdsaleComponent implements OnInit {
-  Crowdsale = contract(crowdsale_artifacts);
-  Project = contract(project_artifacts);
-
   parseBigNumber = parseBigNumber;
   countDecimals = countDecimals;
-  gas = gas;
 
   orders: IOrder[] = [];
   tokenSymbol: string;
@@ -36,38 +31,28 @@ export class CrowdsaleComponent implements OnInit {
   maxIndexOfVisibleSellOrders: number;
 
   constructor(
-    private dialog: MdDialog
+    private dialog: MdDialog,
+    private _projectService: ProjectService,
+    private _crowdsaleService: CrowdsaleService
   ) { }
 
   ngOnInit() {
     const sellOrderPromises = [];
     const buyOrderPromises = [];
-    let projectContractInstance;
-    let crowdsaleContractInstance;
-    this.Project.setProvider(web3.currentProvider);
-    this.Project.deployed()
-      .then(projectContractInstanceResponse => {
-        projectContractInstance = projectContractInstanceResponse;
-        return projectContractInstance.decimals();
-      })
+    this._projectService.decimals()
       .then(decimalsResponse => {
         this.decimals = this.countDecimals(decimalsResponse);
-        return projectContractInstance.symbol();
+        return this._projectService.symbol();
       })
       .then(symbolResponse => {
         this.tokenSymbol = symbolResponse;
-        this.Crowdsale.setProvider(web3.currentProvider);
-        return this.Crowdsale.deployed()
-      })
-      .then(crowdsaleContractInstanceResponse => {
-        crowdsaleContractInstance = crowdsaleContractInstanceResponse;
-        return crowdsaleContractInstance.getSellOrderLength();
+        return this._crowdsaleService.getSellOrderLength();
       })
       .then(sellOrdersLengthResponse => {
         const sellOrdersLength = this.parseBigNumber(sellOrdersLengthResponse);
         this.sellOrdersLength = sellOrdersLength;
         for (let i = 0; i < sellOrdersLength; i++) {
-          sellOrderPromises.push(crowdsaleContractInstance.getSellOrder.call(i));
+          sellOrderPromises.push(this._crowdsaleService.getSellOrder(i));
         }
         return Promise.all(sellOrderPromises)
       })
@@ -76,13 +61,13 @@ export class CrowdsaleComponent implements OnInit {
           item = this.formatOrder(item, 'sell');
           this.orders.push(item);
         });
-        return crowdsaleContractInstance.getBuyOrderLength();
+        return this._crowdsaleService.getBuyOrderLength();
       })
       .then(buyOrdersLengthResponse => {
         const buyOrdersLength = this.parseBigNumber(buyOrdersLengthResponse);
         this.buyOrdersLength = buyOrdersLength;
         for (let i = 0; i < buyOrdersLength; i++) {
-          buyOrderPromises.push(crowdsaleContractInstance.getBuyOrder.call(i));
+          buyOrderPromises.push(this._crowdsaleService.getBuyOrder(i));
         }
         return Promise.all(buyOrderPromises)
       })
@@ -109,13 +94,9 @@ export class CrowdsaleComponent implements OnInit {
         if (addOrderDialogResult.price < theSmallestPriceOfSellOrders || !theSmallestPriceOfSellOrders) {
           const eth = addOrderDialogResult.eth * this.decimals;
           const price = addOrderDialogResult.price * this.decimals;
-          this.Crowdsale.deployed()
-            .then(crowdsaleContractInstanceResponse => {
-              crowdsaleContractInstance = crowdsaleContractInstanceResponse;
-              return crowdsaleContractInstance.addBuyOrder(price, {gas: this.gas, from: web3.eth.accounts[0], value: eth});
-            })
+          this._crowdsaleService.addBuyOrder(price, eth)
             .then(response => {
-              this.getBuyOrderToUpdate(crowdsaleContractInstance, this.buyOrdersLength);
+              this.getBuyOrderToUpdate(this.buyOrdersLength);
             })
             .catch(err => {
               console.error('An error occurred on crowdsale.component in "openAddOrderDialog":', err);
@@ -124,17 +105,10 @@ export class CrowdsaleComponent implements OnInit {
           this.dialog.open(CrowdsaleAddBuyOrderErrorDialogComponent, {data: theSmallestPriceOfSellOrders});
         }
       } else if (addOrderDialogResult && addOrderDialogResult.type && addOrderDialogResult.type === 'sell') {
-        this.Crowdsale.deployed()
-          .then(crowdsaleContractInstanceResponse => {
-            crowdsaleContractInstance = crowdsaleContractInstanceResponse;
-            const price = addOrderDialogResult.price * this.decimals;
-            return crowdsaleContractInstance.addSellOrder(addOrderDialogResult.value, price, {
-              gas: this.gas,
-              from: web3.eth.accounts[0]
-            });
-          })
+        const price = addOrderDialogResult.price * this.decimals;
+        this._crowdsaleService.addSellOrder(addOrderDialogResult.value, price)
           .then(response => {
-            this.getSellOrderToUpdate(crowdsaleContractInstance, this.sellOrdersLength);
+            this.getSellOrderToUpdate(this.sellOrdersLength);
           })
           .catch(err => {
             console.error('An error occurred on crowdsale.component in "openAddOrderDialog":', err);
@@ -143,11 +117,11 @@ export class CrowdsaleComponent implements OnInit {
     });
   }
 
-  getBuyOrderToUpdate(contractInstance, index: number): void {
-    contractInstance.getBuyOrder.call(index)
+  getBuyOrderToUpdate(index: number): void {
+    this._crowdsaleService.getBuyOrder(index)
       .then(buyOrder => {
         if (!buyOrder[0] || buyOrder[0].length === 0) {
-          this.getBuyOrderToUpdate(contractInstance, this.visibleBuyOrdersLength);
+          this.getBuyOrderToUpdate(this.visibleBuyOrdersLength);
           return;
         } else {
           buyOrder = this.formatOrder(buyOrder, 'buy');
@@ -160,12 +134,12 @@ export class CrowdsaleComponent implements OnInit {
       })
   }
 
-  getSellOrderToUpdate(contractInstance, index: number): void {
+  getSellOrderToUpdate(index: number): void {
     index = index ? index : 0;
-    contractInstance.getSellOrder.call(index)
+    this._crowdsaleService.getSellOrder(index)
       .then(sellOrder => {
         if (!sellOrder[0] || sellOrder[0].length === 0) {
-          this.getSellOrderToUpdate(contractInstance, this.sellOrdersLength);
+          this.getSellOrderToUpdate(this.sellOrdersLength);
           return;
         } else {
           sellOrder = this.formatOrder(sellOrder, 'sell');
@@ -186,12 +160,7 @@ export class CrowdsaleComponent implements OnInit {
   }
 
   buy(id: number): void {
-    let crowdsaleContractInstance;
-    this.Crowdsale.deployed()
-      .then(crowdsaleContractInstanceResponse => {
-        crowdsaleContractInstance = crowdsaleContractInstanceResponse;
-        return crowdsaleContractInstance.buy(id, {gas: this.gas, from: web3.eth.accounts[0]})
-      })
+    this._crowdsaleService.buy(id)
       .then(buyResponse => {
         this.excludeItemFromList(id, 'sell');
       })
@@ -201,12 +170,7 @@ export class CrowdsaleComponent implements OnInit {
   }
 
   sell(id: number): void {
-    let crowdsaleContractInstance;
-    this.Crowdsale.deployed()
-      .then(crowdsaleContractInstanceResponse => {
-        crowdsaleContractInstance = crowdsaleContractInstanceResponse;
-        return crowdsaleContractInstance.sell(id, {gas: this.gas, from: web3.eth.accounts[0]});
-      })
+    this._crowdsaleService.sell(id)
       .then(sellResponse => {
         this.excludeItemFromList(id, 'buy');
       })
@@ -216,15 +180,13 @@ export class CrowdsaleComponent implements OnInit {
   }
 
   closeOrder(e: MouseEvent, type: string, id: number): void {
-    let crowdsaleContractInstance;
     e.stopPropagation();
-    this.Crowdsale.deployed()
-      .then(crowdsaleContractInstanceResponse => {
-        crowdsaleContractInstance = crowdsaleContractInstanceResponse;
+    Promise.resolve()
+      .then(() => {
         if (type === "sell") {
-          return crowdsaleContractInstance.closeSellOrder(id, {gas: this.gas, from: web3.eth.accounts[0]});
+          return this._crowdsaleService.closeSellOrder(id);
         } else if (type === "buy") {
-          return crowdsaleContractInstance.closeBuyOrder(id, {gas: this.gas, from: web3.eth.accounts[0]});
+          return this._crowdsaleService.closeBuyOrder(id);
         }
       })
       .then(closeSellOrderResponse => {

@@ -1,10 +1,9 @@
 import { Component, OnInit, ViewChild, QueryList } from '@angular/core';
 import { MdMenuTrigger } from '@angular/material'
 import { WorkerService } from '../../../core/worker.service'
+import { ProjectService } from '../../../core/contracts/project.service'
 import { WalletStateService } from '../../../core/wallet-state.service'
-import project_artifacts from '../../../../../../build/contracts/Project.json'
-import {default as contract} from 'truffle-contract'
-import { parseBigNumber, countDecimals, gas } from '../../../shared/methods'
+import { parseBigNumber, countDecimals } from '../../../shared/methods'
 import {MediumEnterLeaveAnimation, MediumControlledEnterLeaveAnimation} from '../../../shared/animations'
 import anime from 'animejs'
 
@@ -16,16 +15,14 @@ import anime from 'animejs'
 })
 export class WalletComponent implements OnInit {
   @ViewChild('sendTokensMenuTrigger') sendTokensMenuTrigger: MdMenuTrigger;
-  Project = contract(project_artifacts);
 
   parseBigNumber = parseBigNumber;
   countDecimals = countDecimals;
-  gas = gas;
 
   currentBalance: { [key: string]: number } = { balance: null };
   tokenSymbol: string;
   readyToDisplay = false;
-  sendTokensObj: { [key: string]: string | number } = {};
+  sendTokensObj: { address: string, value: string, fadeAnimation: string } = {address: "", value: "", fadeAnimation: ""};
   workersAddresses: string[] = [];
   walletTokensAmountChange: number;
   decimals: number;
@@ -36,29 +33,24 @@ export class WalletComponent implements OnInit {
 
   constructor(
     private _workerService: WorkerService,
-    private _walletStateService: WalletStateService
+    private _walletStateService: WalletStateService,
+    private _projectService: ProjectService
   ) { }
 
   ngOnInit() {
     let addressesWereSet = false;
     this._workerService.getWorkers().subscribe(workers => {
       if (!addressesWereSet && workers) {
-        let contractInstance;
         this.workersAddresses = workers.map(worker => worker[0]);
         addressesWereSet = true;
-        this.Project.setProvider(web3.currentProvider);
-        this.Project.deployed()
-          .then(contractInstanceResponse => {
-            contractInstance = contractInstanceResponse;
-            return contractInstance.balanceOf(web3.eth.accounts[0])
-          })
+        this._projectService.balanceOf(web3.eth.accounts[0])
           .then(balanceResponse => {
             this.currentBalance.balance = this.parseBigNumber(balanceResponse);
-            return contractInstance.symbol();
+            return this._projectService.symbol();
           })
           .then(symbol => {
             this.tokenSymbol = symbol;
-            return contractInstance.decimals();
+            return this._projectService.decimals();
           })
           .then(decimalsResponse => {
             this.decimals = this.countDecimals(decimalsResponse);
@@ -90,20 +82,12 @@ export class WalletComponent implements OnInit {
   }
 
   sendTokens(): void {
-    if (this.sendTokensObj.address && this.sendTokensObj.value && this.sendTokensObj.value > 0) {
-      let contractInstance;
+    if (this.sendTokensObj.address && this.sendTokensObj.value && Number(this.sendTokensObj.value) > 0) {
       this.sendTokensLoading = true;
       this.sendTokensObj.fadeAnimation = "void";
-      this.Project.deployed()
-        .then(contractInstanceResponse => {
-          contractInstance = contractInstanceResponse;
-          return contractInstance.transfer(this.sendTokensObj.address, Number(this.sendTokensObj.value) * this.decimals, {
-            gas: this.gas,
-            from: web3.eth.accounts[0]
-          });
-        })
+      this._projectService.transfer(this.sendTokensObj.address, Number(this.sendTokensObj.value) * this.decimals)
         .then(transferResponse => {
-          return contractInstance.balanceOf(web3.eth.accounts[0]);
+          return this._projectService.balanceOf(web3.eth.accounts[0]);
         })
         .then(balanceResponse => {
           const balanceDifference = Number(this.sendTokensObj.value);

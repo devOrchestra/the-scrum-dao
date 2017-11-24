@@ -2,16 +2,13 @@ import { Injectable } from '@angular/core';
 import { RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
 import { WorkerService } from '../worker.service'
 import { Web3Service } from '../web3.service';
-import project_artifacts from '../../../../../build/contracts/Project.json'
-import {default as contract} from 'truffle-contract'
+import { ProjectService } from '../contracts/project.service';
 import { parseBigNumber, countDecimals } from '../../shared/methods'
 import * as _ from 'lodash'
 
 
 @Injectable()
 export class WorkersResolverService {
-  Project = contract(project_artifacts);
-
   parseBigNumber = parseBigNumber;
   countDecimals = countDecimals;
 
@@ -19,30 +16,25 @@ export class WorkersResolverService {
 
   constructor(
     private _web3Service: Web3Service,
-    private _workerService: WorkerService
+    private _workerService: WorkerService,
+    private _projectService: ProjectService
   ) {}
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): void {
     this._web3Service.getConnectionState().subscribe(connectionState => {
       if (connectionState && (connectionState === "connected" || connectionState === "none")) {
-        let contractInstance;
         let decimals;
         let workersFinal = [];
         const holdersFinal = [];
         let holdersAddresses = [];
         let workersLength;
         let holdersLength;
-        this.Project.setProvider(web3.currentProvider);
-        return this.Project.deployed()
-          .then(contractInstanceResponse => {
-            contractInstance = contractInstanceResponse;
-            return contractInstance.getWorkersLength.call();
-          })
+        this._projectService.getWorkersLength()
           .then(data => {
             workersLength = this.parseBigNumber(data);
             const workersPromises = [];
             for (let i = 0; i < workersLength; i++) {
-              workersPromises.push(contractInstance.getWorker.call(i));
+              workersPromises.push(this._projectService.getWorker(i));
             }
             return Promise.all(workersPromises);
           })
@@ -50,7 +42,7 @@ export class WorkersResolverService {
             workersFinal = value;
             const balancePromises = [];
             for (let i = 0; i < workersLength; i++) {
-              balancePromises.push(contractInstance.balanceOf(value[i][0]));
+              balancePromises.push(this._projectService.balanceOf(value[i][0]));
             }
             return Promise.all(balancePromises);
           })
@@ -59,17 +51,17 @@ export class WorkersResolverService {
               item.push(this.parseBigNumber(response[i]));
             });
             this._workerService.setWorkers(workersFinal);
-            return contractInstance.decimals();
+            return this._projectService.decimals();
           })
           .then(decimalsResponse => {
             decimals = this.countDecimals(decimalsResponse);
-            return contractInstance.getHoldersLength();
+            return this._projectService.getHoldersLength();
           })
           .then(holdersLengthResponse => {
             holdersLength = this.parseBigNumber(holdersLengthResponse);
             const holdersPromises = [];
             for (let i = 0; i < holdersLength; i++) {
-              holdersPromises.push(contractInstance.holders(i));
+              holdersPromises.push(this._projectService.holders(i));
             }
             return Promise.all(holdersPromises)
           })
@@ -85,7 +77,7 @@ export class WorkersResolverService {
               return isNotInWorkers;
             });
             for (let i = 0; i < holdersLength; i++) {
-              balancePromises.push(contractInstance.balanceOf(holdersResponse[i]))
+              balancePromises.push(this._projectService.balanceOf(holdersResponse[i]))
             }
             return Promise.all(balancePromises);
           })

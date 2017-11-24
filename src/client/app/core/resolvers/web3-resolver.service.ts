@@ -1,24 +1,18 @@
 import { Injectable } from '@angular/core';
 import { RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
 import { Web3Service } from '../web3.service';
-import project_artifacts from '../../../../../build/contracts/Project.json'
-import {default as contract} from 'truffle-contract'
+import { ProjectService } from '../contracts/project.service';
 
 @Injectable()
 export class Web3ResolverService {
-  Project = contract(project_artifacts);
-
   constructor(
-    private _web3Service: Web3Service
+    private _web3Service: Web3Service,
+    private _projectService: ProjectService
   ) { }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): void {
     const connectionStateIsSet = JSON.parse(sessionStorage.getItem("connectionStateIsSet"));
-    this.Project.setProvider(web3.currentProvider);
-    this.Project.deployed()
-      .then(contractInstance => {
-        return contractInstance.balanceOf(web3.eth.accounts[0]);
-      })
+    this._projectService.balanceOf()
       .then(balanceResponse => {
         if (!connectionStateIsSet || connectionStateIsSet.connectionStateIsSet === false) {
           this._web3Service.setConnectionState("connected");
