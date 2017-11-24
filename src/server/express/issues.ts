@@ -17,7 +17,7 @@ issueRouter.get('/', (req, res, next) => {
     statusQuery = `AND (status="Backlog" OR status="In Progress" OR status="Selected for Development")`
   }
   logger.debug(`retrieving backlog issues from jira project`);
-  let url = `https://legalcoins.atlassian.net/rest/api/2/search?jql=project="${PROJECT_KEY}" ${statusQuery}&fields=id,key,status,assignee,summary,issuetype`;
+  let url = `https://legalcoins.atlassian.net/rest/api/2/search?jql=project="${PROJECT_KEY}" ${statusQuery}&fields=id,key,status,assignee,summary,issuetype&maxResults=1000`;
   jira.makeRequest({url}, (error, body) => {
     if (error) return next(error);
     if (!body || !body.issues) return next('fail during retrieving project issues');
