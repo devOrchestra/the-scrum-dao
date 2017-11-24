@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core';
 import project_artifacts from '../../../../../build/contracts/Project.json';
 import {default as contract} from 'truffle-contract'
-import {gas} from '../../shared/methods'
 
 @Injectable()
 export class ProjectService {
   Project = contract(project_artifacts);
   projectContractInstance;
-  gas = gas;
 
   constructor() { }
 
@@ -79,11 +77,11 @@ export class ProjectService {
 
   transfer(toAddress: string, value: number): Promise<any> {
     if (this.projectContractInstance) {
-      return this.projectContractInstance.transfer(toAddress, value, {gas: this.gas, from: web3.eth.accounts[0]});
+      return this.projectContractInstance.transfer(toAddress, value, {gas: 80000, from: web3.eth.accounts[0]});
     } else {
       return this.deployProjectContract()
         .then(() => {
-          return this.projectContractInstance.transfer(toAddress, value, {gas: this.gas, from: web3.eth.accounts[0]});
+          return this.projectContractInstance.transfer(toAddress, value, {gas: 80000, from: web3.eth.accounts[0]});
         });
     }
   }
@@ -143,24 +141,13 @@ export class ProjectService {
     }
   }
 
-  addTrustedOracle(oracleAddress: string): Promise<any> {
-    if (this.projectContractInstance) {
-      return this.projectContractInstance.addTrustedOracle(oracleAddress, {from: web3.eth.accounts[0], gas: this.gas});
-    } else {
-      return this.deployProjectContract()
-        .then(() => {
-          return this.projectContractInstance.addTrustedOracle(oracleAddress, {from: web3.eth.accounts[0], gas: this.gas});
-        });
-    }
-  }
-
   initCrowdsale(crowdsaleAddress: string): Promise<any> {
     if (this.projectContractInstance) {
-      return this.projectContractInstance.initCrowdsale(crowdsaleAddress, {from: web3.eth.accounts[0], gas: this.gas});
+      return this.projectContractInstance.initCrowdsale(crowdsaleAddress, {from: web3.eth.accounts[0], gas: 35000});
     } else {
       return this.deployProjectContract()
         .then(() => {
-          return this.projectContractInstance.initCrowdsale(crowdsaleAddress, {from: web3.eth.accounts[0], gas: this.gas});
+          return this.projectContractInstance.initCrowdsale(crowdsaleAddress, {from: web3.eth.accounts[0], gas: 35000});
         });
     }
   }

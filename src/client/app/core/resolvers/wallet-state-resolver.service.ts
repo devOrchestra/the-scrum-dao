@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
 import { WalletStateService } from '../wallet-state.service';
-import { ProjectService } from '../contracts/project.service';
+import { ProjectService } from '../contract-calls/project.service';
 import { parseBigNumber, countDecimals } from '../../shared/methods'
 
 @Injectable()

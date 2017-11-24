@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
 import { WorkerService } from '../worker.service'
 import { Web3Service } from '../web3.service';
-import { ProjectService } from '../contracts/project.service';
+import { ProjectService } from '../contract-calls/project.service';
 import { parseBigNumber, countDecimals } from '../../shared/methods'
 import * as _ from 'lodash'
 

@@ -59,27 +59,6 @@
       </div>
 
       <div fxLayout="column" fxLayoutAlign="space-between" class="form">
-        <div fxLayout="column" fxLayoutAlign="center" class="inputs" *ngIf="!addOracleLoading && !showOracleExists"
-             [@shortEnterAnimation]>
-          <md-input-container [color]="'accent'">
-            <input mdInput placeholder="Oracle address" [(ngModel)]="newOracleAddress">
-          </md-input-container>
-        </div>
-        <button md-button (click)="addOracleAddress()" class="confirm-button transition-fast"
-                *ngIf="!addOracleLoading && !showOracleExists" [@shortEnterAnimation]
-                [disabled]="!newOracleAddress || newOracleAddress.length === 0">
-          ADD ORACLE
-        </button>
-        <div fxLayout="row" fxLayoutAlign="center center" class="form-additional-content-container" *ngIf="addOracleLoading">
-          <md-spinner></md-spinner>
-        </div>
-        <div fxLayout="row" fxLayoutAlign="center center" class="form-additional-content-container" *ngIf="showOracleExists"
-             [@shortEnterAnimation]>
-          <p class="notification">The specified oracle address is equal to the current</p>
-        </div>
-      </div>
-
-      <div fxLayout="column" fxLayoutAlign="space-between" class="form">
         <div fxLayout="column" fxLayoutAlign="center" class="inputs" *ngIf="!addCrowdsaleLoading && !showCrowdsaleExists"
              [@shortEnterAnimation]>
           <md-input-container [color]="'accent'">

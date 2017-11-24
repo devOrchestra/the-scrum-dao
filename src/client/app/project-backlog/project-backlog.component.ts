@@ -3,9 +3,9 @@ import * as _ from 'lodash';
 import {MdDialog} from '@angular/material';
 import {ProjectBacklogAddTrackDialogComponent} from './project-backlog-add-track-dialog/project-backlog-add-track-dialog.component'
 import {JiraService} from '../core/jira.service'
-import {PlanningPokerService} from '../core/contracts/planning-poker.service'
-import {ProjectBacklogService} from '../core/contracts/project-backlog.service'
-import {ProjectService} from '../core/contracts/project.service'
+import {PlanningPokerService} from '../core/contract-calls/planning-poker.service'
+import {ProjectBacklogService} from '../core/contract-calls/project-backlog.service'
+import {ProjectService} from '../core/contract-calls/project.service'
 import {countStoryPoints, countDecimals, parseBigNumber} from '../shared/methods'
 import {AlternativeControlFlashAnimation, ShortEnterAnimation} from '../shared/animations'
 import { IBacklogTask } from "../shared/interfaces";

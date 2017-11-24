@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {WorkerService} from '../core/worker.service'
-import {ProjectService} from '../core/contracts/project.service'
+import {ProjectService} from '../core/contract-calls/project.service'
 import {countDecimals} from '../shared/methods'
 import { ISettingsWorker } from "../shared/interfaces";
 import {
@@ -105,37 +105,6 @@ export class SettingsComponent implements OnInit {
       setTimeout(() => {
         this.worker = {};
         this.showWorkerWithSuchEthAddressExists = false;
-      }, 5000);
-    }
-  }
-
-
-  addOracleAddress(): void {
-    const specifiedOracleAlreadyExists = this.currentOracleAddress === this.newOracleAddress;
-    if (!specifiedOracleAlreadyExists) {
-      this.addOracleLoading = true;
-      this._projectService.addTrustedOracle(this.newOracleAddress)
-        .then(() => {
-          return this._projectService.trustedOracle();
-        })
-        .then(newOracle => {
-          this.oracleFlashAnimation = "animate";
-          this.currentOracleAddress = newOracle;
-          this.newOracleAddress = "";
-          this.addOracleLoading = false;
-          setTimeout(() => {
-            this.oracleFlashAnimation = "";
-          }, 1000);
-        })
-        .catch(err => {
-          console.error('An error occurred on settings.component in "addOracleAddress":', err);
-          this.addOracleLoading = false;
-        });
-    } else {
-      this.showOracleExists = true;
-      setTimeout(() => {
-        this.newOracleAddress = "";
-        this.showOracleExists = false;
       }, 5000);
     }
   }

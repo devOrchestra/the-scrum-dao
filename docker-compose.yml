@@ -19,7 +19,7 @@ services:
       - "127.0.0.1:8021:8021"
     volumes:
       - "credentials:/src/credentials/"
-      - "contracts:/src/build/contracts/"
+      - "contract-calls:/src/build/contract-calls/"
     networks:
       - basic
     depends_on:

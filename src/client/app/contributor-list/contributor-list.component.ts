@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { WorkerService } from '../core/worker.service';
-import { ProjectService } from '../core/contracts/project.service'
+import { ProjectService } from '../core/contract-calls/project.service'
 import { ShortEnterAnimation } from '../shared/animations'
 import { countDecimals, parseBigNumber } from '../shared/methods'
 import { IContributor, IHolder } from "../shared/interfaces";

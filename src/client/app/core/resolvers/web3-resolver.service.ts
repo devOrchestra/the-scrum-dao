@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
 import { Web3Service } from '../web3.service';
-import { ProjectService } from '../contracts/project.service';
+import { ProjectService } from '../contract-calls/project.service';
 
 @Injectable()
 export class Web3ResolverService {

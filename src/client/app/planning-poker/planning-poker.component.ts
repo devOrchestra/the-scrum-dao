@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {JiraService} from '../core/jira.service'
-import {PlanningPokerService} from '../core/contracts/planning-poker.service'
+import {PlanningPokerService} from '../core/contract-calls/planning-poker.service'
 import {parseBigNumber, countStoryPoints} from '../shared/methods'
 import * as _ from 'lodash'
 import {AlternativeControlFlashAnimation, ShortEnterAnimation} from '../shared/animations'

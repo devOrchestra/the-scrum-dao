@@ -34,10 +34,10 @@ class EthController {
     let artifacts: any = {};
     let isExist;
     try {
-      artifacts.project = require(path.resolve('./build/contracts/Project.json'));
-      artifacts.planningPoker = require(path.resolve('./build/contracts/PlanningPoker.json'));
-      artifacts.crowdsale = require(path.resolve('./build/contracts/Crowdsale.json'));
-      artifacts.productBacklog = require(path.resolve('./build/contracts/ProductBacklog.json'));
+      artifacts.project = require(path.resolve('./build/contract-calls/Project.json'));
+      artifacts.planningPoker = require(path.resolve('./build/contract-calls/PlanningPoker.json'));
+      artifacts.crowdsale = require(path.resolve('./build/contract-calls/Crowdsale.json'));
+      artifacts.productBacklog = require(path.resolve('./build/contract-calls/ProductBacklog.json'));
       isExist = fs.existsSync(this.config.ethereum.owner.walletPath);
     } catch (error) {
       return process.nextTick(()=>{done(error)});

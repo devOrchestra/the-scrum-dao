@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {CrowdsaleAddOrderDialogComponent} from './crowdsale-add-order-dialog/crowdsale-add-order-dialog.component'
 import {CrowdsaleAddBuyOrderErrorDialogComponent} from './crowdsale-add-buy-order-error-dialog/crowdsale-add-buy-order-error-dialog.component'
 import {MdDialog} from '@angular/material';
-import {CrowdsaleService} from '../core/contracts/crowdsale.service'
-import {ProjectService} from '../core/contracts/project.service'
+import {CrowdsaleService} from '../core/contract-calls/crowdsale.service'
+import {ProjectService} from '../core/contract-calls/project.service'
 import {parseBigNumber, countDecimals} from '../shared/methods'
 import {ControlFlashAnimation, ShortEnterAnimation} from '../shared/animations'
 import * as _ from 'lodash'
@@ -89,7 +89,6 @@ export class CrowdsaleComponent implements OnInit {
     const addOrderDialogRef = this.dialog.open(CrowdsaleAddOrderDialogComponent);
     addOrderDialogRef.afterClosed().subscribe(addOrderDialogResult => {
       const theSmallestPriceOfSellOrders = this.findTheSmallestPriceOfSellOrders();
-      let crowdsaleContractInstance;
       if (addOrderDialogResult && addOrderDialogResult.type && addOrderDialogResult.type === 'buy') {
         if (addOrderDialogResult.price < theSmallestPriceOfSellOrders || !theSmallestPriceOfSellOrders) {
           const eth = addOrderDialogResult.eth * this.decimals;
@@ -189,7 +188,7 @@ export class CrowdsaleComponent implements OnInit {
           return this._crowdsaleService.closeBuyOrder(id);
         }
       })
-      .then(closeSellOrderResponse => {
+      .then(closeOrderResponse => {
         this.excludeItemFromList(id, type);
       })
       .catch(err => {

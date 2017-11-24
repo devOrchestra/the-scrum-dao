@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, QueryList } from '@angular/core';
 import { MdMenuTrigger } from '@angular/material'
 import { WorkerService } from '../../../core/worker.service'
-import { ProjectService } from '../../../core/contracts/project.service'
+import { ProjectService } from '../../../core/contract-calls/project.service'
 import { WalletStateService } from '../../../core/wallet-state.service'
 import { parseBigNumber, countDecimals } from '../../../shared/methods'
 import {MediumEnterLeaveAnimation, MediumControlledEnterLeaveAnimation} from '../../../shared/animations'

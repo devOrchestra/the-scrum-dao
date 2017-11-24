@@ -1,5 +1,3 @@
-export const gas = 200000;
-
 export const countDecimals = (numberOfNulls: number): number => {
   let final = "1";
   const parsedNumberOfNulls = parseBigNumber(numberOfNulls);
