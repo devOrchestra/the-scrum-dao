@@ -9,4 +9,5 @@ RUN cd /src \
    && rm -rf node_modules \
    && npm install --production
 EXPOSE 8021
-ENTRYPOINT [ "npm", "start" ]
+ENTRYPOINT ["./docker-starter.sh"]
+CMD ["start-server"]
