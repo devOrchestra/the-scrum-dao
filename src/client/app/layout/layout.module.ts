@@ -14,6 +14,7 @@ import { CrowdsaleComponent } from '../crowdsale/crowdsale.component';
 import { CrowdsaleAddOrderDialogComponent } from '../crowdsale/crowdsale-add-order-dialog/crowdsale-add-order-dialog.component';
 import { CrowdsaleAddBuyOrderErrorDialogComponent } from '../crowdsale/crowdsale-add-buy-order-error-dialog/crowdsale-add-buy-order-error-dialog.component';
 import { WalletComponent } from './header/wallet/wallet.component'
+import { TotalSupplyComponent } from './header/total-supply/total-supply.component'
 import { ConnectionStateComponent } from './connection-state/connection-state.component';
 
 import { RouterModule } from '@angular/router';
@@ -37,6 +38,7 @@ import { RouterModule } from '@angular/router';
     CrowdsaleAddOrderDialogComponent,
     CrowdsaleAddBuyOrderErrorDialogComponent,
     WalletComponent,
+    TotalSupplyComponent,
     ConnectionStateComponent
   ],
   entryComponents: [

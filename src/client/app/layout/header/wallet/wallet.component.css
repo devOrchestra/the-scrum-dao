@@ -3,7 +3,7 @@
 }
 
 .balance {
-  padding: 6px 12px;
+  padding: 4px 12px;
   border: 1px white solid;
   border-radius: 6px;
 }
@@ -12,10 +12,10 @@
   font-size: 14px;
   color: white;
   margin-right: 16px;
-  height: 18px;
-  padding: 4px 8px;
+  height: 16px;
+  padding: 3px 8px;
   border-radius: 6px;
-  line-height: 18px;
+  line-height: 16px;
 }
 
 .balance-container .minus-tokens {
@@ -34,7 +34,7 @@
 .balance-container .wallet-info {
   color: white;
   line-height: 22px;
-  font-size: 16px;
+  font-size: 15px;
 }
 
 .form-container .title-container {
@@ -83,5 +83,5 @@
 }
 
 /deep/ .mat-menu-panel {
-  margin-top: 14px;
+  margin-top: 16px;
 }

@@ -1,0 +1,16 @@
+:host {
+  margin-left: 16px;
+  cursor: default;
+}
+
+.total-supply {
+  padding: 4px 12px;
+  border: 1px white solid;
+  border-radius: 6px;
+}
+
+.total-supply-container .total-supply-info {
+  color: white;
+  line-height: 22px;
+  font-size: 15px;
+}

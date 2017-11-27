@@ -77,11 +77,11 @@ export class ProjectService {
 
   transfer(toAddress: string, value: number): Promise<any> {
     if (this.projectContractInstance) {
-      return this.projectContractInstance.transfer(toAddress, value, {gas: 80000, from: web3.eth.accounts[0]});
+      return this.projectContractInstance.transfer(toAddress, value, {gas: 100000, from: web3.eth.accounts[0]});
     } else {
       return this.deployProjectContract()
         .then(() => {
-          return this.projectContractInstance.transfer(toAddress, value, {gas: 80000, from: web3.eth.accounts[0]});
+          return this.projectContractInstance.transfer(toAddress, value, {gas: 100000, from: web3.eth.accounts[0]});
         });
     }
   }
@@ -148,6 +148,17 @@ export class ProjectService {
       return this.deployProjectContract()
         .then(() => {
           return this.projectContractInstance.initCrowdsale(crowdsaleAddress, {from: web3.eth.accounts[0], gas: 35000});
+        });
+    }
+  }
+
+  initPlanningPoker(planningPokerAddress: string): Promise<any> {
+    if (this.projectContractInstance) {
+      return this.projectContractInstance.initPlanningPoker(planningPokerAddress, {from: web3.eth.accounts[0], gas: 45000});
+    } else {
+      return this.deployProjectContract()
+        .then(() => {
+          return this.projectContractInstance.initPlanningPoker(planningPokerAddress, {from: web3.eth.accounts[0], gas: 45000});
         });
     }
   }
