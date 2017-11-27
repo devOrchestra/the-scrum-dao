@@ -120,7 +120,7 @@ contract('PlanningPoker', accounts => {
       return planningPokerContact.vote("SD-TEST", {from: accounts[5], gas: 150000}).should.be.rejected
     });
 
-    it("should vote properly when Worker is voting", done => {
+    it("should vote properly when Worker is voting on issue with opened voting", done => {
       planningPokerContact.vote("SD-TEST", 100, {from: workerAddresses[0], gas: 150000})
         .then(() => {
           return Promise.all([
@@ -142,7 +142,37 @@ contract('PlanningPoker', accounts => {
           getVotingResponse[3].should.equal(true);
           getVotingResponse[4].should.equal(false);
           done();
+        });
+    });
+
+    it("should add voting after first vote on issue without opened voting at the moment", done => {
+      planningPokerContact.getVoting("SD-TEST-FOR-VOTING-OPENING", {from: workerAddresses[0], gas: 150000})
+        .then(getVotingResponse => {
+          getVotingResponse[0].should.equal("");
+          parseBigNumber(getVotingResponse[1]).should.equal(0);
+          parseBigNumber(getVotingResponse[2]).should.equal(0);
+          getVotingResponse[3].should.equal(false);
+          getVotingResponse[4].should.equal(false);
+          return planningPokerContact.vote("SD-TEST-FOR-VOTING-OPENING", 100, {from: workerAddresses[0], gas: 300000});
         })
+        .then(() => {
+          return planningPokerContact.getVoting("SD-TEST-FOR-VOTING-OPENING", {from: workerAddresses[0], gas: 300000});
+        })
+        .then(getVotingResponse => {
+          getVotingResponse[0].should.equal("SD-TEST-FOR-VOTING-OPENING");
+          parseBigNumber(getVotingResponse[1]).should.equal(1);
+          parseBigNumber(getVotingResponse[2]).should.equal(100);
+          getVotingResponse[3].should.equal(true);
+          getVotingResponse[4].should.equal(false);
+          done();
+        });
+    });
+
+    it("should throw error when trying to vote on issue with closed voting", () => {
+      planningPokerContact.closeVoting("SD-TEST-FOR-VOTING-OPENING", {from: accounts[1], gas: 150000})
+        .then(() => {
+          return planningPokerContact.vote("SD-TEST-FOR-VOTING-OPENING", {from: accounts[1], gas: 300000}).should.be.rejected;
+        });
     });
   });
 

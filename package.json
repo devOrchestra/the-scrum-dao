@@ -6,6 +6,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
+    "test-contracts": "export NODE_ENV=development && truffle test",
     "copy-data": "cpx \"src/server/*.ini\" \"build/server\"",
     "compile-contracts": "truffle compile --network stub",
     "dev-migrate": "export NODE_ENV=development && truffle migrate --network development",

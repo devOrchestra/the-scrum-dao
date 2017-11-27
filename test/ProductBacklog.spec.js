@@ -109,7 +109,7 @@ contract('ProductBacklog', accounts => {
       return productBacklogContract.vote("SD-TEST", {from: accounts[5], gas: 150000}).should.be.rejected
     });
 
-    it("should vote properly when TokenHolder is voting", done => {
+    it("should vote properly when TokenHolder is voting on issue with opened voting", done => {
       productBacklogContract.vote("SD-TEST", {from: holders[0], gas: 150000})
         .then(() => {
           return productBacklogContract.getVote("SD-TEST", {from: accounts[0], gas: 150000});
@@ -127,7 +127,35 @@ contract('ProductBacklog', accounts => {
           getVotingResponse[2].should.equal(100000000000000000000);
           getVotingResponse[3].should.equal(true);
           done();
+        });
+    });
+
+    it("should add voting after first vote on issue without opened voting at the moment", done => {
+      productBacklogContract.getVoting("SD-TEST-FOR-VOTING-OPENING", {from: holders[0], gas: 150000})
+        .then(getVotingResponse => {
+          getVotingResponse[0].should.equal("");
+          parseBigNumber(getVotingResponse[1]).should.equal(0);
+          parseBigNumber(getVotingResponse[2]).should.equal(0);
+          getVotingResponse[3].should.equal(false);
+          return productBacklogContract.vote("SD-TEST-FOR-VOTING-OPENING", {from: holders[0], gas: 300000});
         })
+        .then(() => {
+          return productBacklogContract.getVoting("SD-TEST-FOR-VOTING-OPENING", {from: holders[0], gas: 300000});
+        })
+        .then(getVotingResponse => {
+          getVotingResponse[0].should.equal("SD-TEST-FOR-VOTING-OPENING");
+          parseBigNumber(getVotingResponse[1]).should.equal(100000000000000000000);
+          parseBigNumber(getVotingResponse[2]).should.equal(100000000000000000000);
+          getVotingResponse[3].should.equal(true);
+          done();
+        });
+    });
+
+    it("should throw error when trying to vote on issue with closed voting", () => {
+      productBacklogContract.closeVoting("SD-TEST-FOR-VOTING-OPENING", {from: accounts[0], gas: 150000})
+        .then(() => {
+          return productBacklogContract.vote("SD-TEST-FOR-VOTING-OPENING", {from: holders[0], gas: 300000}).should.be.rejected;
+        });
     });
   });
 
