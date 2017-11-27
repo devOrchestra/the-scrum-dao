@@ -34,8 +34,6 @@ export class TotalSupplyComponent implements OnInit {
       .then(decimalsResponse => {
         this.decimals = this.countDecimals(this.parseBigNumber(decimalsResponse));
         this.totalSupply = totalSupplyUnformatted / this.decimals;
-        console.log("decimals", this.decimals);
-        console.log("totalSupply", this.totalSupply);
         this.readyToDisplay = true;
       })
       .catch(err => {

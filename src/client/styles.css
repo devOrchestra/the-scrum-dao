@@ -165,3 +165,31 @@ input::-webkit-inner-spin-button {
   -o-transition: all .2s ease-in-out !important;
   transition: all .2s ease-in-out !important;
 }
+
+/* Chatbro */
+
+.chatbro_minimized_chat.chatbro_movable_chat {
+  left: 332px;
+  top: 16px;
+  right: 0 !important;
+  z-index: 0 !important;
+  width: 1px !important;
+  height: 1px !important;
+}
+
+.chatbro_minimized_chat.chatbro_movable_chat .chatbro_header {
+  height: 32px !important;
+}
+
+.chatbro_minimized_chat.chatbro_movable_chat .chatbro_header .new_messages_count_wrapper {
+  margin-right: 0 !important;
+}
+
+.chatbro_minimized_chat.chatbro_movable_chat .chatbro_header .new_messages_count_wrapper:after {
+  content: none;
+}
+
+.chatbro_minimized_chat.chatbro_movable_chat table {
+  border: 1px white solid !important;
+  border-radius: 6px;
+}
