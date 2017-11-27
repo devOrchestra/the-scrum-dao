@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {WorkerService} from '../core/worker.service'
 import {ProjectService} from '../core/contract-calls/project.service'
-import {countDecimals} from '../shared/methods'
+import {countDecimals, parseBigNumber} from '../shared/methods'
 import { ISettingsWorker } from "../shared/interfaces";
 import {
   ShortEnterAnimation,
@@ -25,23 +25,22 @@ import {
 })
 export class SettingsComponent implements OnInit {
   countDecimals = countDecimals;
+  parseBigNumber = parseBigNumber;
 
   worker: { [key: string]: string } = {};
   workers: ISettingsWorker[] = [];
-  newOracleAddress: string;
   currentOracleAddress: string;
+  oracleBalance: number;
   newCrowdsale: string;
   currentCrowdsale: string;
   symbol: string;
   decimals: number;
   readyToDisplay = false;
   addWorkerLoading = false;
-  addOracleLoading = false;
   addCrowdsaleLoading = false;
   oracleFlashAnimation = "void";
   crowdsaleFlashAnimation = "void";
   showWorkerWithSuchEthAddressExists = false;
-  showOracleExists = false;
   showCrowdsaleExists = false;
 
   constructor(
@@ -68,9 +67,17 @@ export class SettingsComponent implements OnInit {
         this._workerService.getWorkers().subscribe(getWorkersResponse => {
           if (getWorkersResponse) {
             this.workers = this.formatWorkers(getWorkersResponse);
+          }
+        });
+        web3.eth.getBalance(this.currentOracleAddress, (err, data) => {
+          if (err) {
+            console.error(err);
+          } else if (data) {
+            this.oracleBalance =  Number(web3.fromWei(this.parseBigNumber(data), "gwei"));
+            console.log("this.oracleBalance", this.oracleBalance);
             this.readyToDisplay = true;
           }
-        })
+        });
       })
       .catch(err => {
         console.error('An error occurred on settings.component in "OnInit" block:', err);

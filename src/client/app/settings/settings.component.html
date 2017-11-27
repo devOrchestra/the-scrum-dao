@@ -21,6 +21,10 @@
       <h3 class="title oracle-title">Oracle:</h3>
       <p class="oracle-address" [@alternativeControlFlashAnimation]="oracleFlashAnimation">{{currentOracleAddress}}</p>
     </div>
+    <div fxLayout="row" class="oracle-balance-section">
+      <p class="oracle-balance">{{oracleBalance.toFixed(0)}}</p>
+      <p class="oracle-gwei">gwei</p>
+    </div>
   </div>
 
   <div fxLayout="row">

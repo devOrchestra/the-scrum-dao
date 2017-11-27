@@ -63,8 +63,14 @@
   background-color: #333333;
 }
 
-.oracle-section {
+.oracle-section,
+.oracle-balance-section {
   margin-top: 32px;
+}
+
+.oracle-balance-section {
+  padding: 7px 16px;
+  border: 1px #333333 solid;
 }
 
 .crowdsale-section {
@@ -78,10 +84,23 @@
   color: white;
 }
 
+.oracle-balance {
+  line-height: 24px;
+}
+
+.oracle-gwei {
+  line-height: 24px;
+  margin-left: 8px;
+}
+
 .oracle-section .oracle-title,
 .crowdsale-section .crowdsale-title {
   font-size: 18px;
   color: white;
+}
+
+.balance-title {
+  font-size: 18px;
 }
 
 .forms-section {
