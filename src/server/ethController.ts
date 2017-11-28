@@ -106,6 +106,7 @@ class EthController {
         break;
 
       case 'production':
+      case 'stage':
         let walletData = require(path.resolve(this.config.ethereum[entity].walletPath));
         wallet.v3Wallet = Wallet.fromV3(walletData, this.config.ethereum[entity].walletPassword);
         wallet.address = `0x${wallet.v3Wallet.getAddress().toString("hex")}`;
@@ -127,6 +128,7 @@ class EthController {
         break;
 
       case 'production':
+      case 'stage':
         this.ethAddress = wallet.address;
         let engine = new ProviderEngine();
         engine.addProvider(new FilterSubprovider());

@@ -12,6 +12,7 @@ volumes:
 services:
   scrum-dao:
     image: krabradosty/scrum-dao
+    restart: always
     environment:
       - NODE_ENV=stage
       - LOG_LEVEL=debug
@@ -27,6 +28,7 @@ services:
 
   redis:
     image: redis:3.2
+    restart: always
     command: ["redis-server", "--appendonly", "yes"]
     expose:
       - 6379
