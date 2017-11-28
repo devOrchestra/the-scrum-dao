@@ -13,13 +13,13 @@ services:
   scrum-dao:
     image: krabradosty/scrum-dao
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=development
       - LOG_LEVEL=debug
     ports:
       - "127.0.0.1:8021:8021"
     volumes:
       - "credentials:/src/credentials/"
-      - "contract-calls:/src/build/contract-calls/"
+      - "contracts:/src/build/contracts/"
     networks:
       - basic
     depends_on:

@@ -80,3 +80,6 @@ This contract allows Workers to sell earned Tokens to anyone. It works like usua
 
 - You should fully fill existing order
 - You can fill only one order per transaction
+
+## Diman's temporary unit
+docker-compose run --rm scrum-dao migrate 
