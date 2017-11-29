@@ -45,12 +45,12 @@ module.exports = {
       network_id: "*" // Match any network id
     },
     production: {
-      network_id: 3,    // Official ropsten network id
+      network_id: 1,
       provider: engine, // Use our custom provider
       from: address     // Use the address we derived
     },
     stage: {
-      network_id: "*",    // Official ropsten network id
+      network_id: 4,
       provider: engine, // Use our custom provider
       from: address     // Use the address we derived
     },

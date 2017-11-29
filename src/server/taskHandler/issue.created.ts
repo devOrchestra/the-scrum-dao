@@ -3,6 +3,7 @@ import async = require("async");
 import TaskScheduler from "../taskScheduler";
 import TaskHandler from "./index";
 import EthController from "../ethController";
+import logger from "../logger";
 
 export default function (taskHandler: TaskHandler) {
   let {taskScheduler, ethController, config}: {taskScheduler: TaskScheduler, ethController: EthController, config} = taskHandler;
@@ -10,6 +11,8 @@ export default function (taskHandler: TaskHandler) {
   return function (job, done) {
     let {issueKey} = job.data;
     let {timeIntervals} = config.ethereum;
+
+    logger.info(`Handling issue.created task for issue ${issueKey}`);
 
     async.parallel([
 
@@ -22,7 +25,7 @@ export default function (taskHandler: TaskHandler) {
       }
 
     ], (error) => {
-      taskScheduler.createTask('issue.storyPointsVoting.finished', job.data, timeIntervals.storyPointsVoting);
+      taskScheduler.createTask('issue.storyPointsVoting.close', job.data, timeIntervals.storyPointsVoting);
       done(error);
     });
   }

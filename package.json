@@ -12,7 +12,7 @@
     "dev-migrate": "export NODE_ENV=development && truffle migrate --network development",
     "migrate": "truffle migrate --network ${NODE_ENV}",
     "prebuild-app": "rm -rf build/client",
-    "build-app": "ng build",
+    "build-app": "ng build --prod --aot false",
     "prebuild-server": "rm -rf build/server",
     "build-server": "tsc -p src/server/tsconfig.json",
     "postbuild-server": "npm run copy-data",
