@@ -74,7 +74,6 @@ export class SettingsComponent implements OnInit {
             console.error(err);
           } else if (data) {
             this.oracleBalance =  Number(web3.fromWei(this.parseBigNumber(data), "gwei"));
-            console.log("this.oracleBalance", this.oracleBalance);
             this.readyToDisplay = true;
           }
         });
