@@ -75,13 +75,13 @@ export class CrowdsaleService {
     }
   }
 
-  buy(id: number): Promise<any> {
+  buy(id: number, value: number): Promise<any> {
     if (this.crowdsaleContractInstance) {
-      return this.crowdsaleContractInstance.buy(id, {gas: 80000, from: web3.eth.accounts[0]});
+      return this.crowdsaleContractInstance.buy(id, {gas: 80000, from: web3.eth.accounts[0], value});
     } else {
       return this.deployCrowdsaleContract()
         .then(() => {
-          return this.crowdsaleContractInstance.buy(id, {gas: 80000, from: web3.eth.accounts[0]});
+          return this.crowdsaleContractInstance.buy(id, {gas: 80000, from: web3.eth.accounts[0], value});
         });
     }
   }

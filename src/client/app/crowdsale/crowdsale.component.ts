@@ -150,16 +150,17 @@ export class CrowdsaleComponent implements OnInit {
       })
   }
 
-  tradeOrder(type: string, id: number): void {
+  tradeOrder(type: string, id: number, value: number): void {
+    value *= this.decimals;
     if (type === 'sell') {
-      this.buy(id);
+      this.buy(id, value);
     } else if (type === 'buy') {
       this.sell(id);
     }
   }
 
-  buy(id: number): void {
-    this._crowdsaleService.buy(id)
+  buy(id: number, value: number): void {
+    this._crowdsaleService.buy(id, value)
       .then(buyResponse => {
         this.excludeItemFromList(id, 'sell');
       })
@@ -238,7 +239,7 @@ export class CrowdsaleComponent implements OnInit {
       const index = _.findIndex(this.orders, itemToExcludeFromList);
       this.orders.splice(index, 1);
       if (type === "sell") {
-        this.sellOrdersLength -= 1
+        this.visibleSellOrdersLength -= 1;
       } else if (type === "buy") {
         this.visibleBuyOrdersLength -= 1;
       }
