@@ -25,7 +25,7 @@ export default function (taskHandler: TaskHandler) {
       }
 
     ], (error) => {
-      taskScheduler.createTask('issue.storyPointsVoting.close', job.data, timeIntervals.storyPointsVoting);
+      if (!error) taskScheduler.createTask('issue.storyPointsVoting.close', job.data, timeIntervals.storyPointsVoting);
       done(error);
     });
   }

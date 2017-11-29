@@ -38,7 +38,7 @@ class TaskHandler {
 
   private createHandler(eventName: string, handler: (job, done) => void): void {
     this.handler.process(eventName, handler);
-    logger.info(`Handler for ${eventName} has been added`)
+    logger.info(`Handler for ${eventName} has been added`);
   }
 }
 

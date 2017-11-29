@@ -27,7 +27,7 @@ function createTaskFromUpdatedIssue(scheduler: TaskScheduler, issueKey: string, 
   if (!webhookChangelog) return;
 
   let items = webhookChangelog.items;
-  if (!items || items.length !== 1) return;
+  if (!items || items.length === 0) return;
 
   let changedData = items[0];
   if (changedData.fieldId !== 'status') return;
