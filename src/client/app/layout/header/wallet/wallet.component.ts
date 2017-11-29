@@ -63,11 +63,13 @@ export class WalletComponent implements OnInit {
                   this.currentBalance.balance = this.currentBalance.balance / this.decimals;
                 }
                 this.readyToDisplay = true;
-                this.showBalanceChange(currentBalances.currentBalance,
+                this.showBalanceChange(
+                  currentBalances.currentBalance,
                   balanceDifference,
                   false,
                   balanceDifference > 0,
-                  currentBalances.accountWasNotChanged);
+                  currentBalances.accountWasNotChanged
+                );
               } else {
                 this.currentBalance.balance = this.currentBalance.balance / this.decimals;
                 this.readyToDisplay = true;
