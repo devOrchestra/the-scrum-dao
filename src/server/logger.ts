@@ -8,7 +8,8 @@ export default new (winston.Logger)({
       timestamp: () => { return moment().toISOString() },
       formatter: (options) => {
         return `${options.timestamp()} server ${options.level.toUpperCase()} ${options.message || ''}`
-      }
+      },
+      stderrLevels: ['error']
     })
   ]
 })
