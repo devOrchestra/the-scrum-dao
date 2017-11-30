@@ -177,8 +177,13 @@ input::-webkit-inner-spin-button {
   height: 1px !important;
 }
 
+.chatbro_minimized_chat.chatbro_movable_chat table {
+  background-color: #333333;
+}
+
 .chatbro_minimized_chat.chatbro_movable_chat .chatbro_header {
   height: 32px !important;
+  border-radius: 6px;
 }
 
 .chatbro_minimized_chat.chatbro_movable_chat .chatbro_header .new_messages_count_wrapper {
@@ -192,4 +197,16 @@ input::-webkit-inner-spin-button {
 .chatbro_minimized_chat.chatbro_movable_chat table {
   border: 1px white solid !important;
   border-radius: 6px;
+}
+
+.chatbro_chat .chatbro_header_button.chatbro_invite_button {
+  background-color: #333333 !important;
+}
+
+.chatbro_chat .chatbro_header_button.chatbro_minimize_button {
+  background-color: #333333 !important;
+}
+
+.chatbro_chat .chatbro_header.chatbro_maximized_header {
+  background-color: #333333 !important;
 }
