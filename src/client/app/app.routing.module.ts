@@ -6,11 +6,13 @@ import {ProjectBacklogComponent} from './project-backlog/project-backlog.compone
 import {PlanningPokerComponent} from './planning-poker/planning-poker.component';
 import {ContributorListComponent} from './contributor-list/contributor-list.component';
 import {CrowdsaleComponent} from './crowdsale/crowdsale.component';
+import {ExchangeComponent} from './exchange/exchange.component';
 
 import {WorkersResolverService} from './core/resolvers/workers-resolver.service';
 import {JiraIssuesResolverService} from './core/resolvers/jira-issues-resolver.service';
 import {Web3ResolverService} from './core/resolvers/web3-resolver.service';
 import {WalletStateResolverService} from './core/resolvers/wallet-state-resolver.service';
+import {OrdersResolverService} from './core/resolvers/orders-resolver.service';
 
 import {OwnerGuardService} from './owner-guard.service'
 
@@ -22,7 +24,8 @@ const routes: Routes = [
       connection: Web3ResolverService,
       workers: WorkersResolverService,
       issues: JiraIssuesResolverService,
-      walletState: WalletStateResolverService
+      walletState: WalletStateResolverService,
+      orders: OrdersResolverService
     },
     children: [
       {
@@ -45,6 +48,10 @@ const routes: Routes = [
       {
         path: 'crowdsale',
         component: CrowdsaleComponent
+      },
+      {
+        path: 'exchange',
+        component: ExchangeComponent
       }
     ],
   },

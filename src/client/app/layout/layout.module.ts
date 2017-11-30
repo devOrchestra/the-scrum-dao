@@ -9,6 +9,7 @@ import { SettingsComponent } from '../settings/settings.component';
 import { ProjectBacklogComponent } from '../project-backlog/project-backlog.component';
 import { ProjectBacklogAddTrackDialogComponent } from '../project-backlog/project-backlog-add-track-dialog/project-backlog-add-track-dialog.component';
 import { PlanningPokerComponent } from '../planning-poker/planning-poker.component';
+import { ExchangeComponent } from '../exchange/exchange.component';
 import { ContributorListComponent } from '../contributor-list/contributor-list.component';
 import { CrowdsaleComponent } from '../crowdsale/crowdsale.component';
 import { CrowdsaleAddOrderDialogComponent } from '../crowdsale/crowdsale-add-order-dialog/crowdsale-add-order-dialog.component';
@@ -34,6 +35,7 @@ import { RouterModule } from '@angular/router';
     ProjectBacklogComponent,
     ProjectBacklogAddTrackDialogComponent,
     PlanningPokerComponent,
+    ExchangeComponent,
     ContributorListComponent,
     CrowdsaleComponent,
     CrowdsaleAddOrderDialogComponent,

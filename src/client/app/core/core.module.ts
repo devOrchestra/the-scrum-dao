@@ -12,6 +12,7 @@ import { WorkerService } from './worker.service';
 import { JiraService } from './jira.service';
 import { Web3Service } from './web3.service';
 import { WalletStateService } from './wallet-state.service';
+import { OrderService } from './order.service';
 
 @NgModule({
   imports: [
@@ -29,7 +30,8 @@ import { WalletStateService } from './wallet-state.service';
     WorkerService,
     JiraService,
     Web3Service,
-    WalletStateService
+    WalletStateService,
+    OrderService
   ]
 })
 export class CoreModule {}

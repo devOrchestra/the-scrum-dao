@@ -4,7 +4,8 @@ import {CrowdsaleAddBuyOrderErrorDialogComponent} from './crowdsale-add-buy-orde
 import {MdDialog} from '@angular/material';
 import {CrowdsaleService} from '../core/contract-calls/crowdsale.service'
 import {ProjectService} from '../core/contract-calls/project.service'
-import {parseBigNumber, countDecimals} from '../shared/methods'
+import {OrderService} from '../core/order.service'
+import {parseBigNumber, countDecimals, formatOrder, transformOrderToObject} from '../shared/methods'
 import {ControlFlashAnimation, ShortEnterAnimation} from '../shared/animations'
 import * as _ from 'lodash'
 import { IOrder } from "../shared/interfaces";
@@ -18,6 +19,7 @@ import { IOrder } from "../shared/interfaces";
 export class CrowdsaleComponent implements OnInit {
   parseBigNumber = parseBigNumber;
   countDecimals = countDecimals;
+  formatOrder = formatOrder;
 
   orders: IOrder[] = [];
   tokenSymbol: string;
@@ -33,56 +35,33 @@ export class CrowdsaleComponent implements OnInit {
   constructor(
     private dialog: MdDialog,
     private _projectService: ProjectService,
-    private _crowdsaleService: CrowdsaleService
+    private _crowdsaleService: CrowdsaleService,
+    private _orderService: OrderService
   ) { }
 
   ngOnInit() {
     const sellOrderPromises = [];
     const buyOrderPromises = [];
-    this._projectService.decimals()
-      .then(decimalsResponse => {
-        this.decimals = this.countDecimals(decimalsResponse);
-        return this._projectService.symbol();
-      })
-      .then(symbolResponse => {
-        this.tokenSymbol = symbolResponse;
-        return this._crowdsaleService.getSellOrderLength();
-      })
-      .then(sellOrdersLengthResponse => {
-        const sellOrdersLength = this.parseBigNumber(sellOrdersLengthResponse);
-        this.sellOrdersLength = sellOrdersLength;
-        for (let i = 0; i < sellOrdersLength; i++) {
-          sellOrderPromises.push(this._crowdsaleService.getSellOrder(i));
-        }
-        return Promise.all(sellOrderPromises)
-      })
-      .then(sellOrders => {
-        sellOrders.forEach(item => {
-          item = this.formatOrder(item, 'sell');
-          this.orders.push(item);
-        });
-        return this._crowdsaleService.getBuyOrderLength();
-      })
-      .then(buyOrdersLengthResponse => {
-        const buyOrdersLength = this.parseBigNumber(buyOrdersLengthResponse);
-        this.buyOrdersLength = buyOrdersLength;
-        for (let i = 0; i < buyOrdersLength; i++) {
-          buyOrderPromises.push(this._crowdsaleService.getBuyOrder(i));
-        }
-        return Promise.all(buyOrderPromises)
-      })
-      .then(buyOrders => {
-        buyOrders.forEach(item => {
-          item = this.formatOrder(item, 'buy');
-          item.value /= this.decimals;
-          this.orders.push(item);
-        });
-        this.countVisibleOrdersLength();
-        this.readyToDisplay = true;
-      })
-      .catch(err => {
-        console.error('An error occurred on crowdsale.component in "OnInit" block:', err);
-      });
+    this._orderService.getOrders().subscribe(ordersFromService => {
+      if (ordersFromService) {
+        this.orders = ordersFromService;
+        this.sellOrdersLength = _.filter(this.orders, order => order.orderType === 'sell').length;
+        this.buyOrdersLength = _.filter(this.orders, order => order.orderType === 'buy').length;
+        this._projectService.decimals()
+          .then(decimalsResponse => {
+            this.decimals = this.countDecimals(decimalsResponse);
+            return this._projectService.symbol();
+          })
+          .then(symbolResponse => {
+            this.tokenSymbol = symbolResponse;
+            this.countVisibleOrdersLength();
+            this.readyToDisplay = true;
+          })
+          .catch(err => {
+            console.error('An error occurred on crowdsale.component in "OnInit" block:', err);
+          });
+      }
+    });
   }
 
   openAddOrderDialog(): void {
@@ -123,10 +102,11 @@ export class CrowdsaleComponent implements OnInit {
           this.getBuyOrderToUpdate(this.visibleBuyOrdersLength);
           return;
         } else {
-          buyOrder = this.formatOrder(buyOrder, 'buy');
+          buyOrder = this.formatOrder(buyOrder, 'buy', this.decimals);
           buyOrder.value /= this.decimals;
           buyOrder.flashAnimation = "animate";
           this.orders.push(buyOrder);
+          this._orderService.setOrders(this.orders);
           this.buyOrdersLength += 1;
           this.countVisibleOrdersLength();
         }
@@ -141,9 +121,10 @@ export class CrowdsaleComponent implements OnInit {
           this.getSellOrderToUpdate(this.sellOrdersLength);
           return;
         } else {
-          sellOrder = this.formatOrder(sellOrder, 'sell');
+          sellOrder = this.formatOrder(sellOrder, 'sell', this.decimals);
           sellOrder.flashAnimation = "animate";
           this.orders.push(sellOrder);
+          this._orderService.setOrders(this.orders);
           this.sellOrdersLength += 1;
           this.countVisibleOrdersLength();
         }
@@ -162,7 +143,7 @@ export class CrowdsaleComponent implements OnInit {
   buy(id: number, value: number): void {
     this._crowdsaleService.buy(id, value)
       .then(buyResponse => {
-        this.excludeItemFromList(id, 'sell');
+        this.excludeItemFromList(id, 'sell', 'trade');
       })
       .catch(err => {
         console.error('An error occurred on crowdsale.component in "buy":', err);
@@ -172,7 +153,7 @@ export class CrowdsaleComponent implements OnInit {
   sell(id: number): void {
     this._crowdsaleService.sell(id)
       .then(sellResponse => {
-        this.excludeItemFromList(id, 'buy');
+        this.excludeItemFromList(id, 'buy', 'trade');
       })
       .catch(err => {
         console.error('An error occurred on crowdsale.component in "sell":', err);
@@ -190,7 +171,7 @@ export class CrowdsaleComponent implements OnInit {
         }
       })
       .then(closeOrderResponse => {
-        this.excludeItemFromList(id, type);
+        this.excludeItemFromList(id, type, 'close');
       })
       .catch(err => {
         console.error('An error occurred on crowdsale.component in "closeOrder":', err);
@@ -231,17 +212,21 @@ export class CrowdsaleComponent implements OnInit {
     }
   }
 
-  excludeItemFromList(id: number, type: string): void {
+  excludeItemFromList(id: number, type: string, operationType: string): void {
     const itemToExcludeFromList = _.find(this.orders, {id: id, orderType: type});
-    itemToExcludeFromList.flashAnimation = "void";
+    itemToExcludeFromList.isOpen = false;
+    const index = _.findIndex(this.orders, itemToExcludeFromList);
+    if (operationType === 'trade') {
+      this.orders[index].isOpen = false;
+    } else if (operationType === 'close') {
+      this.orders[index].isLocked = true;
+    }
+    this._orderService.setOrders(this.orders);
     setTimeout(() => {
-      itemToExcludeFromList.isOpen = false;
-      const index = _.findIndex(this.orders, itemToExcludeFromList);
-      this.orders.splice(index, 1);
       if (type === "sell") {
-        this.visibleSellOrdersLength -= 1;
+        this.visibleSellOrdersLength = this.visibleSellOrdersLength === 0 ? 0 : this.visibleSellOrdersLength - 1;
       } else if (type === "buy") {
-        this.visibleBuyOrdersLength -= 1;
+        this.visibleBuyOrdersLength = this.visibleBuyOrdersLength === 0 ? 0 : this.visibleBuyOrdersLength - 1;
       }
     }, 1000);
   }
@@ -269,27 +254,6 @@ export class CrowdsaleComponent implements OnInit {
       }
     });
     return minPriceOfSellOrders;
-  }
-
-  formatOrder(item: IOrder, type: string): IOrder {
-    for (let i = 1; i <= 3; i++) {
-      item[i] = this.parseBigNumber(item[i]);
-    }
-    item = this.transformOrderToObject(item, type);
-    item.price = item.price / this.decimals;
-    return item;
-  }
-
-  transformOrderToObject(item: IOrder, orderType: string): IOrder {
-    return {
-      owner: item[0],
-      value: item[1],
-      price: item[2],
-      id: item[3],
-      isOpen: item[4],
-      isLocked: item[5] || false,
-      orderType: orderType
-    }
   }
 
   styleRow(e: any): void {

@@ -1,0 +1,109 @@
+.no-orders {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  font-size: 32px;
+  font-weight: bold;
+}
+
+#orders .item-wrapper .item {
+  padding: 8px 16px;
+  margin: 0 8px;
+  border-left: 1px #e1e1e1 solid;
+  border-bottom: 1px #e1e1e1 solid;
+  border-right: 1px #e1e1e1 solid;
+}
+
+#orders .item-wrapper .item-border-top {
+  border-top: 1px #e1e1e1 solid;
+}
+
+.qwe {
+  border-top: 1px #e1e1e1 solid;
+}
+
+#orders .buy-cloud i,
+#orders .sell-cloud i {
+  color: white;
+}
+
+#orders .buy-cloud span,
+#orders .sell-cloud span {
+  margin-left: 4px;
+}
+
+#orders .item .buy-cloud {
+  font-size: 12px;
+  border-radius: 10px;
+  padding: 5px 10px;
+  background-color: #239b23;
+  font-weight: bold;
+  width: 56px;
+  min-width: 56px;
+  color: white;
+  margin-right: 12px;
+}
+
+#orders .item .sell-cloud {
+  font-size: 12px;
+  border-radius: 10px;
+  padding: 5px 10px;
+  background-color: #f30000;
+  font-weight: bold;
+  width: 56px;
+  min-width: 56px;
+  color: white;
+  margin-right: 12px;
+}
+
+#orders .fat-border-bottom {
+  border-bottom: 3px #e1e1e1 solid !important;
+}
+
+#top-row {
+  margin-bottom: 16px;
+}
+
+#add-order-button {
+  background-color: #333333;
+  color: #fffa7a;
+  font-size: 24px;
+  position: fixed;
+  bottom: 16px;
+  right: 32px;
+}
+
+#orders .lock-button {
+  line-height: 22px;
+  letter-spacing: 1px;
+  padding: 0 10px;
+  margin-right: 8px;
+  color: royalblue;
+  border: 1px royalblue solid;
+  font-size: 12px;
+  border-radius: 3px;
+  font-weight: bold;
+}
+
+#orders .lock-button:hover {
+  background-color: royalblue;
+  color: white;
+}
+
+.item-background-transition-fast {
+  -webkit-transition: background-color .2s ease-in-out !important;
+  -moz-transition: background-color .2s ease-in-out !important;
+  -o-transition: background-color .2s ease-in-out !important;
+  transition: background-color .2s ease-in-out !important;
+}
+
+.main-spinner {
+  width: 75px;
+  height: 75px;
+}
+
+/deep/ .main-spinner path {
+  stroke: #333333;
+}

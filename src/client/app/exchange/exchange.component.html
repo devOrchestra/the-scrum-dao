@@ -9,15 +9,14 @@
 <div *ngIf="readyToDisplay" [@shortEnterAnimation]>
   <div fxLayout="column" fxFill class="relative-container">
     <div id="top-row" fxLayout="row" fxLayoutAlign="space-between">
-      <h2>Order book</h2>
+      <h2>Closed orders</h2>
     </div>
 
     <div fxLayout="column" id="orders">
-      <div fxLayout="row" fxFlex="100" class="item-wrapper unselectable pointer transition-fast"
-           *ngFor="let order of orders | sortBuyAndSellOrdersByTypeAndPriceDescendingPipe; let index = index;"
-           (click)="tradeOrder(order.orderType, order.id, order.value * order.price)">
-        <div fxLayout="row" fxFlex="100" class="item unselectable pointer item-background-transition-fast"
-             *ngIf="order.isOpen && !order.isLocked" (mouseenter)="styleRow($event)" (mouseleave)="styleRow($event)"
+      <div fxLayout="row" fxFlex="100" class="item-wrapper unselectable default-cursor transition-fast"
+           *ngFor="let order of orders | sortBuyAndSellOrdersByTypeAndPriceDescendingPipe; let index = index;">
+        <div fxLayout="row" fxFlex="100" class="item unselectable default-cursor item-background-transition-fast"
+             *ngIf="!order.isOpen" (mouseenter)="styleRow($event)" (mouseleave)="styleRow($event)"
              [@controlFlashAnimation]="order.flashAnimation"
              [ngClass]="{'fat-border-bottom': visibleBuyOrdersLength && visibleBuyOrdersLength > 0 &&
                         index === countIndexOfTheLastVisibleSellOrder(index, order),
@@ -37,10 +36,6 @@
               </div>
             </div>
             <div fxLayout="row">
-              <div *ngIf="currentOwner === order.owner" class="lock-button transition-fast" (mouseenter)="styleRow($event)"
-                      (mouseleave)="styleRow($event)" (click)="closeOrder($event, order.orderType, order.id)">
-                CLOSE
-              </div>
               <span fxLayout="column" fxLayoutAlign="center">{{order.price}} {{tokenSymbol}}/ETH</span>
             </div>
           </div>
@@ -48,6 +43,4 @@
       </div>
     </div>
   </div>
-
-  <button id="add-order-button" md-fab (click)="openAddOrderDialog()">+</button>
 </div>
