@@ -31,7 +31,13 @@ export class ExchangeComponent implements OnInit {
     private _titleService: Title,
     private _projectService: ProjectService,
     private _orderService: OrderService
-  ) { this._titleService.setTitle('Scrum DAO - Exchange'); }
+  ) {
+    const currentTitle = this._titleService.getTitle(),
+          neededTitle = 'Scrum DAO - Exchange';
+    if (currentTitle !== neededTitle) {
+      this._titleService.setTitle(neededTitle);
+    }
+  }
 
   ngOnInit() {
     const sellOrderPromises = [];

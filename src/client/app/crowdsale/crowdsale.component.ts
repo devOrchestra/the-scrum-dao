@@ -39,7 +39,13 @@ export class CrowdsaleComponent implements OnInit {
     private _projectService: ProjectService,
     private _crowdsaleService: CrowdsaleService,
     private _orderService: OrderService
-  ) { this._titleService.setTitle('Scrum DAO - Crowdsale'); }
+  ) {
+    const currentTitle = this._titleService.getTitle(),
+          neededTitle = 'Scrum DAO - Crowdsale';
+    if (currentTitle !== neededTitle) {
+      this._titleService.setTitle(neededTitle);
+    }
+  }
 
   ngOnInit() {
     const sellOrderPromises = [];

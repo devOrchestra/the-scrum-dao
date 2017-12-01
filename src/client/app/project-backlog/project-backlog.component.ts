@@ -36,7 +36,13 @@ export class ProjectBacklogComponent implements OnInit {
     private _planningPokerService: PlanningPokerService,
     private _projectBacklogService: ProjectBacklogService,
     private _projectService: ProjectService
-  ) { this._titleService.setTitle('Scrum DAO - Project backlog'); }
+  ) {
+    const currentTitle = this._titleService.getTitle(),
+          neededTitle = 'Scrum DAO - Project backlog';
+    if (currentTitle !== neededTitle) {
+      this._titleService.setTitle(neededTitle);
+    }
+  }
 
 
   ngOnInit() {

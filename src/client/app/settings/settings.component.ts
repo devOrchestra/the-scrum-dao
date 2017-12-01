@@ -48,7 +48,13 @@ export class SettingsComponent implements OnInit {
     private _titleService: Title,
     private _workerService: WorkerService,
     private _projectService: ProjectService
-  ) { this._titleService.setTitle('Scrum DAO - Settings'); }
+  ) {
+    const currentTitle = this._titleService.getTitle(),
+          neededTitle = 'Scrum DAO - Settings';
+    if (currentTitle !== neededTitle) {
+      this._titleService.setTitle(neededTitle);
+    }
+  }
 
   ngOnInit() {
     this._projectService.trustedOracle()

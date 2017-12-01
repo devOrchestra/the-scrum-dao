@@ -26,7 +26,13 @@ export class PlanningPokerComponent implements OnInit {
     private _titleService: Title,
     private _jiraService: JiraService,
     private _planningPokerService: PlanningPokerService
-  ) { this._titleService.setTitle('Scrum DAO - Planning poker'); }
+  ) {
+    const currentTitle = this._titleService.getTitle(),
+          neededTitle = 'Scrum DAO - Planning poker';
+    if (currentTitle !== neededTitle) {
+      this._titleService.setTitle(neededTitle);
+    }
+  }
 
   ngOnInit() {
     const getVotingPromises = [];
