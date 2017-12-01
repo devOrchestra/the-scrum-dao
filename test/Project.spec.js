@@ -217,7 +217,7 @@ contract('Project', function (accounts) {
       });
     });
 
-    it("Should transfer tokens from account to crowdsale ", function () {
+    it("should transfer tokens from account to crowdsale ", function () {
       let projectInstance;
       return Project.deployed().then(function (instance) {
         projectInstance = instance

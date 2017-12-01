@@ -175,6 +175,19 @@ contract('ProductBacklog', accounts => {
           done();
         });
     });
+
+    it("should throw error when trying to vote on issue with closed voting", () => {
+      return Promise.resolve()
+        .then(() => {
+          return productBacklogContract.getVoting("SD-TEST", {from: accounts[0], gas: 150000});
+        })
+        .then(getVotingResponse => {
+          getVotingResponse[0].should.equal("SD-TEST");
+          getVotingResponse[3].should.equal(false);
+          return productBacklogContract.vote("SD-TEST", {from: holders[0], gas: 150000}).should.be.rejected;
+        });
+    });
+
   });
 });
 

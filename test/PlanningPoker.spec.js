@@ -230,7 +230,7 @@ contract('PlanningPoker', accounts => {
         });
     });
 
-    it("should throw error when trying to vote on issue with closed voting and payed award", () => {
+    it("should throw error when trying to vote on issue with closed voting", () => {
       return Promise.resolve()
         .then(() => {
           return planningPokerContact.getVoting("SD-TEST", {from: accounts[0], gas: 150000});
