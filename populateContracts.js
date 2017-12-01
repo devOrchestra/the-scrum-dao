@@ -39,33 +39,15 @@ Promise
     planningPokerContact = contracts[1];
     crowdsaleContract = contracts[2];
     productBacklogContract = contracts[3];
-    return Promise.all([
-      projectContract.initPlanningPoker(planningPokerContact.address, {from: accounts[0], gas: 150000}),
-      projectContract.initCrowdsale(crowdsaleContract.address, {from: accounts[0], gas: 150000})
-    ]);
-  })
-  .then(function () {
-    console.log(`Project contract has been initialized with Story points voting and crowdsale contracts`);
+
     let addWorkerTasks = [];
     for (let i = 1; i < names.length; i++) {
       addWorkerTasks.push(projectContract.addWorker(accounts[i], names[i], {from: accounts[0], gas: 150000}));
     }
-    return Promise.all([
-      projectContract.addTrustedOracle(accounts[0], {from: accounts[0], gas: 150000}),
-      ...addWorkerTasks
-    ]);
+    return Promise.all(addWorkerTasks);
   })
   .then(function () {
-    console.log(`Trusted oracle for Project has been added`);
     console.log(`Workers have been added`);
-    return planningPokerContact.addTrustedOracle(accounts[0], {from: accounts[0], gas: 150000});
-  })
-  .then(function () {
-    console.log(`Trusted oracle for PlanningPoker has been added`);
-    return productBacklogContract.addTrustedOracle(accounts[0], {from: accounts[0], gas: 150000})
-  })
-  .then(function () {
-    console.log(`Trusted oracle for ProductBacklog has been added`);
     let addVotingTasks = [];
     for (let issueName of issues) {
       addVotingTasks.push(planningPokerContact.addVoting(issueName, {from: accounts[0], gas: 150000}));

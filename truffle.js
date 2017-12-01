@@ -4,8 +4,11 @@ let WalletSubprovider = require('web3-provider-engine/subproviders/wallet.js');
 let Web3Subprovider = require("web3-provider-engine/subproviders/web3.js");
 let Web3 = require("web3");
 let FilterSubprovider = require('web3-provider-engine/subproviders/filters.js');
+let assert = require('assert');
 
 let toWei = new Web3().toWei;
+
+assert(process.env.NODE_ENV, 'NODE_ENV is not defined');
 
 let network_id;
 let address;

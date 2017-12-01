@@ -8,8 +8,10 @@ import Web3Subprovider = require("web3-provider-engine/subproviders/web3.js");
 import FilterSubprovider = require('web3-provider-engine/subproviders/filters.js');
 import Promise = require('bluebird');
 import fs = require('fs');
+import assert = require("assert");
 import loadConfig = require('ini-config');
 import logger from './logger';
+
 
 let projectArtifact = require(path.resolve('./build/contracts/Project.json'));
 let planningPokerArtifact = require(path.resolve('./build/contracts/PlanningPoker.json'));
@@ -27,6 +29,8 @@ let ownerAddress;
 let oracleAddress;
 let contracts: any = {};
 let config;
+
+assert(process.env.NODE_ENV, 'NODE_ENV is not defined');
 
 loadConfigPromise(path.resolve(__dirname, 'config.ini'))
   .then((loadedConfig) => {
