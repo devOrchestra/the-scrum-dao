@@ -229,6 +229,19 @@ contract('PlanningPoker', accounts => {
           done();
         });
     });
+
+    it("should throw error when trying to vote on issue with closed voting and payed award", () => {
+      return Promise.resolve()
+        .then(() => {
+          return planningPokerContact.getVoting("SD-TEST", {from: accounts[0], gas: 150000});
+        })
+        .then(getVotingResponse => {
+          getVotingResponse[0].should.equal("SD-TEST");
+          getVotingResponse[3].should.equal(false);
+          getVotingResponse[4].should.equal(true);
+          return planningPokerContact.vote("SD-TEST", 40, {from: workerAddresses[0], gas: 300000}).should.be.rejected;
+        });
+    });
   });
 });
 
