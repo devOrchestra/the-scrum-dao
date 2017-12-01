@@ -8,7 +8,7 @@
     "e2e": "ng e2e",
     "test-contracts": "export NODE_ENV=development && truffle test",
     "copy-data": "cpx \"src/server/*.ini\" \"build/server\"",
-    "compile-contracts": "truffle compile --network stub",
+    "compile-contracts": "export NODE_ENV=stub && truffle compile --network stub",
     "dev-migrate": "export NODE_ENV=development && truffle migrate --network development",
     "migrate": "truffle migrate --network ${NODE_ENV}",
     "prebuild-app": "rm -rf build/client",
