@@ -7,10 +7,8 @@ import WalletSubprovider = require('web3-provider-engine/subproviders/wallet.js'
 import Web3Subprovider = require("web3-provider-engine/subproviders/web3.js");
 import FilterSubprovider = require('web3-provider-engine/subproviders/filters.js');
 import Promise = require('bluebird');
-import fs = require('fs');
 
 import logger from './logger';
-let deleteFile = Promise.promisify(fs.unlink);
 
 class EthController {
 
@@ -31,54 +29,19 @@ class EthController {
   public init(done): void {
 
     let artifacts: any = {};
-    let isExist;
     try {
       artifacts.project = require(path.resolve('./build/contracts/Project.json'));
       artifacts.planningPoker = require(path.resolve('./build/contracts/PlanningPoker.json'));
       artifacts.crowdsale = require(path.resolve('./build/contracts/Crowdsale.json'));
       artifacts.productBacklog = require(path.resolve('./build/contracts/ProductBacklog.json'));
-      isExist = fs.existsSync(this.config.ethereum.owner.walletPath);
     } catch (error) {
       return process.nextTick(()=>{done(error)});
     }
 
-    let chain = Promise.resolve();
-    if (isExist === true || this.config.environment === 'development') {
-      chain = chain.then(() => this.initWithOwnerWallet(artifacts));
-    } else {
-      chain = chain.then(() => this.initWithOracleWallet(artifacts));
-    }
-    chain
-      .then(() => this.postInitializationAction())
+    this.initWithOracleWallet(artifacts)
       .then(() => done())
       .catch((error) => done(error));
 
-  }
-
-  private initWithOwnerWallet(artifacts): Promise {
-    let ownerWallet;
-    let oracleWallet;
-
-    return Promise
-      .resolve()
-      .then(() => {
-        ownerWallet = this.loadWallet('owner');
-        oracleWallet = this.loadWallet('oracle');
-        this.setWeb3Engine(ownerWallet);
-        return this.initContractInstances(artifacts);
-      })
-      .then(() => {
-        let addOracleTasks = [];
-        for (let contractName of Object.keys(this.contracts)) {
-          addOracleTasks.push(this.contracts[contractName].addTrustedOracle(oracleWallet.address, {from: this.ethAddress}));
-        }
-        return Promise.all(addOracleTasks);
-      })
-      .then(() => {
-        logger.info(`Trusted oracle ${oracleWallet.address} has been added for all contracts`);
-        this.setWeb3Engine(oracleWallet);
-        return this.initContractInstances(artifacts);
-      });
   }
 
   private initWithOracleWallet(artifacts): Promise {
@@ -166,19 +129,6 @@ class EthController {
         this.contracts.planningPoker = contracts[1];
         this.contracts.crowdsale = contracts[2];
         this.contracts.productBacklog = contracts[3];
-      });
-  }
-
-  private postInitializationAction(): Promise {
-    return Promise
-      .resolve()
-      .then(() => {
-        if (this.config.environment === 'production') {
-          return deleteFile(this.config.ethereum.owner.walletPath)
-            .then(() => {
-              logger.info(`Owner wallet V3 file has been removed from server`);
-            });
-        }
       });
   }
 

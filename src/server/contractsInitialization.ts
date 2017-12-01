@@ -105,7 +105,7 @@ loadConfigPromise(path.resolve(__dirname, 'config.ini'))
     logger.info(`Trusted oracle ${oracleAddress} has been added for all contracts`);
     if (config.environment !== 'production') return;
     return deleteFile(path.resolve(config.ethereum.owner.walletPath))
-      .then(() => logger.info(`Owner wallet file has been deleted`));
+      .then(() => logger.info(`Owner wallet V3 file has been removed`));
   })
   .catch((error) => {
     logger.error(`Errors occurred during contracts initialization: ${error.message}`);
