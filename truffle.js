@@ -11,8 +11,8 @@ let network_id;
 let address;
 let providerUrl;
 let engine;
-let gasPrice = process.env.MIGRATION_GAS_PRICE || 20;
-gasPrice = toWei(gasPrice);
+let gasPrice = process.env.ETH_GAS_PRICE || 20;
+gasPrice = toWei(gasPrice, 'gwei');
 
 if (process.env.NODE_ENV === 'development') {
   providerUrl = 'http://localhost:8545';
