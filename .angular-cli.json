@@ -9,7 +9,7 @@
       "outDir": "build/client",
       "assets": [
         "assets",
-        "favicon.ico",
+        "favicon.png",
         "images",
         { "glob": "chatbro-id.json", "input": "../../credentials/", "output": "./assets/" }
       ],

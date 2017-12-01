@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import {CrowdsaleAddOrderDialogComponent} from './crowdsale-add-order-dialog/crowdsale-add-order-dialog.component'
 import {CrowdsaleAddBuyOrderErrorDialogComponent} from './crowdsale-add-buy-order-error-dialog/crowdsale-add-buy-order-error-dialog.component'
 import {MdDialog} from '@angular/material';
@@ -33,11 +34,12 @@ export class CrowdsaleComponent implements OnInit {
   maxIndexOfVisibleSellOrders: number;
 
   constructor(
+    private _titleService: Title,
     private dialog: MdDialog,
     private _projectService: ProjectService,
     private _crowdsaleService: CrowdsaleService,
     private _orderService: OrderService
-  ) { }
+  ) { this._titleService.setTitle('Scrum DAO - Crowdsale'); }
 
   ngOnInit() {
     const sellOrderPromises = [];

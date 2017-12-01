@@ -1,4 +1,5 @@
 import {Component, OnInit, ViewChild, ElementRef} from '@angular/core';
+import {Title} from '@angular/platform-browser';
 import * as _ from 'lodash';
 import {MdDialog} from '@angular/material';
 import {ProjectBacklogAddTrackDialogComponent} from './project-backlog-add-track-dialog/project-backlog-add-track-dialog.component'
@@ -29,12 +30,13 @@ export class ProjectBacklogComponent implements OnInit {
   public decimals: number;
 
   constructor(
+    private _titleService: Title,
     private dialog: MdDialog,
     private _jiraService: JiraService,
     private _planningPokerService: PlanningPokerService,
     private _projectBacklogService: ProjectBacklogService,
     private _projectService: ProjectService
-  ) {}
+  ) { this._titleService.setTitle('Scrum DAO - Project backlog'); }
 
 
   ngOnInit() {

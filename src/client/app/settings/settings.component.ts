@@ -1,4 +1,5 @@
 import {Component, OnInit} from '@angular/core';
+import {Title} from '@angular/platform-browser';
 import {WorkerService} from '../core/worker.service'
 import {ProjectService} from '../core/contract-calls/project.service'
 import {countDecimals, parseBigNumber} from '../shared/methods'
@@ -44,9 +45,10 @@ export class SettingsComponent implements OnInit {
   showCrowdsaleExists = false;
 
   constructor(
+    private _titleService: Title,
     private _workerService: WorkerService,
     private _projectService: ProjectService
-  ) { }
+  ) { this._titleService.setTitle('Scrum DAO - Settings'); }
 
   ngOnInit() {
     this._projectService.trustedOracle()

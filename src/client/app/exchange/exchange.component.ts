@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import {ProjectService} from '../core/contract-calls/project.service'
 import {OrderService} from '../core/order.service'
 import {parseBigNumber, countDecimals} from '../shared/methods'
@@ -27,9 +28,10 @@ export class ExchangeComponent implements OnInit {
   maxIndexOfVisibleSellOrders: number;
 
   constructor(
+    private _titleService: Title,
     private _projectService: ProjectService,
     private _orderService: OrderService
-  ) { }
+  ) { this._titleService.setTitle('Scrum DAO - Exchange'); }
 
   ngOnInit() {
     const sellOrderPromises = [];

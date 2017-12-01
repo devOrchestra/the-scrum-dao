@@ -1,4 +1,4 @@
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, Title } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router'
 
@@ -33,6 +33,7 @@ import { OwnerGuardService } from './owner-guard.service';
     Web3ResolverService,
     WalletStateResolverService,
     OrdersResolverService,
+    Title,
 
     OwnerGuardService
   ],

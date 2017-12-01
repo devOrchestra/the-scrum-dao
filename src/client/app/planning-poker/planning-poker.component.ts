@@ -1,4 +1,5 @@
 import {Component, OnInit} from '@angular/core';
+import {Title} from '@angular/platform-browser';
 import {JiraService} from '../core/jira.service'
 import {PlanningPokerService} from '../core/contract-calls/planning-poker.service'
 import {parseBigNumber, countStoryPoints} from '../shared/methods'
@@ -22,9 +23,10 @@ export class PlanningPokerComponent implements OnInit {
   public readyToDisplay = false;
 
   constructor(
-    public _jiraService: JiraService,
+    private _titleService: Title,
+    private _jiraService: JiraService,
     private _planningPokerService: PlanningPokerService
-  ) { }
+  ) { this._titleService.setTitle('Scrum DAO - Planning poker'); }
 
   ngOnInit() {
     const getVotingPromises = [];

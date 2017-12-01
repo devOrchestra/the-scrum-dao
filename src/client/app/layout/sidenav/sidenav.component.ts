@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import project_artifacts from '../../../../../build/contracts/Project.json'
 import {default as contract} from 'truffle-contract'
 
@@ -13,7 +14,9 @@ export class SidenavComponent implements OnInit {
   showSettingsLink: boolean;
   readyToRender = false;
 
-  constructor() { }
+  constructor(
+    private _titleService: Title
+  ) { }
 
   ngOnInit() {
     this.Project.setProvider(web3.currentProvider);
@@ -27,4 +30,7 @@ export class SidenavComponent implements OnInit {
       })
   }
 
+  changeTabName(titlePart: string) {
+    this._titleService.setTitle(`Scrum DAO - ${titlePart}`);
+  }
 }

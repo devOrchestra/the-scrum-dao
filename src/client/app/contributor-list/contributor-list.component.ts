@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { WorkerService } from '../core/worker.service';
 import { ProjectService } from '../core/contract-calls/project.service'
 import { ShortEnterAnimation } from '../shared/animations'
@@ -23,9 +24,10 @@ export class ContributorListComponent implements OnInit {
   public decimals: number;
 
   constructor(
+    private _titleService: Title,
     private _workerService: WorkerService,
     private _projectService: ProjectService
-  ) { }
+  ) { this._titleService.setTitle('Scrum DAO - Contributor list'); }
 
   ngOnInit() {
     let workersWereSet = false;

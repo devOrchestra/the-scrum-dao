@@ -4,16 +4,16 @@
   </div>
   <nav fxLayout="column" *ngIf="readyToRender">
     <a class="nav-button transition-fast" md-button routerLink="/app/contributor-list" color="primary"
-       routerLinkActive="active-nav-button">Contributor list</a>
+       routerLinkActive="active-nav-button" (click)="changeTabName('Contributor list')">Contributor list</a>
     <a class="nav-button transition-fast" md-button routerLink="/app/crowdsale" color="primary"
-       routerLinkActive="active-nav-button">Crowdsale</a>
+       routerLinkActive="active-nav-button" (click)="changeTabName('Crowdsale')">Crowdsale</a>
     <a class="nav-button transition-fast" md-button routerLink="/app/exchange" color="primary"
-       routerLinkActive="active-nav-button">Exchange</a>
+       routerLinkActive="active-nav-button" (click)="changeTabName('Exchange')">Exchange</a>
     <a class="nav-button transition-fast" md-button routerLink="/app/project-backlog" color="primary"
-       routerLinkActive="active-nav-button">Project backlog</a>
+       routerLinkActive="active-nav-button" (click)="changeTabName('Project backlog')">Project backlog</a>
     <a class="nav-button transition-fast" md-button routerLink="/app/planning-poker" color="primary"
-       routerLinkActive="active-nav-button">Planing Poker</a>
+       routerLinkActive="active-nav-button" (click)="changeTabName('Planing Poker')">Planing Poker</a>
     <a class="nav-button transition-fast" md-button routerLink="/app/settings" color="primary" *ngIf="showSettingsLink"
-       routerLinkActive="active-nav-button">Settings</a>
+       routerLinkActive="active-nav-button" (click)="changeTabName('Settings')">Settings</a>
   </nav>
 </md-card>
