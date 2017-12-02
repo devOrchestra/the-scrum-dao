@@ -41,7 +41,7 @@ loadConfigPromise(path.resolve(__dirname, 'config.ini'))
       case 'development':
         web3 = new Web3(new Web3.providers.HttpProvider(config.ethereum.url));
         ownerAddress = web3.eth.accounts[0];
-        oracleAddress = web3.eth.accounts[1];
+        oracleAddress = web3.eth.accounts[0];
         break;
 
       case 'production':

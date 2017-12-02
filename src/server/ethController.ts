@@ -64,7 +64,7 @@ class EthController {
         if (entity === 'owner') {
           wallet.address = web3.eth.accounts[0];
         } else {
-          wallet.address = web3.eth.accounts[1];
+          wallet.address = web3.eth.accounts[0];
         }
         break;
 
