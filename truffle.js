@@ -10,7 +10,6 @@ let toWei = new Web3().toWei;
 
 assert(process.env.NODE_ENV, 'NODE_ENV is not defined');
 
-let network_id;
 let address;
 let providerUrl;
 let engine;
@@ -22,7 +21,6 @@ if (process.env.NODE_ENV === 'development') {
   let web3 = new Web3(new Web3.providers.HttpProvider(providerUrl));
   address = web3.eth.accounts[0];
   engine = web3.currentProvider;
-  network_id = '*';
 
 } else if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'stage') {
 
@@ -30,11 +28,9 @@ if (process.env.NODE_ENV === 'development') {
   if (process.env.NODE_ENV === 'production') {
     walletPassword = process.env.OWNER_WALLET_PASSWORD;
     providerUrl = process.env.ETH_NODE_URL;
-    network_id = 1;
   } else {
     walletPassword = 'semen';
     providerUrl = 'https://rinkeby.infura.io/QTeUiM06pSmTwLqjbcip';
-    network_id = 4;
   }
 
   let ownerWalletData = require('./credentials/ownerWallet.json');
@@ -47,7 +43,26 @@ if (process.env.NODE_ENV === 'development') {
   engine.start(); // Required by the provider engine.
 }
 
-let network = {provider: engine, from: address, network_id, gasPrice};
-let networks = {stub: {}};
-networks[process.env.NODE_ENV] = network;
-module.exports = {networks};
+module.exports = {
+  networks: {
+    development: {
+      gasPrice,
+      provider: engine,
+      from: address,
+      network_id: "*" // Match any network id
+    },
+    production: {
+      gasPrice,
+      network_id: 1,
+      provider: engine,
+      from: address
+    },
+    stage: {
+      gasPrice,
+      network_id: 4,
+      provider: engine,
+      from: address
+    },
+    stub: {}
+  }
+};
