@@ -10,7 +10,7 @@
     "copy-data": "cpx \"src/server/*.ini\" \"build/server\"",
     "compile-contracts": "export NODE_ENV=stub && truffle compile --network stub",
     "dev-migrate": "export NODE_ENV=development && truffle migrate --network development",
-    "dev-init-contracts": "export NODE_ENV=development && node build/server/contractsInitialization.js",
+    "dev-init-contracts": "export NODE_ENV=development && node src/scripts/contractsInitialization.js",
     "migrate": "truffle migrate --network ${NODE_ENV}",
     "prebuild-app": "rm -rf build/client",
     "build-app": "ng build --prod --aot false",
@@ -23,7 +23,7 @@
     "predev-start": "npm run dev-migrate && node ./populateContracts.js",
     "dev-start": "concurrently --kill-others-on-fail \"npm run dev-start-angular\" \"npm run dev-start-server\"",
     "start": "node build/server/server.js",
-    "init-contracts": "node build/server/contractsInitialization.js"
+    "init-contracts": "node src/scripts/contractsInitialization.js"
   },
   "contributors": [
     "Pavel Shalamkov"

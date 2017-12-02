@@ -1,20 +1,21 @@
 let Promise = require('bluebird');
 let contract = require('truffle-contract');
 let Web3 = require('web3');
+let path = require('path');
 
-let projectArtifact = require('./build/contracts/Project.json');
-let planningPokerArtifact = require('./build/contracts/PlanningPoker.json');
-let crowdsaleArtifact = require('./build/contracts/Crowdsale.json')
-let productBacklogArtifact = require('./build/contracts/ProductBacklog.json')
+let projectArtifact = require(path.resolve('./build/contracts/Project.json'));
+let planningPokerArtifact = require(path.resolve('./build/contracts/PlanningPoker.json'));
+let crowdsaleArtifact = require(path.resolve('./build/contracts/Crowdsale.json'));
+let productBacklogArtifact = require(path.resolve('./build/contracts/ProductBacklog.json'));
 
 let web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
 let project = contract(projectArtifact);
 project.setProvider(web3.currentProvider);
 let planningPoker = contract(planningPokerArtifact);
 planningPoker.setProvider(web3.currentProvider);
-let crowdsale = contract(crowdsaleArtifact)
+let crowdsale = contract(crowdsaleArtifact);
 crowdsale.setProvider(web3.currentProvider);
-let productBacklog = contract(productBacklogArtifact)
+let productBacklog = contract(productBacklogArtifact);
 productBacklog.setProvider(web3.currentProvider);
 
 let accounts = web3.eth.accounts;

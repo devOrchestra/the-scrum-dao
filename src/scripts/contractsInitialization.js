@@ -1,16 +1,15 @@
-import Web3 = require('web3');
-import Wallet = require('ethereumjs-wallet');
-import contract = require('truffle-contract');
-import path = require('path');
-import ProviderEngine = require("web3-provider-engine");
-import WalletSubprovider = require('web3-provider-engine/subproviders/wallet.js');
-import Web3Subprovider = require("web3-provider-engine/subproviders/web3.js");
-import FilterSubprovider = require('web3-provider-engine/subproviders/filters.js');
-import Promise = require('bluebird');
-import fs = require('fs');
-import assert = require("assert");
-import loadConfig = require('ini-config');
-import logger from './logger';
+let Web3 = require('web3');
+let Wallet = require('ethereumjs-wallet');
+let contract = require('truffle-contract');
+let path = require('path');
+let ProviderEngine = require("web3-provider-engine");
+let WalletSubprovider = require('web3-provider-engine/subproviders/wallet.js');
+let Web3Subprovider = require("web3-provider-engine/subproviders/web3.js");
+let FilterSubprovider = require('web3-provider-engine/subproviders/filters.js');
+let Promise = require('bluebird');
+let fs = require('fs');
+let assert = require("assert");
+let loadConfig = require('ini-config');
 
 
 let projectArtifact = require(path.resolve('./build/contracts/Project.json'));
@@ -27,12 +26,12 @@ gasPrice = toWei(gasPrice, 'gwei');
 
 let ownerAddress;
 let oracleAddress;
-let contracts: any = {};
+let contracts = {};
 let config;
 
 assert(process.env.NODE_ENV, 'NODE_ENV is not defined');
 
-loadConfigPromise(path.resolve(__dirname, 'config.ini'))
+loadConfigPromise(path.resolve('./src/server/config.ini'))
   .then((loadedConfig) => {
     config = loadedConfig;
     let web3;
@@ -65,9 +64,9 @@ loadConfigPromise(path.resolve(__dirname, 'config.ini'))
         throw Error(`unknown environment: ${config.environment}`);
     }
 
-    logger.info(`Owner ${ownerAddress} wallet has been loaded`);
-    logger.info(`Oracle ${oracleAddress} wallet has been loaded`);
-    logger.info(`Connection with ethereum node on ${config.ethereum.url} has been established (${config.environment} mode)`);
+    console.log(`Owner ${ownerAddress} wallet has been loaded`);
+    console.log(`Oracle ${oracleAddress} wallet has been loaded`);
+    console.log(`Connection with ethereum node on ${config.ethereum.url} has been established (${config.environment} mode)`);
 
     let project = contract(projectArtifact);
     project.setProvider(web3.currentProvider);
@@ -97,7 +96,7 @@ loadConfigPromise(path.resolve(__dirname, 'config.ini'))
     ]);
   })
   .then(() => {
-    logger.info(`Project contract has been initialized with PlaningPoker and Crowdsale contracts`);
+    console.log(`Project contract has been initialized with PlaningPoker and Crowdsale contracts`);
 
     let addOracleTasks = [];
     for (let contractName of Object.keys(contracts)) {
@@ -106,13 +105,13 @@ loadConfigPromise(path.resolve(__dirname, 'config.ini'))
     return Promise.all(addOracleTasks);
   })
   .then(() => {
-    logger.info(`Trusted oracle ${oracleAddress} has been added for all contracts`);
+    console.log(`Trusted oracle ${oracleAddress} has been added for all contracts`);
     if (config.environment !== 'production') return;
     return deleteFile(path.resolve(config.ethereum.owner.walletPath))
-      .then(() => logger.info(`Owner wallet V3 file has been removed`));
+      .then(() => console.log(`Owner wallet V3 file has been removed`));
   })
   .catch((error) => {
-    logger.error(`Errors occurred during contracts initialization: ${error.message}`);
+    console.log(`Errors occurred during contracts initialization: ${error.message}`);
   });
 
 
