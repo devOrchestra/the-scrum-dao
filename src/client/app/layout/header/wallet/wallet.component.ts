@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, QueryList } from '@angular/core';
 import { MdMenuTrigger } from '@angular/material'
 import { WorkerService } from '../../../core/worker.service'
 import { ProjectService } from '../../../core/contract-calls/project.service'
+import { Web3Service } from '../../../core/web3.service'
 import { WalletStateService } from '../../../core/wallet-state.service'
 import { parseBigNumber, countDecimals } from '../../../shared/methods'
 import {MediumEnterLeaveAnimation, MediumControlledEnterLeaveAnimation} from '../../../shared/animations'
@@ -34,7 +35,8 @@ export class WalletComponent implements OnInit {
   constructor(
     private _workerService: WorkerService,
     private _walletStateService: WalletStateService,
-    private _projectService: ProjectService
+    private _projectService: ProjectService,
+    private _web3Service: Web3Service
   ) { }
 
   ngOnInit() {
@@ -55,25 +57,28 @@ export class WalletComponent implements OnInit {
           .then(decimalsResponse => {
             this.decimals = this.countDecimals(decimalsResponse);
             this._walletStateService.getLastAndCurrentBalances().subscribe(currentBalances => {
-              const balanceDifference = currentBalances.currentBalance - currentBalances.lastBalanceFromStorage;
-              if (balanceDifference && balanceDifference !== 0) {
-                if (currentBalances.accountWasNotChanged) {
-                  this.currentBalance.balance = currentBalances.lastBalanceFromStorage;
+              this._web3Service.getNeedToShowAccountChange().subscribe(needToShowAccountChange => {
+                const balanceDifference = currentBalances.currentBalance - currentBalances.lastBalanceFromStorage;
+                if (balanceDifference && balanceDifference !== 0) {
+                  if (currentBalances.accountWasNotChanged) {
+                    this.currentBalance.balance = currentBalances.lastBalanceFromStorage;
+                  } else {
+                    this.currentBalance.balance = this.currentBalance.balance / this.decimals;
+                  }
+                  this.readyToDisplay = true;
+                  if (needToShowAccountChange) { this.displayAccountChange() }
+                  this.showBalanceChange(
+                    currentBalances.currentBalance,
+                    balanceDifference,
+                    false,
+                    balanceDifference > 0
+                  );
                 } else {
                   this.currentBalance.balance = this.currentBalance.balance / this.decimals;
+                  this.readyToDisplay = true;
+                  if (needToShowAccountChange) { this.displayAccountChange() }
                 }
-                this.readyToDisplay = true;
-                this.showBalanceChange(
-                  currentBalances.currentBalance,
-                  balanceDifference,
-                  false,
-                  balanceDifference > 0,
-                  currentBalances.accountWasNotChanged
-                );
-              } else {
-                this.currentBalance.balance = this.currentBalance.balance / this.decimals;
-                this.readyToDisplay = true;
-              }
+              });
             })
           })
           .catch(err => {
@@ -95,7 +100,7 @@ export class WalletComponent implements OnInit {
           const balanceDifference = Number(this.sendTokensObj.value);
           this.walletTokensAmountChange = balanceDifference;
           const newBalance = this.currentBalance.balance - balanceDifference;
-          this.showBalanceChange(newBalance, balanceDifference, true, false, true);
+          this.showBalanceChange(newBalance, balanceDifference, true, false);
         })
         .catch(err => {
           console.error('An error occurred on wallet.component in "sendTokens":', err);
@@ -104,7 +109,7 @@ export class WalletComponent implements OnInit {
     }
   }
 
-  showBalanceChange(newBalance: number, balanceDifference: number, isAfterSend: boolean, positive: boolean, accountWasNotSwitched: boolean): void {
+  showBalanceChange(newBalance: number, balanceDifference: number, isAfterSend: boolean, positive: boolean): void {
     this.walletTokensAmountChange = balanceDifference < 0 ? balanceDifference * -1 : balanceDifference;
     if (isAfterSend) {
       this.sendTokensObj.address = "";
@@ -116,14 +121,7 @@ export class WalletComponent implements OnInit {
     setTimeout(() => {
       this.sendTokensObj.fadeAnimation = "";
     }, 500);
-    if (!accountWasNotSwitched) {
-      setTimeout(() => {
-        this.showAccountChange = true;
-      }, 1000);
-      setTimeout(() => {
-        this.showAccountChange = false;
-      }, 6000);
-    } else if (positive && accountWasNotSwitched) {
+    if (positive) {
       setTimeout(() => {
         this.showPositiveBalanceChange = true;
       }, 1000);
@@ -133,7 +131,7 @@ export class WalletComponent implements OnInit {
       setTimeout(() => {
         this.showPositiveBalanceChange = false;
       }, 10000);
-    } else if (!positive && accountWasNotSwitched) {
+    } else if (!positive) {
       setTimeout(() => {
         this.showNegativeBalanceChange = true;
       }, 1000);
@@ -145,6 +143,16 @@ export class WalletComponent implements OnInit {
       }, 10000);
       sessionStorage.setItem("lastBalance", JSON.stringify({lastBalance: newBalance}));
     }
+  }
+
+  displayAccountChange(): void {
+    if (web3.eth.accounts[0]) {sessionStorage.setItem("lastAddress", JSON.stringify({lastAddress: web3.eth.accounts[0]}))}
+    setTimeout(() => {
+      this.showAccountChange = true;
+    }, 1000);
+    setTimeout(() => {
+      this.showAccountChange = false;
+    }, 6000);
   }
 
   animateMyWalletCounter(toValue: number): void {
