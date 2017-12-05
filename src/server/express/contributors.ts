@@ -5,11 +5,15 @@ import logger from '../logger';
 import JiraConnector from '../jira';
 
 const contributorRouter: express.Router = express.Router();
-const PROJECT_KEY: string = 'SD';
+let PROJECT_KEY: string;
 
 
 contributorRouter.get('/', (req, res, next) => {
   const jira: JiraConnector = req.app.get('jira');
+  if (!PROJECT_KEY) {
+    const config = req.app.get('config');
+    PROJECT_KEY = config.projectKey;
+  }
 
   logger.debug(`retrieving list of developers from jira project`);
   waterfall([
@@ -28,7 +32,7 @@ contributorRouter.get('/', (req, res, next) => {
         developersListReceived(null, body.actors);
       });
     }
-    
+
   ], (error, contributors) => {
     if (error) return next(error);
     res.json(contributors);

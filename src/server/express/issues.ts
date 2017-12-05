@@ -4,10 +4,15 @@ import logger from '../logger';
 import JiraConnector from '../jira';
 
 const issueRouter: express.Router = express.Router();
-const PROJECT_KEY: string = 'SD';
+let PROJECT_KEY: string;
 
 
 issueRouter.get('/', (req, res, next) => {
+  if (!PROJECT_KEY) {
+    const config = req.app.get('config');
+    PROJECT_KEY = config.projectKey;
+  }
+
   const jira: JiraConnector = req.app.get('jira');
   let {status} = req.query;
   let statusQuery: string;
