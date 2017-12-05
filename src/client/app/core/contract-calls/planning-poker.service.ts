@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import gas_price from '../../../../../credentials/gas-price.json'
 import planningPoker_artifacts from '../../../../../build/contracts/PlanningPoker.json';
 import {default as contract} from 'truffle-contract'
 
@@ -6,16 +7,23 @@ import {default as contract} from 'truffle-contract'
 export class PlanningPokerService {
   PlanningPoker = contract(planningPoker_artifacts);
   planningPokerContractInstance;
+  gasPrice = gas_price;
 
   constructor() { }
 
   vote(issue: string, points: number): Promise<any> {
     if (this.planningPokerContractInstance) {
-      return this.planningPokerContractInstance.vote(issue, points, {from: web3.eth.accounts[0], gas: 155000});
+      return this.planningPokerContractInstance.vote(issue, points, {
+        from: web3.eth.accounts[0],
+        gas: this.gasPrice.planningPokerContract.vote * 2
+      });
     } else {
       return this.deployPlanningPokerContract()
         .then(() => {
-          return this.planningPokerContractInstance.vote(issue, points, {from: web3.eth.accounts[0], gas: 155000});
+          return this.planningPokerContractInstance.vote(issue, points, {
+            from: web3.eth.accounts[0],
+            gas: this.gasPrice.planningPokerContract.vote * 2
+          });
         });
     }
   }

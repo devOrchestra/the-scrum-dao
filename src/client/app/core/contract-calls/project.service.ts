@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import gas_price from '../../../../../credentials/gas-price.json'
 import project_artifacts from '../../../../../build/contracts/Project.json';
 import {default as contract} from 'truffle-contract'
 
@@ -6,6 +7,7 @@ import {default as contract} from 'truffle-contract'
 export class ProjectService {
   Project = contract(project_artifacts);
   projectContractInstance;
+  gasPrice = gas_price;
 
   constructor() { }
 
@@ -77,11 +79,17 @@ export class ProjectService {
 
   transfer(toAddress: string, value: number): Promise<any> {
     if (this.projectContractInstance) {
-      return this.projectContractInstance.transfer(toAddress, value, {gas: 100000, from: web3.eth.accounts[0]});
+      return this.projectContractInstance.transfer(toAddress, value, {
+        gas: this.gasPrice.planningPokerContract.transfer * 2,
+        from: web3.eth.accounts[0]
+      });
     } else {
       return this.deployProjectContract()
         .then(() => {
-          return this.projectContractInstance.transfer(toAddress, value, {gas: 100000, from: web3.eth.accounts[0]});
+          return this.projectContractInstance.transfer(toAddress, value, {
+            gas: this.gasPrice.planningPokerContract.transfer * 2,
+            from: web3.eth.accounts[0]
+          });
         });
     }
   }
@@ -143,22 +151,34 @@ export class ProjectService {
 
   initCrowdsale(crowdsaleAddress: string): Promise<any> {
     if (this.projectContractInstance) {
-      return this.projectContractInstance.initCrowdsale(crowdsaleAddress, {from: web3.eth.accounts[0], gas: 35000});
+      return this.projectContractInstance.initCrowdsale(crowdsaleAddress, {
+        from: web3.eth.accounts[0],
+        gas: this.gasPrice.planningPokerContract.initCrowdsale * 2
+      });
     } else {
       return this.deployProjectContract()
         .then(() => {
-          return this.projectContractInstance.initCrowdsale(crowdsaleAddress, {from: web3.eth.accounts[0], gas: 35000});
+          return this.projectContractInstance.initCrowdsale(crowdsaleAddress, {
+            from: web3.eth.accounts[0],
+            gas: this.gasPrice.planningPokerContract.initCrowdsale * 2
+          });
         });
     }
   }
 
   initPlanningPoker(planningPokerAddress: string): Promise<any> {
     if (this.projectContractInstance) {
-      return this.projectContractInstance.initPlanningPoker(planningPokerAddress, {from: web3.eth.accounts[0], gas: 45000});
+      return this.projectContractInstance.initPlanningPoker(planningPokerAddress, {
+        from: web3.eth.accounts[0],
+        gas: this.gasPrice.planningPokerContract.initPlanningPoker * 2
+      });
     } else {
       return this.deployProjectContract()
         .then(() => {
-          return this.projectContractInstance.initPlanningPoker(planningPokerAddress, {from: web3.eth.accounts[0], gas: 45000});
+          return this.projectContractInstance.initPlanningPoker(planningPokerAddress, {
+            from: web3.eth.accounts[0],
+            gas: this.gasPrice.planningPokerContract.initPlanningPoker * 2
+          });
         });
     }
   }

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import gas_price from '../../../../../credentials/gas-price.json'
 import crowdsale_artifacts from '../../../../../build/contracts/Crowdsale.json';
 import {default as contract} from 'truffle-contract'
 
@@ -6,6 +7,7 @@ import {default as contract} from 'truffle-contract'
 export class CrowdsaleService {
   Crowdsale = contract(crowdsale_artifacts);
   crowdsaleContractInstance;
+  gasPrice = gas_price;
 
   constructor() { }
 
@@ -55,66 +57,106 @@ export class CrowdsaleService {
 
   addBuyOrder(price: number, value: number): Promise<any> {
     if (this.crowdsaleContractInstance) {
-      return this.crowdsaleContractInstance.addBuyOrder(price, {gas: 130000, from: web3.eth.accounts[0], value: value});
+      return this.crowdsaleContractInstance.addBuyOrder(price, {
+        gas: this.gasPrice.crowdsaleContract.addBuyOrder * 2,
+        from: web3.eth.accounts[0],
+        value: value
+      });
     } else {
       return this.deployCrowdsaleContract()
         .then(() => {
-          return this.crowdsaleContractInstance.addBuyOrder(price, {gas: 130000, from: web3.eth.accounts[0], value: value});
+          return this.crowdsaleContractInstance.addBuyOrder(price, {
+            gas: this.gasPrice.crowdsaleContract.addBuyOrder * 2,
+            from: web3.eth.accounts[0],
+            value: value
+          });
         });
     }
   }
 
   addSellOrder(value: number, price: number): Promise<any> {
     if (this.crowdsaleContractInstance) {
-      return this.crowdsaleContractInstance.addSellOrder(value, price, {gas: 165000, from: web3.eth.accounts[0]});
+      return this.crowdsaleContractInstance.addSellOrder(value, price, {
+        gas: this.gasPrice.crowdsaleContract.addSellOrder * 2,
+        from: web3.eth.accounts[0]
+      });
     } else {
       return this.deployCrowdsaleContract()
         .then(() => {
-          return this.crowdsaleContractInstance.addSellOrder(value, price, {gas: 165000, from: web3.eth.accounts[0]});
+          return this.crowdsaleContractInstance.addSellOrder(value, price, {
+            gas: this.gasPrice.crowdsaleContract.addSellOrder * 2,
+            from: web3.eth.accounts[0]
+          });
         });
     }
   }
 
   buy(id: number, value: number): Promise<any> {
     if (this.crowdsaleContractInstance) {
-      return this.crowdsaleContractInstance.buy(id, {gas: 100000, from: web3.eth.accounts[0], value});
+      return this.crowdsaleContractInstance.buy(id, {
+        gas: this.gasPrice.crowdsaleContract.buy * 2,
+        from: web3.eth.accounts[0],
+        value
+      });
     } else {
       return this.deployCrowdsaleContract()
         .then(() => {
-          return this.crowdsaleContractInstance.buy(id, {gas: 100000, from: web3.eth.accounts[0], value});
+          return this.crowdsaleContractInstance.buy(id, {
+            gas: this.gasPrice.crowdsaleContract.buy * 2,
+            from: web3.eth.accounts[0],
+            value
+          });
         });
     }
   }
 
   sell(id: number): Promise<any> {
     if (this.crowdsaleContractInstance) {
-      return this.crowdsaleContractInstance.sell(id, {gas: 100000, from: web3.eth.accounts[0]});
+      return this.crowdsaleContractInstance.sell(id, {
+        gas: this.gasPrice.crowdsaleContract.sell * 2,
+        from: web3.eth.accounts[0]
+      });
     } else {
       return this.deployCrowdsaleContract()
         .then(() => {
-          return this.crowdsaleContractInstance.sell(id, {gas: 100000, from: web3.eth.accounts[0]});
+          return this.crowdsaleContractInstance.sell(id, {
+            gas: this.gasPrice.crowdsaleContract.sell * 2,
+            from: web3.eth.accounts[0]
+          });
         });
     }
   }
 
   closeSellOrder(id: number): Promise<any> {
     if (this.crowdsaleContractInstance) {
-      return this.crowdsaleContractInstance.closeSellOrder(id, {gas: 50000, from: web3.eth.accounts[0]});
+      return this.crowdsaleContractInstance.closeSellOrder(id, {
+        gas: this.gasPrice.crowdsaleContract.closeSellOrder * 2,
+        from: web3.eth.accounts[0]
+      });
     } else {
       return this.deployCrowdsaleContract()
         .then(() => {
-          return this.crowdsaleContractInstance.closeSellOrder(id, {gas: 50000, from: web3.eth.accounts[0]});
+          return this.crowdsaleContractInstance.closeSellOrder(id, {
+            gas: this.gasPrice.crowdsaleContract.closeSellOrder * 2,
+            from: web3.eth.accounts[0]
+          });
         });
     }
   }
 
   closeBuyOrder(id: number): Promise<any> {
     if (this.crowdsaleContractInstance) {
-      return this.crowdsaleContractInstance.closeBuyOrder(id, {gas: 50000, from: web3.eth.accounts[0]});
+      return this.crowdsaleContractInstance.closeBuyOrder(id, {
+        gas: this.gasPrice.crowdsaleContract.closeBuyOrder * 2,
+        from: web3.eth.accounts[0]
+      });
     } else {
       return this.deployCrowdsaleContract()
         .then(() => {
-          return this.crowdsaleContractInstance.closeBuyOrder(id, {gas: 50000, from: web3.eth.accounts[0]});
+          return this.crowdsaleContractInstance.closeBuyOrder(id, {
+            gas: this.gasPrice.crowdsaleContract.closeBuyOrder * 2,
+            from: web3.eth.accounts[0]
+          });
         });
     }
   }
