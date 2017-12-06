@@ -38,6 +38,10 @@ function createTaskFromUpdatedIssue(scheduler: TaskScheduler, issueKey: string, 
     }
 
     if ((changedData.fromString === 'Done') && changedData.toString === 'Closed') {
+      if (!webhookPayload.issue.fields.assignee) {
+        logger.error(`Error in project ${webhookPayload.issue.fields.assignee} issue ${issueKey}: finished issue has no assignee`);
+        break;
+      }
       let assignee = webhookPayload.issue.fields.assignee.name;
       scheduler.createTask('issue.development.finished', {issueKey, projectKey, assignee}, 0);
       break;
