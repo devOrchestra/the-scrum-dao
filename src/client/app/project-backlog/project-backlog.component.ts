@@ -91,6 +91,7 @@ export class ProjectBacklogComponent implements OnInit {
               tasks[i].totalPercentsLoading = false;
               tasks[i].bgcEasingApplied = true;
             }
+            this.constructLinksToJira(tasks);
             this.sortOpenedAndClosedTasks(tasks);
             this.readyToDisplay = true;
           })
@@ -154,6 +155,12 @@ export class ProjectBacklogComponent implements OnInit {
     } else {
       return Number(result.toFixed(1));
     }
+  }
+
+  constructLinksToJira(tasks): void {
+    tasks.forEach(item => {
+      item.link = item.self.split("/rest")[0] + "/browse/" + item.key;
+    })
   }
 
   openDialog(): void {

@@ -66,7 +66,9 @@ export class PlanningPokerComponent implements OnInit {
               tasks[i].votingLoading = false;
               tasks[i].storyPointsLoading = false;
             });
+            this.constructLinksToJira(tasks);
             this.sortOpenedAndClosedTasks(tasks);
+            console.log(this.openedTasks);
             this.readyToDisplay = true;
           })
           .catch(err => {
@@ -106,6 +108,12 @@ export class PlanningPokerComponent implements OnInit {
         item.votingLoading = false;
         item.storyPointsLoading = false;
       });
+  }
+
+  constructLinksToJira(tasks): void {
+    tasks.forEach(item => {
+      item.link = item.self.split("/rest")[0] + "/browse/" + item.key;
+    })
   }
 
   sortOpenedAndClosedTasks(tasks: IPlanningPokerTask[]): void {

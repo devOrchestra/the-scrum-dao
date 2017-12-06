@@ -16,6 +16,7 @@ import { CrowdsaleAddOrderDialogComponent } from '../crowdsale/crowdsale-add-ord
 import { CrowdsaleAddBuyOrderErrorDialogComponent } from '../crowdsale/crowdsale-add-buy-order-error-dialog/crowdsale-add-buy-order-error-dialog.component';
 import { ChatbroComponent } from './header/chatbro/chatbro.component';
 import { WalletComponent } from './header/wallet/wallet.component'
+import { LinkToJiraComponent } from './header/link-to-jira/link-to-jira.component';
 import { TotalSupplyComponent } from './header/total-supply/total-supply.component'
 import { ConnectionStateComponent } from './connection-state/connection-state.component';
 
@@ -43,7 +44,8 @@ import { RouterModule } from '@angular/router';
     WalletComponent,
     TotalSupplyComponent,
     ConnectionStateComponent,
-    ChatbroComponent
+    ChatbroComponent,
+    LinkToJiraComponent
   ],
   entryComponents: [
     ProjectBacklogAddTrackDialogComponent,

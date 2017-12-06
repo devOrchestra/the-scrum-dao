@@ -1,3 +1,18 @@
+a.task-key,
+a.task-key:link,
+a.task-key:visited,
+a.task-key:active,
+a.task-key:focus {
+  font-size: 16px;
+  color: #333333;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+a.task-key:hover {
+  color: royalblue;
+}
+
 .no-tasks {
   position: absolute;
   top: 0;
@@ -23,7 +38,6 @@ h2.heading {
   min-width: calc(100% - 16px);
   max-width: calc(100% - 16px);
   margin: 0 8px;
-  padding: 8px 16px;
 }
 
 .item-border-top {
@@ -35,6 +49,16 @@ h2.heading {
   border-left: 1px #e1e1e1 solid;
   border-right: 1px #e1e1e1 solid;
   border-bottom: 1px #e1e1e1 solid;
+}
+
+#project-backlog .item .left-side,
+#project-backlog-closed .item .left-side {
+  margin: 8px 0 8px 16px;
+}
+
+#project-backlog .item .right-side,
+#project-backlog-closed .item .right-side {
+  margin: 8px 16px 8px 0;
 }
 
 #project-backlog .item .left-side *,
@@ -61,6 +85,7 @@ h2.heading {
   padding: 5px 10px;
   background-color: #239b23;
   font-weight: bold;
+  min-width: 70px;
   width: 70px;
   color: white;
 }
@@ -116,6 +141,14 @@ h2.heading {
   -moz-transition: background-color .2s ease-in-out !important;
   -o-transition: background-color .2s ease-in-out !important;
   transition: background-color .2s ease-in-out !important;
+}
+
+.outer-jira-logo:hover {
+  background-color: royalblue !important;
+}
+
+.outer-jira-logo:hover > .inner-jira-logo {
+  background-color: white !important;
 }
 
 /deep/ .main-spinner path {

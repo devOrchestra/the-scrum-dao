@@ -5,3 +5,9 @@ md-toolbar {
 /deep/ .mat-menu-content {
   padding: 0 !important;
 }
+
+/deep/ .mat-toolbar-layout,
+/deep/ .mat-toolbar-row {
+  width: 100%;
+}
+

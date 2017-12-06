@@ -1,5 +1,10 @@
-<md-toolbar fxLayout="row" fxLayoutAlign="end">
-  <app-chatbro></app-chatbro>
-  <app-wallet></app-wallet>
-  <app-total-supply></app-total-supply>
+<md-toolbar fxLayout="row" fxLayoutAlign="space-between">
+  <div fxLayout="row" fxFlex="50">
+    <app-link-to-jira></app-link-to-jira>
+    <app-chatbro></app-chatbro>
+  </div>
+  <div fxLayout="row" fxFlex="50" fxLayoutAlign="end">
+    <app-wallet></app-wallet>
+    <app-total-supply></app-total-supply>
+  </div>
 </md-toolbar>

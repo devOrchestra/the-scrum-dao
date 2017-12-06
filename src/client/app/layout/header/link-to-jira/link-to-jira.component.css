@@ -1,0 +1,31 @@
+.jira {
+  border: 1px white solid;
+  border-radius: 6px;
+}
+
+.jira-container .jira-text {
+  color: white;
+  line-height: 22px;
+  font-size: 15px;
+  margin: 4px 12px 4px 4px;
+}
+
+.jira-container div.inner-jira-logo {
+  background-color: white;
+  -webkit-mask: url(../../../../assets/images/jira.svg) no-repeat center;
+  mask: url(../../../../assets/images/jira.svg) no-repeat center;
+  width: 13px;
+  height: 13px;
+  margin-left: 12px;
+  margin-bottom: 10px;
+}
+
+a.jira,
+a.jira:link,
+a.jira:visited,
+a.jira:hover,
+a.jira:active,
+a.jira:focus {
+  font-size: 16px;
+  text-decoration: none
+}

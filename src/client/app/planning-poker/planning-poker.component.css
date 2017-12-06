@@ -1,3 +1,18 @@
+a.task-key,
+a.task-key:link,
+a.task-key:visited,
+a.task-key:active,
+a.task-key:focus {
+  font-size: 16px;
+  color: #333333;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+a.task-key:hover {
+  color: royalblue;
+}
+
 .no-tasks {
   position: absolute;
   top: 0;
@@ -23,7 +38,6 @@ h2.heading {
   min-width: calc(100% - 16px);
   max-width: calc(100% - 16px);
   margin: 0 8px;
-  padding: 8px 8px 8px 16px;
 }
 
 .item-border-top {
@@ -35,6 +49,16 @@ h2.heading {
   border-left: 1px #e1e1e1 solid;
   border-right: 1px #e1e1e1 solid;
   border-bottom: 1px #e1e1e1 solid;
+}
+
+#planning-poker .item .left-side,
+#planning-poker-closed .item .left-side {
+  margin: 8px 0 8px 16px;
+}
+
+#planning-poker .item .right-side,
+#planning-poker-closed .item .right-side {
+  margin: 8px 16px 8px 0;
 }
 
 #planning-poker .item .left-side *,
@@ -108,6 +132,14 @@ h2.heading {
 .main-spinner {
   width: 75px;
   height: 75px;
+}
+
+.outer-jira-logo:hover {
+  background-color: royalblue !important;
+}
+
+.outer-jira-logo:hover > .inner-jira-logo {
+  background-color: white !important;
 }
 
 /deep/ .main-spinner path {
