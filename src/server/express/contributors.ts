@@ -6,6 +6,7 @@ import JiraConnector from '../jira';
 
 const contributorRouter: express.Router = express.Router();
 let PROJECT_KEY: string;
+let JIRA_URL: string = 'devorchestra.atlassian.net';
 
 
 contributorRouter.get('/', (req, res, next) => {
@@ -18,7 +19,7 @@ contributorRouter.get('/', (req, res, next) => {
   logger.debug(`retrieving list of developers from jira project`);
   waterfall([
     (projectInfoReceived) => {
-      jira.makeRequest({url: `https://legalcoins.atlassian.net/rest/api/2/project/${PROJECT_KEY}`}, (error, body) => {
+      jira.makeRequest({url: `https://${JIRA_URL}/rest/api/2/project/${PROJECT_KEY}`}, (error, body) => {
         if (error) return projectInfoReceived(error);
         if (!body || !body.roles || !body.roles.Developers) return projectInfoReceived(new Error('fail during retrieving project info'));
         projectInfoReceived(null, body.roles.Developers);
