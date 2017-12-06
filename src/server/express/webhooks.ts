@@ -29,15 +29,19 @@ function createTaskFromUpdatedIssue(scheduler: TaskScheduler, issueKey: string, 
   let items = webhookChangelog.items;
   if (!items || items.length === 0) return;
 
-  let changedData = items[0];
-  if (changedData.fieldId !== 'status') return;
+  for (let changedData of items) {
+    if (changedData.fieldId !== 'status') return;
 
-  if (changedData.fromString === 'Backlog' && (changedData.toString === 'Selected for Development' || changedData.toString === 'In Progress')) {
-    return scheduler.createTask('issue.development.started', {issueKey, projectKey}, 0);
-  }
+    if (changedData.fromString === 'Backlog' && changedData.toString === 'In Progress') {
+       scheduler.createTask('issue.development.started', {issueKey, projectKey}, 0);
+       break;
+    }
 
-  if ((changedData.fromString === 'Selected for Development' || changedData.fromString === 'In Progress') && changedData.toString === 'Done') {
-    let assignee = webhookPayload.issue.fields.assignee.name;
-    return scheduler.createTask('issue.development.finished', {issueKey, projectKey, assignee}, 0);
+    if ((changedData.fromString === 'Done') && changedData.toString === 'Closed') {
+      let assignee = webhookPayload.issue.fields.assignee.name;
+      scheduler.createTask('issue.development.finished', {issueKey, projectKey, assignee}, 0);
+      break;
+    }
+
   }
 }
