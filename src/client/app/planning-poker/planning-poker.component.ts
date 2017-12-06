@@ -68,7 +68,6 @@ export class PlanningPokerComponent implements OnInit {
             });
             this.constructLinksToJira(tasks);
             this.sortOpenedAndClosedTasks(tasks);
-            console.log(this.openedTasks);
             this.readyToDisplay = true;
           })
           .catch(err => {
