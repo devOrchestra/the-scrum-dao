@@ -131,6 +131,7 @@ export class CrowdsaleComponent implements OnInit {
           return;
         } else {
           sellOrder = this.formatOrder(sellOrder, 'sell', this.decimals);
+          sellOrder.value /= this.decimals;
           sellOrder.flashAnimation = "animate";
           this.orders.push(sellOrder);
           this._orderService.setOrders(this.orders);
