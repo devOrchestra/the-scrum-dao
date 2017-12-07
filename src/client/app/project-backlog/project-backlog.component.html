@@ -5,10 +5,10 @@
   <div fxLayout="row" fxLayoutAlign="center center" *ngIf="(!openedTasks || openedTasks.length === 0) &&
        (!closedTasks || closedTasks.length === 0) && readyToDisplay" class="no-tasks"
        [@shortEnterAnimation]>
-    <p>No issues!</p>
+    <p>No tasks!</p>
   </div>
   <div fxLayout="column" fxFill *ngIf="readyToDisplay" [@shortEnterAnimation]>
-    <h2 class="heading" *ngIf="openedTasks && openedTasks.length > 0">Opened issues</h2>
+    <h2 class="heading" *ngIf="openedTasks && openedTasks.length > 0">Opened tasks</h2>
     <div id="project-backlog" fxLayout="column" [ngClass]="{'bottom-margin': openedTasks && openedTasks.length > 0}">
       <div class="item-wrapper" *ngFor="let item of openedTasks; let index = index">
         <div class="item" fxLayout="row" *ngIf="item.fields.votingWasNotCreated || item.fields.isOpen"
@@ -51,7 +51,7 @@
       </div>
     </div>
 
-    <h2 class="heading" *ngIf="closedTasks && closedTasks.length > 0">Closed issues</h2>
+    <h2 class="heading" *ngIf="closedTasks && closedTasks.length > 0">Closed tasks</h2>
     <div id="project-backlog-closed" fxLayout="column">
       <div class="item-wrapper" *ngFor="let item of closedTasks; let index = index">
         <div class="item" fxLayout="row" [ngClass]="{'item-border-top': index === 0}">

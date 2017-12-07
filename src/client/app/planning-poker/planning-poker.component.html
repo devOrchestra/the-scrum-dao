@@ -5,10 +5,10 @@
      (!closedTasks || closedTasks.length === 0)) && readyToDisplay"
      class="no-tasks"
      [@shortEnterAnimation]>
-  <p>No ussues!</p>
+  <p>No tasks!</p>
 </div>
 <div fxFlex *ngIf="readyToDisplay" [@shortEnterAnimation]>
-  <h2 class="heading" *ngIf="openedTasks && openedTasks.length > 0">Opened issues</h2>
+  <h2 class="heading" *ngIf="openedTasks && openedTasks.length > 0">Opened tasks</h2>
   <div id="planning-poker" fxLayout="column" [ngClass]="{'bottom-margin': openedTasks && openedTasks.length > 0}">
     <div class="item-wrapper" *ngFor="let task of openedTasks; let index = index">
       <div class="item" fxLayout="row" *ngIf="task.fields.votingWasNotCreated || task.fields.isOpen"
@@ -53,7 +53,7 @@
     </div>
   </div>
 
-  <h2 class="heading" *ngIf="closedTasks && closedTasks.length > 0">Closed issues</h2>
+  <h2 class="heading" *ngIf="closedTasks && closedTasks.length > 0">Award paid</h2>
   <div id="planning-poker-closed" fxLayout="column">
     <div class="item-wrapper" *ngFor="let task of closedTasks; let index = index">
       <div class="item" fxLayout="row" [ngClass]="{'item-border-top': index === 0}">
