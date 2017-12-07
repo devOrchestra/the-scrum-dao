@@ -51,9 +51,11 @@
     </div>
 
     <div class="heading-row" fxLayout="row" fxLayoutAlign="space-between"
-      [ngClass]="{'heading-row-top-offset': (orders && orders.length > 0 && (visibleBuyOrdersLengthForOrderBook > 0 ||
+         *ngIf="orders && orders.length > 0 && (visibleBuyOrdersLengthForClosedOrders > 0 ||
+         visibleSellOrdersLengthForClosedOrders > 0) && readyToDisplay" [@shortEnterAnimation]
+         [ngClass]="{'heading-row-top-offset': (orders && orders.length > 0 && (visibleBuyOrdersLengthForOrderBook > 0 ||
          visibleSellOrdersLengthForOrderBook > 0) && readyToDisplay)}">
-      <h2>Exchange</h2>
+      <h2>Closed orders</h2>
     </div>
 
     <div fxLayout="column" class="orders">
@@ -62,10 +64,10 @@
         <div fxLayout="row" fxFlex="100" class="item unselectable default-cursor item-background-transition-fast"
              *ngIf="!order.isOpen" (mouseenter)="styleRow($event)" (mouseleave)="styleRow($event)"
              [@controlFlashAnimationReversed]="order.flashAnimation"
-             [ngClass]="{'fat-border-bottom': visibleBuyOrdersLengthForExchange &&
-                        visibleBuyOrdersLengthForExchange > 0 &&
-                        index === countIndexOfTheLastVisibleSellOrderForExchange(index, order),
-                        'item-border-top': index === calculateFirstVisibleItemIndexForExchange(index)}">
+             [ngClass]="{'fat-border-bottom': visibleBuyOrdersLengthForClosedOrders &&
+                        visibleBuyOrdersLengthForClosedOrders > 0 &&
+                        index === countIndexOfTheLastVisibleSellOrderForClosedOrders(index, order),
+                        'item-border-top': index === calculateFirstVisibleItemIndexForClosedOrders(index)}">
           <div fxLayout="row" fxLayoutAlign="space-between" fxFlex="100">
             <div fxLayout="row" class="break-long-words">
               <div class="buy-cloud" *ngIf="order.orderType === 'buy'" fxLayout="row">
