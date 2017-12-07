@@ -56,6 +56,7 @@ export class PlanningPokerComponent implements OnInit {
               tasks[i].fields.votesCount = getVotingPromisesResponse[i][1];
               tasks[i].fields.votesSum = getVotingPromisesResponse[i][2];
               tasks[i].fields.isOpen = getVotingPromisesResponse[i][3];
+              tasks[i].fields.awardPaid = getVotingPromisesResponse[i][4];
               getVotePromises.push(this._planningPokerService.getVote(tasks[i].key));
             });
             return Promise.all(getVotePromises)
@@ -117,6 +118,6 @@ export class PlanningPokerComponent implements OnInit {
 
   sortOpenedAndClosedTasks(tasks: IPlanningPokerTask[]): void {
     this.openedTasks = _.filter(tasks, (o) => o.fields.isOpen || o.fields.votingWasNotCreated);
-    this.closedTasks = _.filter(tasks, (o) => !o.fields.isOpen && !o.fields.votingWasNotCreated);
+    this.closedTasks = _.filter(tasks, (o) => !o.fields.isOpen && !o.fields.votingWasNotCreated && o.fields.awardPaid);
   }
 }
