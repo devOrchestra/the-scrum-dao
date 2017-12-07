@@ -16,6 +16,7 @@ class EthController {
     this.projectName = projectName;
     this.config = config;
     this.contracts = {};
+    this.defaultGasPrice = (new Web3()).toWei(config.ethereum.gasPrice, 'gwei');
   }
 
   // FIELDS
@@ -24,6 +25,8 @@ class EthController {
   private web3: Web3;
   private contracts: any;
   private ethAddress: string;
+  private defaultGasPrice: string;
+  private gasLimitsTable: any;
 
   // METHODS
   public init(done): void {
@@ -34,6 +37,7 @@ class EthController {
       artifacts.planningPoker = require(path.resolve('./build/contracts/PlanningPoker.json'));
       artifacts.crowdsale = require(path.resolve('./build/contracts/Crowdsale.json'));
       artifacts.productBacklog = require(path.resolve('./build/contracts/ProductBacklog.json'));
+      this.gasLimitsTable = require(path.resolve('./credentials/gas-price.json'));
     } catch (error) {
       return process.nextTick(()=>{done(error)});
     }
@@ -134,6 +138,10 @@ class EthController {
 
   public createStoryPointsVoting(issueName: string, options: ContractMethodOptions, done): void {
     options.from = this.ethAddress;
+    if (!options.gasPrice) options.gasPrice = this.defaultGasPrice;
+    let gasLimit = this.gasLimitsTable.planningPokerContract.addVoting;
+    if (gasLimit) options.gas = gasLimit;
+
     this.contracts.planningPoker
       .addVoting(issueName, options)
       .then(() => {
@@ -148,6 +156,10 @@ class EthController {
 
   public closeStoryPointsVoting(issueName: string, options: ContractMethodOptions, done): void {
     options.from = this.ethAddress;
+    if (!options.gasPrice) options.gasPrice = this.defaultGasPrice;
+    let gasLimit = this.gasLimitsTable.planningPokerContract.closeVoting;
+    if (gasLimit) options.gas = gasLimit;
+
     this.contracts.planningPoker
       .closeVoting(issueName, options)
       .then(() => {
@@ -162,6 +174,10 @@ class EthController {
 
   public payIssueAward(username: string, issueName: string, options: ContractMethodOptions, done): void {
     options.from = this.ethAddress;
+    if (!options.gasPrice) options.gasPrice = this.defaultGasPrice;
+    let gasLimit = this.gasLimitsTable.projectContract.payAward;
+    if (gasLimit) options.gas = gasLimit;
+
     this.contracts.project
       .payAward(username, issueName, options)
       .then(() => {
@@ -176,6 +192,10 @@ class EthController {
 
   public createPriorityVoting(issueName: string, options: ContractMethodOptions, done): void {
     options.from = this.ethAddress;
+    if (!options.gasPrice) options.gasPrice = this.defaultGasPrice;
+    let gasLimit = this.gasLimitsTable.productBacklogContract.addVoting;
+    if (gasLimit) options.gas = gasLimit;
+
     this.contracts.productBacklog
       .addVoting(issueName, options)
       .then(() => {
@@ -190,6 +210,10 @@ class EthController {
 
   public closePriorityVoting(issueName: string, options: ContractMethodOptions, done): void {
     options.from = this.ethAddress;
+    if (!options.gasPrice) options.gasPrice = this.defaultGasPrice;
+    let gasLimit = this.gasLimitsTable.productBacklogContract.closeVoting;
+    if (gasLimit) options.gas = gasLimit;
+
     this.contracts.productBacklog
       .closeVoting(issueName, options)
       .then(() => {
@@ -205,7 +229,7 @@ class EthController {
 }
 
 interface ContractMethodOptions {
-  gasLimit?: string;
+  gasPrice?: string;
   gas?: string;
   from?: string;
 }

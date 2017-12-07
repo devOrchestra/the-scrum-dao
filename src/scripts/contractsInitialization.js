@@ -20,10 +20,8 @@ let productBacklogArtifact = require(path.resolve('./build/contracts/ProductBack
 let deleteFile = Promise.promisify(fs.unlink);
 let loadConfigPromise = Promise.promisify(loadConfig);
 
-let toWei = new Web3().toWei;
-let gasPrice = process.env.ETH_GAS_PRICE || 20;
-gasPrice = toWei(gasPrice, 'gwei');
 
+let gasPrice;
 let ownerAddress;
 let oracleAddress;
 let contracts = {};
@@ -76,6 +74,9 @@ loadConfigPromise(path.resolve('./src/server/config.ini'))
     crowdsale.setProvider(web3.currentProvider);
     let productBacklog = contract(productBacklogArtifact);
     productBacklog.setProvider(web3.currentProvider);
+
+    gasPrice = config.ethereum.gasPrice;
+    gasPrice = web3.toWei(gasPrice, 'gwei');
 
     return Promise.all([
         project.deployed(),
