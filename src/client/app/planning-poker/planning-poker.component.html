@@ -22,11 +22,11 @@
             <img *ngIf="task.fields.issuetype.name === 'Epic'" class="first unselectable" src="../../assets/images/epic-icon.svg" alt="">
             <p>{{task.fields.summary}}</p>
             <div class="assignee-cloud" fxLayout="row" fxLayoutAlign="center center" *ngIf="task.fields.assignee && task.fields.assignee.displayName">
-              {{task.fields.assignee.displayName}}
+              {{task.fields.assignee.name}}
             </div>
           </div>
           <div class="right-side" fxLayout="row" fxLayoutAlign="center center">
-            <a class="task-key unselectable" href="{{task.link}}">{{task.key}}</a>
+            <a class="task-key unselectable" href="{{task.link}}" target="_blank">{{task.key}}</a>
             <div class="story-points-cloud" fxLayout="row" fxLayoutAlign="center center">
               <md-spinner *ngIf="task.storyPointsLoading"></md-spinner>
               <span *ngIf="!task.storyPointsLoading" [@alternativeControlFlashAnimation]="task.flashAnimation" class="default-cursor unselectable">
@@ -66,11 +66,11 @@
             <img *ngIf="task.fields.issuetype.name === 'Epic'" class="first unselectable" src="../../assets/images/epic-icon.svg" alt="">
             <p>{{task.fields.summary}}</p>
             <div class="assignee-cloud" fxLayout="row" fxLayoutAlign="center center" *ngIf="task.fields.assignee && task.fields.assignee.displayName">
-              {{task.fields.assignee.displayName}}
+              {{task.fields.assignee.name}}
             </div>
           </div>
           <div class="right-side" fxLayout="row" fxLayoutAlign="center center">
-            <a class="task-key unselectable" href="{{task.link}}">{{task.key}}</a>
+            <a class="task-key unselectable" href="{{task.link}}" target="_blank">{{task.key}}</a>
             <div class="story-points-cloud" fxLayout="row" fxLayoutAlign="center center">
               <md-spinner *ngIf="task.storyPointsLoading"></md-spinner>
               <span *ngIf="!task.storyPointsLoading" [@alternativeControlFlashAnimation]="task.flashAnimation" class="default-cursor unselectable">

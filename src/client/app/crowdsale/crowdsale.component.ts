@@ -92,7 +92,8 @@ export class CrowdsaleComponent implements OnInit {
         }
       } else if (addOrderDialogResult && addOrderDialogResult.type && addOrderDialogResult.type === 'sell') {
         const price = addOrderDialogResult.price * this.decimals;
-        this._crowdsaleService.addSellOrder(addOrderDialogResult.value, price)
+        const value = addOrderDialogResult.value * this.decimals;
+        this._crowdsaleService.addSellOrder(value, price)
           .then(response => {
             this.getSellOrderToUpdate(this.sellOrdersLength);
           })

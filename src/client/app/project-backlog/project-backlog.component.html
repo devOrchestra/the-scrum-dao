@@ -23,11 +23,11 @@
               <p>{{item.fields.summary}}</p>
               <div class="assignee-cloud" fxLayout="row" fxLayoutAlign="center center"
                    *ngIf="item.fields.assignee && item.fields.assignee.displayName">
-                {{item.fields.assignee.displayName}}
+                {{item.fields.assignee.name}}
               </div>
             </div>
             <div class="right-side" fxLayout="row" fxLayoutAlign="center center">
-              <a class="task-key unselectable" href="{{item.link}}">{{item.key}}</a>
+              <a class="task-key unselectable" href="{{item.link}}" target="_blank">{{item.key}}</a>
               <div class="story-points-cloud unselectable default-cursor" fxLayout="row" fxLayoutAlign="center center">
                 <md-spinner *ngIf="item.storyPointsLoading"></md-spinner>
                 <span *ngIf="!item.storyPointsLoading" [@alternativeControlFlashAnimation]="item.flashAnimation">
@@ -65,11 +65,11 @@
               <p>{{item.fields.summary}}</p>
               <div class="assignee-cloud" fxLayout="row" fxLayoutAlign="center center"
                    *ngIf="item.fields.assignee && item.fields.assignee.displayName">
-                {{item.fields.assignee.displayName}}
+                {{item.fields.assignee.name}}
               </div>
             </div>
             <div class="right-side" fxLayout="row" fxLayoutAlign="center center">
-              <a class="task-key unselectable" href="{{item.link}}">{{item.key}}</a>
+              <a class="task-key unselectable" href="{{item.link}}" target="_blank">{{item.key}}</a>
               <div class="story-points-cloud unselectable default-cursor" fxLayout="row" fxLayoutAlign="center center">
                 <md-spinner *ngIf="item.storyPointsLoading"></md-spinner>
                 <span *ngIf="!item.storyPointsLoading" [@alternativeControlFlashAnimation]="item.flashAnimation">
