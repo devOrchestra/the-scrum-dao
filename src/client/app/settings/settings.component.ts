@@ -93,10 +93,12 @@ export class SettingsComponent implements OnInit {
 
   addWorker(address: string): void {
     const ethAddressAlreadyExists = this.checkIsWorkersEthAddressAlreadyExists(address);
+    let workerWasAdded = false;
     if (!ethAddressAlreadyExists) {
       this.addWorkerLoading = true;
       this._projectService.addWorker(this.worker.address, this.worker.login)
         .then(() => {
+          workerWasAdded = true;
           return this._projectService.getWorkersLength();
         })
         .then(data => {
@@ -111,8 +113,23 @@ export class SettingsComponent implements OnInit {
           this.addWorkerLoading = false;
         })
         .catch(err => {
-          console.error('An error occurred on settings.component in "addWorker":', err);
-          this.addWorkerLoading = false;
+          if (err.toString().includes("new BigNumber() not a base 16 number") && workerWasAdded) {
+            this._projectService.getWorkersLength()
+              .then(data => {
+                const length = parseInt(data.toString(), 10);
+                return this._projectService.getWorker(length);
+              })
+              .then(worker => {
+                worker = this.formatWorkers([worker]);
+                worker[0].flashAnimation = "animate";
+                this.workers.push(worker[0]);
+                this.worker = {};
+                this.addWorkerLoading = false;
+              })
+          } else {
+            console.error('An error occurred on settings.component in "addWorker":', err);
+            this.addWorkerLoading = false;
+          }
         });
     } else {
       this.showWorkerWithSuchEthAddressExists = true;
