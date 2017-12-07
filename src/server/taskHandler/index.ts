@@ -5,7 +5,6 @@ import TaskScheduler from "../taskScheduler";
 import getIssueCreatedHandler from './issue.created';
 import getDevelopmentFinishedHandler from './issue.development.finished';
 import getDevelopmentStartedHandler from './issue.development.started';
-import getSPVotingCloseHandler from './issue.storyPointsVoting.close';
 import EthController from "../ethController";
 
 class TaskHandler {
@@ -30,7 +29,6 @@ class TaskHandler {
       this.createHandler('issue.created', getIssueCreatedHandler(this));
       this.createHandler('issue.development.finished', getDevelopmentFinishedHandler(this));
       this.createHandler('issue.development.started', getDevelopmentStartedHandler(this));
-      this.createHandler('issue.storyPointsVoting.finished', getSPVotingCloseHandler(this));
       logger.info('Task Handler is initialized');
     });
 
