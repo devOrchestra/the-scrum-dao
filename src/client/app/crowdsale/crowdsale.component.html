@@ -35,7 +35,7 @@
                 <span>SELL</span>
               </div>
               <div fxLayout="column" fxLayoutAlign="center">
-                {{order.value}} {{tokenSymbol}} ({{order.value * order.price}} ETH)
+                {{order.value}} {{tokenSymbol}} ({{(order.value * order.price).toFixed(4)}} ETH)
               </div>
             </div>
             <div fxLayout="row">
@@ -77,7 +77,7 @@
                 <span>SELL</span>
               </div>
               <div fxLayout="column" fxLayoutAlign="center">
-                {{order.value}} {{tokenSymbol}} ({{order.value * order.price}} ETH)
+                {{order.value}} {{tokenSymbol}} ({{(order.value * order.price).toFixed(4)}} ETH)
               </div>
             </div>
             <div fxLayout="row">
