@@ -60,14 +60,11 @@
 
     <div fxLayout="column" class="orders">
       <div fxLayout="row" fxFlex="100" class="item-wrapper unselectable default-cursor transition-fast"
-           *ngFor="let order of orders | sortBuyAndSellOrdersByTypeAndPriceDescendingPipe; let index = index;">
+           *ngFor="let order of closedOrders | sortClosedOrdersByIdDescendingPipe; let index = index;">
         <div fxLayout="row" fxFlex="100" class="item unselectable default-cursor item-background-transition-fast"
              *ngIf="!order.isOpen" (mouseenter)="styleRow($event)" (mouseleave)="styleRow($event)"
              [@controlFlashAnimationReversed]="order.flashAnimation"
-             [ngClass]="{'fat-border-bottom': visibleBuyOrdersLengthForClosedOrders &&
-                        visibleBuyOrdersLengthForClosedOrders > 0 &&
-                        index === countIndexOfTheLastVisibleSellOrderForClosedOrders(index, order),
-                        'item-border-top': index === calculateFirstVisibleItemIndexForClosedOrders(index)}">
+             [ngClass]="{'item-border-top': index === calculateFirstVisibleItemIndexForClosedOrders(index)}">
           <div fxLayout="row" fxLayoutAlign="space-between" fxFlex="100">
             <div fxLayout="row" class="break-long-words">
               <div class="buy-cloud" *ngIf="order.orderType === 'buy'" fxLayout="row">

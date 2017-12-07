@@ -57,6 +57,7 @@ export class OrdersResolverService {
           item.value /= decimals;
           orders.push(item);
         });
+        console.log("resolver", orders);
         this._orderService.setOrders(orders);
       })
       .catch(err => {

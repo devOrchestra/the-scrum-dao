@@ -13,6 +13,7 @@ import { MdMenuModule, MdButtonModule, MdToolbarModule, MdCardModule, MdSidenavM
 
 import {SortContributorsAndHoldersByBalanceDescendingPipe} from './pipes/sortContributorsAndHoldersByBalanceDescendingPipe'
 import {SortBuyAndSellOrdersByTypeAndPriceDescendingPipe} from './pipes/sortBuyAndSellOrdersByTypeAndPriceDescendingPipe';
+import {SortClosedOrdersByIdDescendingPipe} from './pipes/sortClosedOrdersByIdDescendingPipe';
 
 @NgModule({
   imports: [
@@ -39,7 +40,8 @@ import {SortBuyAndSellOrdersByTypeAndPriceDescendingPipe} from './pipes/sortBuyA
   ],
   declarations: [
     SortContributorsAndHoldersByBalanceDescendingPipe,
-    SortBuyAndSellOrdersByTypeAndPriceDescendingPipe
+    SortBuyAndSellOrdersByTypeAndPriceDescendingPipe,
+    SortClosedOrdersByIdDescendingPipe
   ],
   exports: [
     CommonModule,
@@ -64,7 +66,8 @@ import {SortBuyAndSellOrdersByTypeAndPriceDescendingPipe} from './pipes/sortBuyA
     MdProgressSpinnerModule,
 
     SortContributorsAndHoldersByBalanceDescendingPipe,
-    SortBuyAndSellOrdersByTypeAndPriceDescendingPipe
+    SortBuyAndSellOrdersByTypeAndPriceDescendingPipe,
+    SortClosedOrdersByIdDescendingPipe
   ]
 })
 export class SharedModule {

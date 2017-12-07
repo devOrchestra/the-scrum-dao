@@ -23,6 +23,7 @@ export class CrowdsaleComponent implements OnInit {
   formatOrder = formatOrder;
 
   orders: IOrder[] = [];
+  closedOrders: IOrder[] = [];
   tokenSymbol: string;
   readyToDisplay = false;
   buyOrdersLength: number;
@@ -54,7 +55,15 @@ export class CrowdsaleComponent implements OnInit {
     const buyOrderPromises = [];
     this._orderService.getOrders().subscribe(ordersFromService => {
       if (ordersFromService) {
+        console.log("ordersFromService", ordersFromService);
         this.orders = ordersFromService;
+        ordersFromService.forEach(item => {
+          if (!item.isOpen) {
+            console.log(item);
+            this.closedOrders.push(item);
+          }
+        });
+        console.log("this.closedOrders", this.closedOrders);
         this.sellOrdersLength = _.filter(this.orders, order => order.orderType === 'sell').length;
         this.buyOrdersLength = _.filter(this.orders, order => order.orderType === 'buy').length;
         this._projectService.decimals()
@@ -118,7 +127,6 @@ export class CrowdsaleComponent implements OnInit {
           buyOrder.value /= this.decimals;
           buyOrder.flashAnimation = "animate";
           this.orders.push(buyOrder);
-          this._orderService.setOrders(this.orders);
           this.buyOrdersLength += 1;
           this.countVisibleOrdersLengthForOrderBook();
         }
@@ -137,7 +145,6 @@ export class CrowdsaleComponent implements OnInit {
           sellOrder.value /= this.decimals;
           sellOrder.flashAnimation = "animate";
           this.orders.push(sellOrder);
-          this._orderService.setOrders(this.orders);
           this.sellOrdersLength += 1;
           this.countVisibleOrdersLengthForOrderBook();
         }
@@ -264,7 +271,7 @@ export class CrowdsaleComponent implements OnInit {
     } else if (operationType === 'close') {
       this.orders[index].isLocked = true;
     }
-    this._orderService.setOrders(this.orders);
+    this.closedOrders.unshift(itemToExcludeFromList);
     setTimeout(() => {
       if (type === "sell") {
         this.visibleSellOrdersLengthForOrderBook = this.visibleSellOrdersLengthForOrderBook === 0 ?
