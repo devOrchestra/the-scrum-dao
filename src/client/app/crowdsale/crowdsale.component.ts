@@ -78,7 +78,7 @@ export class CrowdsaleComponent implements OnInit {
   openAddOrderDialog(): void {
     const addOrderDialogRef = this.dialog.open(CrowdsaleAddOrderDialogComponent);
     addOrderDialogRef.afterClosed().subscribe(addOrderDialogResult => {
-      const theSmallestPriceOfSellOrders = this.findTheSmallestPriceOfSellOrders();
+      const theSmallestPriceOfSellOrders = this.findTheSmallestPriceOfOpenedSellOrders();
       if (addOrderDialogResult && addOrderDialogResult.type && addOrderDialogResult.type === 'buy') {
         if (addOrderDialogResult.price < theSmallestPriceOfSellOrders || !theSmallestPriceOfSellOrders) {
           const eth = addOrderDialogResult.eth * this.decimals;
@@ -300,8 +300,12 @@ export class CrowdsaleComponent implements OnInit {
     return index;
   }
 
-  findTheSmallestPriceOfSellOrders(): void {
-    const sellOrders = _.filter(this.orders, {orderType: 'sell'});
+  findTheSmallestPriceOfOpenedSellOrders(): void {
+    const sellOrders = _.filter(this.orders, {
+      orderType: 'sell',
+      isOpen: true,
+      isLocked: false
+    });
     let minPriceOfSellOrders;
     sellOrders.forEach(item => {
       if (minPriceOfSellOrders) {
