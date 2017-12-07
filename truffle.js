@@ -30,7 +30,7 @@ if (process.env.NODE_ENV === 'development') {
     providerUrl = process.env.ETH_NODE_URL;
   } else {
     walletPassword = 'semen';
-    providerUrl = 'https://rinkeby.infura.io/QTeUiM06pSmTwLqjbcip';
+    providerUrl = 'https://ropsten.infura.io/QTeUiM06pSmTwLqjbcip ';
   }
 
   let ownerWalletData = require('./credentials/ownerWallet.json');
@@ -59,7 +59,7 @@ module.exports = {
     },
     stage: {
       gasPrice,
-      network_id: 4,
+      network_id: 3,
       provider: engine,
       from: address
     },
