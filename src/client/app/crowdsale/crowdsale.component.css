@@ -8,7 +8,7 @@
   font-weight: bold;
 }
 
-#orders .item-wrapper .item {
+.orders .item-wrapper .item {
   padding: 8px 16px;
   margin: 0 8px;
   border-left: 1px #e1e1e1 solid;
@@ -16,7 +16,7 @@
   border-right: 1px #e1e1e1 solid;
 }
 
-#orders .item-wrapper .item-border-top {
+.orders .item-wrapper .item-border-top {
   border-top: 1px #e1e1e1 solid;
 }
 
@@ -24,17 +24,17 @@
   border-top: 1px #e1e1e1 solid;
 }
 
-#orders .buy-cloud i,
-#orders .sell-cloud i {
+.orders .buy-cloud i,
+.orders .sell-cloud i {
   color: white;
 }
 
-#orders .buy-cloud span,
-#orders .sell-cloud span {
+.orders .buy-cloud span,
+.orders .sell-cloud span {
   margin-left: 4px;
 }
 
-#orders .item .buy-cloud {
+.orders .item .buy-cloud {
   font-size: 12px;
   border-radius: 10px;
   padding: 5px 10px;
@@ -46,7 +46,7 @@
   margin-right: 12px;
 }
 
-#orders .item .sell-cloud {
+.orders .item .sell-cloud {
   font-size: 12px;
   border-radius: 10px;
   padding: 5px 10px;
@@ -58,12 +58,16 @@
   margin-right: 12px;
 }
 
-#orders .fat-border-bottom {
+.orders .fat-border-bottom {
   border-bottom: 3px #e1e1e1 solid !important;
 }
 
-#top-row {
+.heading-row {
   margin-bottom: 16px;
+}
+
+.heading-row-top-offset {
+  margin-top: 32px;
 }
 
 #add-order-button {
@@ -75,7 +79,7 @@
   right: 32px;
 }
 
-#orders .lock-button {
+.orders .lock-button {
   line-height: 22px;
   letter-spacing: 1px;
   padding: 0 10px;
@@ -87,7 +91,7 @@
   font-weight: bold;
 }
 
-#orders .lock-button:hover {
+.orders .lock-button:hover {
   background-color: royalblue;
   color: white;
 }

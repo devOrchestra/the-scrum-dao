@@ -42,6 +42,27 @@ export const ControlFlashAnimation = trigger(
     ])
   ]);
 
+export const ControlFlashAnimationReversed = trigger(
+  'controlFlashAnimationReversed',
+  [
+    transition('* => animate', [
+      animate('1s ease-in-out', keyframes([
+        style({opacity: 1}),
+        style({opacity: 0}),
+        style({opacity: 1}),
+        style({opacity: 0}),
+      ]))
+    ]),
+    transition('* => void', [
+      animate('1s ease-in-out', keyframes([
+        style({opacity: 0}),
+        style({opacity: 1}),
+        style({opacity: 0}),
+        style({opacity: 1}),
+      ]))
+    ])
+  ]);
+
 export const AlternativeControlFlashAnimation = trigger(
   'alternativeControlFlashAnimation',
   [

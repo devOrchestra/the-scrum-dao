@@ -1,27 +1,29 @@
 <div fxFlexFill fxLayout="row" fxLayoutAlign="center center" *ngIf="!readyToDisplay">
   <md-spinner class="main-spinner"></md-spinner>
 </div>
-<div fxLayout="row" fxLayoutAlign="center center" *ngIf="(!orders || orders.length === 0 || (visibleBuyOrdersLength === 0 &&
-     visibleSellOrdersLength === 0)) && readyToDisplay"
+<div fxLayout="row" fxLayoutAlign="center center" *ngIf="(!orders || orders.length === 0) && readyToDisplay"
      class="no-orders" [@shortEnterAnimation]>
-  <p>No opened orders!</p>
+  <p>No orders!</p>
 </div>
 <div *ngIf="readyToDisplay" [@shortEnterAnimation]>
   <div fxLayout="column" fxFill class="relative-container">
-    <div id="top-row" fxLayout="row" fxLayoutAlign="space-between">
+    <div id="first-heading-row" class="heading-row" fxLayout="row" fxLayoutAlign="space-between"
+         *ngIf="orders && orders.length > 0 && (visibleBuyOrdersLengthForOrderBook > 0 ||
+         visibleSellOrdersLengthForOrderBook > 0) && readyToDisplay" [@shortEnterAnimation]>
       <h2>Order book</h2>
     </div>
 
-    <div fxLayout="column" id="orders">
+    <div fxLayout="column" class="orders">
       <div fxLayout="row" fxFlex="100" class="item-wrapper unselectable pointer transition-fast"
            *ngFor="let order of orders | sortBuyAndSellOrdersByTypeAndPriceDescendingPipe; let index = index;"
            (click)="tradeOrder(order.orderType, order.id, order.value * order.price)">
         <div fxLayout="row" fxFlex="100" class="item unselectable pointer item-background-transition-fast"
              *ngIf="order.isOpen && !order.isLocked" (mouseenter)="styleRow($event)" (mouseleave)="styleRow($event)"
              [@controlFlashAnimation]="order.flashAnimation"
-             [ngClass]="{'fat-border-bottom': visibleBuyOrdersLength && visibleBuyOrdersLength > 0 &&
-                        index === countIndexOfTheLastVisibleSellOrder(index, order),
-                        'item-border-top': index === calculateFirstVisibleItemIndex(index)}">
+             [ngClass]="{'fat-border-bottom': visibleBuyOrdersLengthForOrderBook &&
+                        visibleBuyOrdersLengthForOrderBook > 0 &&
+                        index === countIndexOfTheLastVisibleSellOrderForOrderBook(index, order),
+                        'item-border-top': index === calculateFirstVisibleItemIndexForOrderBook(index)}">
           <div fxLayout="row" fxLayoutAlign="space-between" fxFlex="100">
             <div fxLayout="row" class="break-long-words">
               <div class="buy-cloud" *ngIf="order.orderType === 'buy'" fxLayout="row">
@@ -41,6 +43,44 @@
                       (mouseleave)="styleRow($event)" (click)="closeOrder($event, order.orderType, order.id)">
                 CLOSE
               </div>
+              <span fxLayout="column" fxLayoutAlign="center">{{order.price}} {{tokenSymbol}}/ETH</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="heading-row" fxLayout="row" fxLayoutAlign="space-between"
+      [ngClass]="{'heading-row-top-offset': (orders && orders.length > 0 && (visibleBuyOrdersLengthForOrderBook > 0 ||
+         visibleSellOrdersLengthForOrderBook > 0) && readyToDisplay)}">
+      <h2>Exchange</h2>
+    </div>
+
+    <div fxLayout="column" class="orders">
+      <div fxLayout="row" fxFlex="100" class="item-wrapper unselectable default-cursor transition-fast"
+           *ngFor="let order of orders | sortBuyAndSellOrdersByTypeAndPriceDescendingPipe; let index = index;">
+        <div fxLayout="row" fxFlex="100" class="item unselectable default-cursor item-background-transition-fast"
+             *ngIf="!order.isOpen" (mouseenter)="styleRow($event)" (mouseleave)="styleRow($event)"
+             [@controlFlashAnimationReversed]="order.flashAnimation"
+             [ngClass]="{'fat-border-bottom': visibleBuyOrdersLengthForExchange &&
+                        visibleBuyOrdersLengthForExchange > 0 &&
+                        index === countIndexOfTheLastVisibleSellOrderForExchange(index, order),
+                        'item-border-top': index === calculateFirstVisibleItemIndexForExchange(index)}">
+          <div fxLayout="row" fxLayoutAlign="space-between" fxFlex="100">
+            <div fxLayout="row" class="break-long-words">
+              <div class="buy-cloud" *ngIf="order.orderType === 'buy'" fxLayout="row">
+                <i class="fa fa-long-arrow-up buy-arrow" aria-hidden="true"></i>
+                <span>BUY</span>
+              </div>
+              <div class="sell-cloud" *ngIf="order.orderType === 'sell'" fxLayout="row">
+                <i class="fa fa-long-arrow-down sell-arrow" aria-hidden="true"></i>
+                <span>SELL</span>
+              </div>
+              <div fxLayout="column" fxLayoutAlign="center">
+                {{order.value}} {{tokenSymbol}} ({{order.value * order.price}} ETH)
+              </div>
+            </div>
+            <div fxLayout="row">
               <span fxLayout="column" fxLayoutAlign="center">{{order.price}} {{tokenSymbol}}/ETH</span>
             </div>
           </div>

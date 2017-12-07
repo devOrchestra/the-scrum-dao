@@ -7,7 +7,7 @@ import {CrowdsaleService} from '../core/contract-calls/crowdsale.service'
 import {ProjectService} from '../core/contract-calls/project.service'
 import {OrderService} from '../core/order.service'
 import {parseBigNumber, countDecimals, formatOrder, transformOrderToObject} from '../shared/methods'
-import {ControlFlashAnimation, ShortEnterAnimation} from '../shared/animations'
+import {ControlFlashAnimation, ControlFlashAnimationReversed, ShortEnterAnimation} from '../shared/animations'
 import * as _ from 'lodash'
 import { IOrder } from "../shared/interfaces";
 
@@ -15,7 +15,7 @@ import { IOrder } from "../shared/interfaces";
   selector: 'app-crowdsale',
   templateUrl: './crowdsale.component.html',
   styleUrls: ['./crowdsale.component.css'],
-  animations: [ControlFlashAnimation, ShortEnterAnimation]
+  animations: [ControlFlashAnimation, ControlFlashAnimationReversed, ShortEnterAnimation]
 })
 export class CrowdsaleComponent implements OnInit {
   parseBigNumber = parseBigNumber;
@@ -26,9 +26,11 @@ export class CrowdsaleComponent implements OnInit {
   tokenSymbol: string;
   readyToDisplay = false;
   buyOrdersLength: number;
-  visibleBuyOrdersLength = 0;
+  visibleBuyOrdersLengthForOrderBook = 0;
+  visibleBuyOrdersLengthForExchange = 0;
   sellOrdersLength: number;
-  visibleSellOrdersLength = 0;
+  visibleSellOrdersLengthForOrderBook = 0;
+  visibleSellOrdersLengthForExchange = 0;
   decimals: number;
   currentOwner: string = web3.eth.accounts[0];
   maxIndexOfVisibleSellOrders: number;
@@ -62,7 +64,8 @@ export class CrowdsaleComponent implements OnInit {
           })
           .then(symbolResponse => {
             this.tokenSymbol = symbolResponse;
-            this.countVisibleOrdersLength();
+            this.countVisibleOrdersLengthForOrderBook();
+            this.countVisibleOrdersLengthForExchange();
             this.readyToDisplay = true;
           })
           .catch(err => {
@@ -108,7 +111,7 @@ export class CrowdsaleComponent implements OnInit {
     this._crowdsaleService.getBuyOrder(index)
       .then(buyOrder => {
         if (!buyOrder[0] || buyOrder[0].length === 0) {
-          this.getBuyOrderToUpdate(this.visibleBuyOrdersLength);
+          this.getBuyOrderToUpdate(this.visibleBuyOrdersLengthForOrderBook);
           return;
         } else {
           buyOrder = this.formatOrder(buyOrder, 'buy', this.decimals);
@@ -117,7 +120,7 @@ export class CrowdsaleComponent implements OnInit {
           this.orders.push(buyOrder);
           this._orderService.setOrders(this.orders);
           this.buyOrdersLength += 1;
-          this.countVisibleOrdersLength();
+          this.countVisibleOrdersLengthForOrderBook();
         }
       })
   }
@@ -136,7 +139,7 @@ export class CrowdsaleComponent implements OnInit {
           this.orders.push(sellOrder);
           this._orderService.setOrders(this.orders);
           this.sellOrdersLength += 1;
-          this.countVisibleOrdersLength();
+          this.countVisibleOrdersLengthForOrderBook();
         }
       })
   }
@@ -188,23 +191,35 @@ export class CrowdsaleComponent implements OnInit {
       });
   }
 
-  countVisibleOrdersLength(): void {
-    this.visibleBuyOrdersLength = !this.visibleBuyOrdersLength || this.visibleBuyOrdersLength > 0 ? 0 : this.visibleBuyOrdersLength;
-    this.visibleSellOrdersLength = !this.visibleSellOrdersLength || this.visibleSellOrdersLength > 0 ? 0 : this.visibleSellOrdersLength;
+  countVisibleOrdersLengthForOrderBook(): void {
+    this.visibleBuyOrdersLengthForOrderBook = !this.visibleBuyOrdersLengthForOrderBook ||
+      this.visibleBuyOrdersLengthForOrderBook > 0 ? 0 : this.visibleBuyOrdersLengthForOrderBook;
+    this.visibleSellOrdersLengthForOrderBook = !this.visibleSellOrdersLengthForOrderBook ||
+      this.visibleSellOrdersLengthForOrderBook > 0 ? 0 : this.visibleSellOrdersLengthForOrderBook;
     this.orders.forEach(item => {
       if (item.orderType === 'buy') {
-        this.visibleBuyOrdersLength += this.checkShouldOrderBeVisible(item) ? 1 : 0;
+        this.visibleBuyOrdersLengthForOrderBook += item.isOpen && !item.isLocked ? 1 : 0;
       } else if (item.orderType === 'sell') {
-        this.visibleSellOrdersLength += this.checkShouldOrderBeVisible(item) ? 1 : 0;
+        this.visibleSellOrdersLengthForOrderBook += item.isOpen && !item.isLocked ? 1 : 0;
       }
     });
   }
 
-  checkShouldOrderBeVisible(order: IOrder): boolean {
-    return order.isOpen && !order.isLocked;
+  countVisibleOrdersLengthForExchange(): void {
+    this.visibleBuyOrdersLengthForExchange = !this.visibleBuyOrdersLengthForExchange ||
+      this.visibleBuyOrdersLengthForExchange > 0 ? 0 : this.visibleBuyOrdersLengthForExchange;
+    this.visibleSellOrdersLengthForExchange = !this.visibleSellOrdersLengthForExchange ||
+      this.visibleSellOrdersLengthForExchange > 0 ? 0 : this.visibleSellOrdersLengthForExchange;
+    this.orders.forEach(item => {
+      if (item.orderType === 'buy') {
+        this.visibleBuyOrdersLengthForExchange += !item.isOpen ? 1 : 0;
+      } else if (item.orderType === 'sell') {
+        this.visibleSellOrdersLengthForExchange += !item.isOpen ? 1 : 0;
+      }
+    });
   }
 
-  countIndexOfTheLastVisibleSellOrder(index: number, order: IOrder): number {
+  countIndexOfTheLastVisibleSellOrderForOrderBook(index: number, order: IOrder): number {
     let allSellOrdersHaveIndexProperty = true;
     order.index = index;
     const visibleSellOrders = _.filter(this.orders, {
@@ -222,9 +237,27 @@ export class CrowdsaleComponent implements OnInit {
     }
   }
 
+  countIndexOfTheLastVisibleSellOrderForExchange(index: number, order: IOrder): number {
+    let allSellOrdersHaveIndexProperty = true;
+    order.index = index;
+    const visibleSellOrders = _.filter(this.orders, {
+      isOpen: false,
+      orderType: 'sell'
+    });
+    visibleSellOrders.forEach(item => {
+      if (!item.hasOwnProperty('index')) { allSellOrdersHaveIndexProperty = false; }
+    });
+    if (allSellOrdersHaveIndexProperty) {
+      const max = _.maxBy(visibleSellOrders, item => item.index);
+      this.maxIndexOfVisibleSellOrders = max && max.hasOwnProperty('index') && max.index >= 0 ? max.index : -1;
+      return this.maxIndexOfVisibleSellOrders;
+    }
+  }
+
   excludeItemFromList(id: number, type: string, operationType: string): void {
     const itemToExcludeFromList = _.find(this.orders, {id: id, orderType: type});
     itemToExcludeFromList.isOpen = false;
+    itemToExcludeFromList.flashAnimation = "animate";
     const index = _.findIndex(this.orders, itemToExcludeFromList);
     if (operationType === 'trade') {
       this.orders[index].isOpen = false;
@@ -234,18 +267,32 @@ export class CrowdsaleComponent implements OnInit {
     this._orderService.setOrders(this.orders);
     setTimeout(() => {
       if (type === "sell") {
-        this.visibleSellOrdersLength = this.visibleSellOrdersLength === 0 ? 0 : this.visibleSellOrdersLength - 1;
+        this.visibleSellOrdersLengthForOrderBook = this.visibleSellOrdersLengthForOrderBook === 0 ?
+          0 : this.visibleSellOrdersLengthForOrderBook - 1;
       } else if (type === "buy") {
-        this.visibleBuyOrdersLength = this.visibleBuyOrdersLength === 0 ? 0 : this.visibleBuyOrdersLength - 1;
+        this.visibleBuyOrdersLengthForOrderBook = this.visibleBuyOrdersLengthForOrderBook === 0 ?
+          0 : this.visibleBuyOrdersLengthForOrderBook - 1;
       }
     }, 1000);
   }
 
-  calculateFirstVisibleItemIndex(): number {
+  calculateFirstVisibleItemIndexForOrderBook(): number {
     let index;
     let flag = true;
     this.orders.forEach((item, i) => {
       if (!item.isLocked && item.isOpen && flag) {
+        index = i;
+        flag = !flag;
+      }
+    });
+    return index;
+  }
+
+  calculateFirstVisibleItemIndexForExchange(): number {
+    let index;
+    let flag = true;
+    this.orders.forEach((item, i) => {
+      if (!item.isOpen && flag) {
         index = i;
         flag = !flag;
       }

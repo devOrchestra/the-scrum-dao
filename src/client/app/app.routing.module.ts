@@ -6,7 +6,6 @@ import {ProjectBacklogComponent} from './project-backlog/project-backlog.compone
 import {PlanningPokerComponent} from './planning-poker/planning-poker.component';
 import {ContributorListComponent} from './contributor-list/contributor-list.component';
 import {CrowdsaleComponent} from './crowdsale/crowdsale.component';
-import {ExchangeComponent} from './exchange/exchange.component';
 
 import {WorkersResolverService} from './core/resolvers/workers-resolver.service';
 import {JiraIssuesResolverService} from './core/resolvers/jira-issues-resolver.service';
@@ -48,10 +47,6 @@ const routes: Routes = [
       {
         path: 'crowdsale',
         component: CrowdsaleComponent
-      },
-      {
-        path: 'exchange',
-        component: ExchangeComponent
       }
     ],
   },
