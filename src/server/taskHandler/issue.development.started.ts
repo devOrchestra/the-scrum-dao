@@ -1,3 +1,5 @@
+import async = require("async");
+
 import TaskHandler from "./index";
 import EthController from "../ethController";
 import logger from "../logger";
@@ -8,6 +10,18 @@ export default function (taskHandler: TaskHandler) {
   return function (job, done) {
     let {issueKey} = job.data;
     logger.info(`Handling issue.development.started task for issue ${issueKey}`);
-    ethController.closePriorityVoting(issueKey, {}, done);
+    async.parallel([
+
+      (priorityVotingClosed) => {
+        ethController.closePriorityVoting(issueKey, {}, priorityVotingClosed);
+      },
+
+      (storyPointsVotingClosed) => {
+        ethController.closeStoryPointsVoting(issueKey, {}, storyPointsVotingClosed);
+      }
+
+    ], (error) => {
+      done(error);
+    });
   }
 }
