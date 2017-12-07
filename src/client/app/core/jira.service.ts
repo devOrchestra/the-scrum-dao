@@ -6,23 +6,30 @@ import 'rxjs/add/operator/toPromise';
 @Injectable()
 export class JiraService {
   public issues;
-  public issues$: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  public issues$: BehaviorSubject<any[]> = new BehaviorSubject<any[]>(null);
 
   constructor(
     private http: Http
   ) { }
 
-  setIssues(issues: string): void {
+  setIssues(issues: any[]): void {
     this.issues = issues;
     this.issues$.next(issues);
   }
 
-  getIssues(): Observable<string> {
+  getIssues(): Observable<any[]> {
     return this.issues$.asObservable();
   }
 
   getIssueListFromApi(): Promise<any> {
     return this.http.get(`/api/issues`)
+      .toPromise()
+      .then(this.sendResponse)
+      .catch(this.handleError);
+  }
+
+  getClosedIssueListFromApi(): Promise<any> {
+    return this.http.get(`/api/issues?status=Closed`)
       .toPromise()
       .then(this.sendResponse)
       .catch(this.handleError);

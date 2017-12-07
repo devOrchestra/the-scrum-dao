@@ -117,7 +117,9 @@ export class PlanningPokerComponent implements OnInit {
   }
 
   sortOpenedAndClosedTasks(tasks: IPlanningPokerTask[]): void {
-    this.openedTasks = _.filter(tasks, (o) => o.fields.isOpen || o.fields.votingWasNotCreated);
-    this.closedTasks = _.filter(tasks, (o) => !o.fields.isOpen && !o.fields.votingWasNotCreated && o.fields.awardPaid);
+    this.openedTasks = _.filter(tasks, (o) => (o.fields.isOpen || o.fields.votingWasNotCreated) &&
+      o.fields.status.name === "Backlog");
+    this.closedTasks = _.filter(tasks, (o) => !o.fields.isOpen && !o.fields.votingWasNotCreated && o.fields.awardPaid &&
+      o.fields.status.name === "Closed");
   }
 }

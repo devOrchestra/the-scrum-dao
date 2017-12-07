@@ -14,9 +14,15 @@ export class JiraIssuesResolverService {
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): void {
     this._web3Service.getConnectionState().subscribe(connectionState => {
       if (connectionState && (connectionState === "connected" || connectionState === "none")) {
+        const issues: boolean[] = [];
         this._jiraService.getIssueListFromApi()
           .then(response => {
-            this._jiraService.setIssues(response);
+            issues.push(...response);
+            return this._jiraService.getClosedIssueListFromApi();
+          })
+          .then(getClosedIssueListFromApiResponse => {
+            issues.push(...getClosedIssueListFromApiResponse);
+            this._jiraService.setIssues(issues);
           })
           .catch(err => {
             console.error('An error occurred on jira-issues-resolver.service:', err);

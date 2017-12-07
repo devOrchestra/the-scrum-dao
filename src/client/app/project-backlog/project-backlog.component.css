@@ -32,8 +32,7 @@ h2.heading {
   margin-bottom: 30px;
 }
 
-#project-backlog .item,
-#project-backlog-closed .item {
+#project-backlog .item {
   width: calc(100% - 16px);
   min-width: calc(100% - 16px);
   max-width: calc(100% - 16px);
@@ -44,42 +43,34 @@ h2.heading {
   border-top: 1px #e1e1e1 solid;
 }
 
-#project-backlog .item,
-#project-backlog-closed .item {
+#project-backlog .item {
   border-left: 1px #e1e1e1 solid;
   border-right: 1px #e1e1e1 solid;
   border-bottom: 1px #e1e1e1 solid;
 }
 
-#project-backlog .item .left-side,
-#project-backlog-closed .item .left-side {
+#project-backlog .item .left-side {
   margin: 8px 0 8px 16px;
 }
 
-#project-backlog .item .right-side,
-#project-backlog-closed .item .right-side {
+#project-backlog .item .right-side {
   margin: 8px 16px 8px 0;
 }
 
-#project-backlog .item .left-side *,
-#project-backlog-closed .item .left-side * {
+#project-backlog .item .left-side * {
   margin-left: 16px;
 }
 
-#project-backlog .item .right-side *,
-#project-backlog-closed .item .right-side * {
+#project-backlog .item .right-side * {
   margin-left: 8px;
 }
 
 #project-backlog .item .left-side .first,
-#project-backlog .item .vote-cloud span,
-#project-backlog-closed .item .left-side .first,
-#project-backlog-closed .item .vote-cloud span {
+#project-backlog .item .vote-cloud span {
   margin-left: 0;
 }
 
-#project-backlog .item .vote-cloud,
-#project-backlog-closed .item .vote-cloud {
+#project-backlog .item .vote-cloud {
   font-size: 12px;
   border-radius: 10px;
   padding: 5px 10px;
@@ -90,14 +81,12 @@ h2.heading {
   color: white;
 }
 
-#project-backlog .item .vote-cloud.already-voted,
-#project-backlog-closed .item .vote-cloud.already-voted {
+#project-backlog .item .vote-cloud.already-voted {
   background-color: #769b74;
   cursor: default;
 }
 
-#project-backlog .item .assignee-cloud,
-#project-backlog-closed .item .assignee-cloud {
+#project-backlog .item .assignee-cloud {
   font-size: 12px;
   border-radius: 10px;
   padding: 5px 10px;
@@ -108,17 +97,12 @@ h2.heading {
 
 #project-backlog .item .story-points-cloud span,
 #project-backlog .item .story-points-cloud md-spinner,
-#project-backlog .item .vote-cloud md-spinner,
-#project-backlog-closed .item .story-points-cloud span,
-#project-backlog-closed .item .story-points-cloud md-spinner,
-#project-backlog-closed .item .vote-cloud md-spinner {
+#project-backlog .item .vote-cloud md-spinner {
   margin-left: 0;
 }
 
 #project-backlog .item .story-points-cloud md-spinner,
-#project-backlog .item .vote-cloud md-spinner,
-#project-backlog-closed .item .story-points-cloud md-spinner,
-#project-backlog-closed .item .vote-cloud md-spinner {
+#project-backlog .item .vote-cloud md-spinner {
   height: 14px;
 }
 
@@ -155,18 +139,15 @@ h2.heading {
   stroke: #333333;
 }
 
-/deep/ #project-backlog .item .vote-cloud md-spinner path,
-/deep/ #project-backlog-closed .item .vote-cloud md-spinner path {
+/deep/ #project-backlog .item .vote-cloud md-spinner path {
   stroke: white !important;
 }
 
-/deep/ #project-backlog .item .story-points-cloud md-spinner path,
-/deep/ #project-backlog-closed .item .story-points-cloud md-spinner path {
+/deep/ #project-backlog .item .story-points-cloud md-spinner path {
   stroke: #333333 !important;
 }
 
-/deep/ #project-backlog .story-points-dropdown .mat-select-trigger,
-/deep/ #project-backlog-closed .story-points-dropdown .mat-select-trigger {
+/deep/ #project-backlog .story-points-dropdown .mat-select-trigger {
   width: 50px;
   min-width: 50px;
   max-width: 50px;

@@ -50,7 +50,7 @@ export class ProjectBacklogComponent implements OnInit {
       if (data) {
         const getVotingBacklogPromises = [],
               getVotingPlanningPokerPromises = [],
-              tasks: IBacklogTask[] = _.cloneDeep(data);
+              tasks: IBacklogTask[] = _.cloneDeep(_.filter(data, (o) => o.fields.status.name === "Backlog"));
         this._projectService.decimals()
           .then(decimalsResponse => {
             this.decimals = this.countDecimals(decimalsResponse);
