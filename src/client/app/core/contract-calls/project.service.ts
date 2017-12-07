@@ -80,14 +80,14 @@ export class ProjectService {
   transfer(toAddress: string, value: number): Promise<any> {
     if (this.projectContractInstance) {
       return this.projectContractInstance.transfer(toAddress, value, {
-        gas: this.gasPrice.planningPokerContract.transfer * 2,
+        gas: this.gasPrice.projectContract.transfer * 2,
         from: web3.eth.accounts[0]
       });
     } else {
       return this.deployProjectContract()
         .then(() => {
           return this.projectContractInstance.transfer(toAddress, value, {
-            gas: this.gasPrice.planningPokerContract.transfer * 2,
+            gas: this.gasPrice.projectContract.transfer * 2,
             from: web3.eth.accounts[0]
           });
         });
@@ -153,14 +153,14 @@ export class ProjectService {
     if (this.projectContractInstance) {
       return this.projectContractInstance.initCrowdsale(crowdsaleAddress, {
         from: web3.eth.accounts[0],
-        gas: this.gasPrice.planningPokerContract.initCrowdsale * 2
+        gas: this.gasPrice.projectContract.initCrowdsale * 2
       });
     } else {
       return this.deployProjectContract()
         .then(() => {
           return this.projectContractInstance.initCrowdsale(crowdsaleAddress, {
             from: web3.eth.accounts[0],
-            gas: this.gasPrice.planningPokerContract.initCrowdsale * 2
+            gas: this.gasPrice.projectContract.initCrowdsale * 2
           });
         });
     }
@@ -170,14 +170,14 @@ export class ProjectService {
     if (this.projectContractInstance) {
       return this.projectContractInstance.initPlanningPoker(planningPokerAddress, {
         from: web3.eth.accounts[0],
-        gas: this.gasPrice.planningPokerContract.initPlanningPoker * 2
+        gas: this.gasPrice.projectContract.initPlanningPoker * 2
       });
     } else {
       return this.deployProjectContract()
         .then(() => {
           return this.projectContractInstance.initPlanningPoker(planningPokerAddress, {
             from: web3.eth.accounts[0],
-            gas: this.gasPrice.planningPokerContract.initPlanningPoker * 2
+            gas: this.gasPrice.projectContract.initPlanningPoker * 2
           });
         });
     }
