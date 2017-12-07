@@ -10,6 +10,7 @@ let toWei = new Web3().toWei;
 
 assert(process.env.NODE_ENV, 'NODE_ENV is not defined');
 
+const GAS_LIMIT = 3100000; // max deployment gas from gas-price.json
 let address;
 let providerUrl;
 let engine;
@@ -30,7 +31,7 @@ if (process.env.NODE_ENV === 'development') {
     providerUrl = process.env.ETH_NODE_URL;
   } else {
     walletPassword = 'semen';
-    providerUrl = 'https://ropsten.infura.io/QTeUiM06pSmTwLqjbcip ';
+    providerUrl = 'https://ropsten.infura.io/QTeUiM06pSmTwLqjbcip';
   }
 
   let ownerWalletData = require('./credentials/ownerWallet.json');
@@ -46,18 +47,21 @@ if (process.env.NODE_ENV === 'development') {
 module.exports = {
   networks: {
     development: {
+      gas: GAS_LIMIT,
       gasPrice,
       provider: engine,
       from: address,
       network_id: "*" // Match any network id
     },
     production: {
+      gas: GAS_LIMIT,
       gasPrice,
       network_id: 1,
       provider: engine,
       from: address
     },
     stage: {
+      gas: GAS_LIMIT,
       gasPrice,
       network_id: 3,
       provider: engine,
