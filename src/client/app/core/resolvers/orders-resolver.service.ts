@@ -39,6 +39,7 @@ export class OrdersResolverService {
       .then(sellOrders => {
         sellOrders.forEach(item => {
           item = this.formatOrder(item, 'sell', decimals);
+          item.value /= decimals;
           orders.push(item);
         });
         return this._crowdsaleService.getBuyOrderLength();
