@@ -11,13 +11,15 @@ import createLogger from '../logger';
 let logger = createLogger('express');
 
 const app = express();
-let webAppPath: string = path.resolve('./', 'build/client');
 if (process.env.NODE_ENV === 'development') {
   app.use(morganLogger('dev'));
 }
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
+let webAppPath: string = path.resolve('./', 'build/client');
 app.use(express.static(webAppPath));
+let artifactsPath: string = path.resolve('./', 'build/contracts');
+app.use('/static/artifacts/', express.static(artifactsPath));
 
 /**
  * Routes configure

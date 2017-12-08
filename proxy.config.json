@@ -3,5 +3,10 @@
     "target": "http://localhost:8021",
     "secure": false,
     "logLevel": "debug"
+  },
+  "/static/artifacts/*": {
+    "target": "http://localhost:8021",
+    "secure": false,
+    "logLevel": "debug"
   }
 }
