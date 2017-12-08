@@ -5,16 +5,13 @@ import logger from '../logger';
 import JiraConnector from '../jira';
 
 const contributorRouter: express.Router = express.Router();
-let PROJECT_KEY: string;
-let JIRA_URL: string = 'devorchestra.atlassian.net';
 
 
 contributorRouter.get('/', (req, res, next) => {
   const jira: JiraConnector = req.app.get('jira');
-  if (!PROJECT_KEY) {
-    const config = req.app.get('config');
-    PROJECT_KEY = config.projectKey;
-  }
+  const config = req.app.get('config');
+  const JIRA_URL = config.jiraUrl;
+  const PROJECT_KEY = config.projectKey;
 
   logger.debug(`retrieving list of developers from jira project`);
   waterfall([

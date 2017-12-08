@@ -4,25 +4,22 @@ import logger from '../logger';
 import JiraConnector from '../jira';
 
 const issueRouter: express.Router = express.Router();
-let PROJECT_KEY: string;
-let JIRA_URL: string = 'devorchestra.atlassian.net';
 
 
 issueRouter.get('/', (req, res, next) => {
-  if (!PROJECT_KEY) {
-    const config = req.app.get('config');
-    PROJECT_KEY = config.projectKey;
-  }
-
+  const config = req.app.get('config');
+  const JIRA_URL = config.jiraUrl;
+  const PROJECT_KEY = config.projectKey;
   const jira: JiraConnector = req.app.get('jira');
   let {status} = req.query;
   let statusQuery: string;
   if (status) {
     statusQuery = `AND status="${status}"`;
   } else {
-    statusQuery = `AND (status="Backlog" OR status="In Progress" OR status="Selected for Development")`
+    statusQuery = `AND (status="Backlog" OR status="In Progress" OR status="Done" OR status="Closed")`
   }
-  logger.debug(`retrieving backlog issues from jira project`);
+
+  logger.debug(`retrieving issues from jira project with query: ${statusQuery}`);
   let url = `https://${JIRA_URL}/rest/api/2/search?jql=project="${PROJECT_KEY}" ${statusQuery}&fields=id,key,status,assignee,summary,issuetype&maxResults=1000`;
   jira.makeRequest({url}, (error, body) => {
     if (error) return next(error);
@@ -33,6 +30,8 @@ issueRouter.get('/', (req, res, next) => {
 
 
 issueRouter.get('/:issueName', (req, res, next) => {
+  const config = req.app.get('config');
+  const JIRA_URL = config.jiraUrl;
   const {issueName} = req.params;
   const jira: JiraConnector = req.app.get('jira');
 
