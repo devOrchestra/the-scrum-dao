@@ -1,6 +1,7 @@
 import express = require('express');
 
-import logger from '../logger';
+import createLogger from '../logger';
+let logger = createLogger('express');
 import JiraConnector from '../jira';
 
 const issueRouter: express.Router = express.Router();

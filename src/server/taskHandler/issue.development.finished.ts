@@ -1,6 +1,7 @@
 import TaskHandler from "./index";
 import EthController from "../ethController";
-import logger from "../logger";
+import createLogger from '../logger';
+let logger = createLogger('handler');
 
 export default function (taskHandler: TaskHandler) {
   let {ethController}: {ethController: EthController} = taskHandler;

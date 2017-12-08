@@ -8,7 +8,8 @@ import Web3Subprovider = require("web3-provider-engine/subproviders/web3.js");
 import FilterSubprovider = require('web3-provider-engine/subproviders/filters.js');
 import Promise = require('bluebird');
 
-import logger from './logger';
+import createLogger from './logger';
+let logger = createLogger('ethController');
 
 class EthController {
 

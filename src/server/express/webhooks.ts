@@ -1,6 +1,7 @@
 import express = require('express');
 
-import logger from '../logger';
+import createLogger from '../logger';
+let logger = createLogger('express');
 import TaskScheduler from "../taskScheduler";
 
 const webhooksRouter: express.Router = express.Router();

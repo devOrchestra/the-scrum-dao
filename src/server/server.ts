@@ -3,11 +3,13 @@ import loadConfig = require('ini-config');
 import path = require('path');
 import cluster = require('cluster');
 
-import logger from './logger';
+import createLogger from './logger';
 import expressServer from './express';
 import JiraConnector from './jira';
 import TaskScheduler from './taskScheduler';
 import TaskHandler from "./taskHandler";
+
+let logger = createLogger();
 
 if (cluster.isMaster) {
   /**

@@ -1,6 +1,7 @@
 import kue = require('kue');
 
-import logger from './logger';
+import createLogger from './logger';
+let logger = createLogger('scheduler');
 
 class TaskScheduler {
 

@@ -1,7 +1,8 @@
 import express = require('express');
 import {waterfall} from 'async';
 
-import logger from '../logger';
+import createLogger from '../logger';
+let logger = createLogger('express');
 import JiraConnector from '../jira';
 
 const contributorRouter: express.Router = express.Router();

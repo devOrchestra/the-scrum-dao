@@ -6,7 +6,8 @@ import path = require('path');
 import issueRouter from './issues';
 import contributorRouter from './contributors';
 import webhooksRouter from './webhooks';
-import logger from '../logger';
+import createLogger from '../logger';
+let logger = createLogger('express');
 
 const app = express();
 let webAppPath: string = path.resolve('./', 'build/client');

@@ -1,11 +1,12 @@
 import kue = require('kue');
 
-import logger from '../logger';
 import TaskScheduler from "../taskScheduler";
 import getIssueCreatedHandler from './issue.created';
 import getDevelopmentFinishedHandler from './issue.development.finished';
 import getDevelopmentStartedHandler from './issue.development.started';
 import EthController from "../ethController";
+import createLogger from '../logger';
+let logger = createLogger('handler');
 
 class TaskHandler {
 
