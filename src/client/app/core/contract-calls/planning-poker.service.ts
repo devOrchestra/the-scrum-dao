@@ -1,15 +1,18 @@
 import { Injectable } from '@angular/core';
+import { Http } from '@angular/http';
 import gas_price from '../../../../../credentials/gas-price.json'
-import planningPoker_artifacts from '../../../../../build/contracts/PlanningPoker.json';
 import {default as contract} from 'truffle-contract'
+import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export class PlanningPokerService {
-  PlanningPoker = contract(planningPoker_artifacts);
+  PlanningPoker;
   planningPokerContractInstance;
   gasPrice = gas_price;
 
-  constructor() { }
+  constructor(
+    private _http: Http
+  ) { }
 
   vote(issue: string, points: number): Promise<any> {
     if (this.planningPokerContractInstance) {
@@ -51,10 +54,33 @@ export class PlanningPokerService {
   }
 
   deployPlanningPokerContract(): Promise<any> {
-    this.PlanningPoker.setProvider(web3.currentProvider);
-    return this.PlanningPoker.deployed()
+    return this.getArtifacts()
+      .then(artifacts => {
+        this.PlanningPoker = contract(artifacts);
+        this.PlanningPoker.setProvider(web3.currentProvider);
+        return this.PlanningPoker.deployed();
+      })
       .then(planningPokerContractInstanceResponse => {
         this.planningPokerContractInstance = planningPokerContractInstanceResponse;
+      })
+      .catch(err => {
+        console.error("An error occurred in planning-poker.service while trying to deployPlanningPokerContract", err);
       });
+  }
+
+  getArtifacts() {
+    return this._http.get(`/static/artifacts/PlanningPoker.json`)
+      .toPromise()
+      .then(this.sendResponse)
+      .catch(this.handleError);
+  }
+
+  private sendResponse(response: any): Promise<any> {
+    return Promise.resolve(JSON.parse(response._body));
+  }
+
+  private handleError(error: any): Promise<any> {
+    console.error('An error occurred (PlanningPokerService): ', error);
+    return Promise.reject(error.message || error._body || error);
   }
 }

@@ -1,15 +1,18 @@
 import { Injectable } from '@angular/core';
+import { Http } from '@angular/http';
 import gas_price from '../../../../../credentials/gas-price.json'
-import crowdsale_artifacts from '../../../../../build/contracts/Crowdsale.json';
 import {default as contract} from 'truffle-contract'
+import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export class CrowdsaleService {
-  Crowdsale = contract(crowdsale_artifacts);
+  Crowdsale;
   crowdsaleContractInstance;
   gasPrice = gas_price;
 
-  constructor() { }
+  constructor(
+    private _http: Http
+  ) { }
 
   getBuyOrder(index: number): Promise<any> {
     if (this.crowdsaleContractInstance) {
@@ -162,10 +165,33 @@ export class CrowdsaleService {
   }
 
   deployCrowdsaleContract(): Promise<any> {
-    this.Crowdsale.setProvider(web3.currentProvider);
-    return this.Crowdsale.deployed()
+    return this.getArtifacts()
+      .then(artifacts => {
+        this.Crowdsale = contract(artifacts);
+        this.Crowdsale.setProvider(web3.currentProvider);
+        return this.Crowdsale.deployed()
+      })
       .then(crowdsaleContractInstanceResponse => {
         this.crowdsaleContractInstance = crowdsaleContractInstanceResponse;
+      })
+      .catch(err => {
+        console.error("An error occurred in crowdsale.service while trying to get artifacts", err);
       });
+  }
+
+  getArtifacts() {
+    return this._http.get(`/static/artifacts/Crowdsale.json`)
+      .toPromise()
+      .then(this.sendResponse)
+      .catch(this.handleError);
+  }
+
+  private sendResponse(response: any): Promise<any> {
+    return Promise.resolve(JSON.parse(response._body));
+  }
+
+  private handleError(error: any): Promise<any> {
+    console.error('An error occurred (CrowdsaleService): ', error);
+    return Promise.reject(error.message || error._body || error);
   }
 }

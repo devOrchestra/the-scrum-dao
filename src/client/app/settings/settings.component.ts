@@ -49,7 +49,6 @@ export class SettingsComponent implements OnInit {
 
   constructor(
     private _titleService: Title,
-    private _workerService: WorkerService,
     private _projectService: ProjectService
   ) {
     const currentTitle = this._titleService.getTitle(),

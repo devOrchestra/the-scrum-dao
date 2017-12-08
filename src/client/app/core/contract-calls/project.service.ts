@@ -1,15 +1,18 @@
 import { Injectable } from '@angular/core';
+import { Http } from '@angular/http';
 import gas_price from '../../../../../credentials/gas-price.json'
-import project_artifacts from '../../../../../build/contracts/Project.json';
 import {default as contract} from 'truffle-contract'
+import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export class ProjectService {
-  Project = contract(project_artifacts);
+  Project;
   projectContractInstance;
   gasPrice = gas_price;
 
-  constructor() { }
+  constructor(
+    private _http: Http
+  ) { }
 
   decimals(): Promise<any> {
     if (this.projectContractInstance) {
@@ -184,10 +187,33 @@ export class ProjectService {
   }
 
   deployProjectContract(): Promise<any> {
-    this.Project.setProvider(web3.currentProvider);
-    return this.Project.deployed()
+    return this.getArtifacts()
+      .then(artifacts => {
+        this.Project = contract(artifacts);
+        this.Project.setProvider(web3.currentProvider);
+        return this.Project.deployed();
+      })
       .then(projectContractInstanceResponse => {
         this.projectContractInstance = projectContractInstanceResponse;
+      })
+      .catch(err => {
+        console.error("An error occurred in project.service while trying to deployProjectContract", err);
       });
+  }
+
+  getArtifacts() {
+    return this._http.get(`/static/artifacts/Project.json`)
+      .toPromise()
+      .then(this.sendResponse)
+      .catch(this.handleError);
+  }
+
+  private sendResponse(response: any): Promise<any> {
+    return Promise.resolve(JSON.parse(response._body));
+  }
+
+  private handleError(error: any): Promise<any> {
+    console.error('An error occurred (ProjectService): ', error);
+    return Promise.reject(error.message || error._body || error);
   }
 }
