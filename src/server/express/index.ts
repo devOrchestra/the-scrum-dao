@@ -6,6 +6,7 @@ import path = require('path');
 import issueRouter from './issues';
 import contributorRouter from './contributors';
 import webhooksRouter from './webhooks';
+import infoRouter from './info';
 import createLogger from '../logger';
 let logger = createLogger('express');
 
@@ -30,6 +31,7 @@ app.get('/api/ping', (req, res)=> {
 app.use('/api/issues', issueRouter);
 app.use('/api/contributors', contributorRouter);
 app.use('/api/webhooks', webhooksRouter);
+app.use('/api/info', infoRouter);
 
 app.use('/*', express.static(path.resolve(webAppPath, 'index.html')));
 
