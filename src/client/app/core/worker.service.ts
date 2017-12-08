@@ -6,35 +6,11 @@ import { IHolder } from "../shared/interfaces";
 
 @Injectable()
 export class WorkerService {
-  public workers: (string | number)[];
-  public workers$: BehaviorSubject<(string | number)[]> = new BehaviorSubject<(string | number)[]>(null);
-  public holders: IHolder[];
-  public holders$: BehaviorSubject<IHolder[]> = new BehaviorSubject<IHolder[]>(null);
   private totalBalance: number;
-
-  public workersAvatarsWereSet = false;
 
   constructor(
     private http: Http
   ) { }
-
-  public setWorkers(workers: (string | number)[]): void {
-    this.workers = workers;
-    this.workers$.next(workers);
-  }
-
-  public getWorkers(): Observable<(string | number)[]> {
-    return this.workers$.asObservable();
-  }
-
-  public setHolders(holders: IHolder[]): void {
-    this.holders = holders;
-    this.holders$.next(holders);
-  }
-
-  public getHolders(): Observable<IHolder[]> {
-    return this.holders$.asObservable();
-  }
 
   public setTotalBalance(balance: number): void {
     this.totalBalance = balance;

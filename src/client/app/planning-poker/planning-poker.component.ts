@@ -37,45 +37,58 @@ export class PlanningPokerComponent implements OnInit {
   ngOnInit() {
     const getVotingPromises = [];
     const getVotePromises = [];
-    this._jiraService.getIssues().subscribe(data => {
-      if (data) {
-        const tasks = _.cloneDeep(data);
+    let tasks;
+    this.getIssues()
+      .then(getIssuesResponse => {
+        tasks = _.cloneDeep(getIssuesResponse);
         tasks.forEach(item => {
           getVotingPromises.push(this._planningPokerService.getVoting(item.key));
           item.votingLoading = true;
           item.storyPointsLoading = true;
         });
-        Promise.all(getVotingPromises)
-          .then(getVotingPromisesResponse => {
-            getVotingPromisesResponse.forEach(item => {
-              item[1] = this.parseBigNumber(item[1]);
-              item[2] = this.parseBigNumber(item[2]);
-            });
-            tasks.forEach((item, i) => {
-              tasks[i].fields.votingWasNotCreated = getVotingPromisesResponse[i][0].length <= 0;
-              tasks[i].fields.votesCount = getVotingPromisesResponse[i][1];
-              tasks[i].fields.votesSum = getVotingPromisesResponse[i][2];
-              tasks[i].fields.isOpen = getVotingPromisesResponse[i][3];
-              tasks[i].fields.awardPaid = getVotingPromisesResponse[i][4];
-              getVotePromises.push(this._planningPokerService.getVote(tasks[i].key));
-            });
-            return Promise.all(getVotePromises)
-          })
-          .then(getVotePromisesResponse => {
-            getVotePromisesResponse.forEach((item, i) => {
-              tasks[i].fields.votesUserChoice = this.parseBigNumber(item);
-              tasks[i].votingLoading = false;
-              tasks[i].storyPointsLoading = false;
-            });
-            this.constructLinksToJira(tasks);
-            this.sortOpenedAndClosedTasks(tasks);
-            this.readyToDisplay = true;
-          })
-          .catch(err => {
-            console.error('An error occurred on planning-poker.component in "OnInit" block:', err);
-          });
-      }
-    })
+        return Promise.all(getVotingPromises);
+      })
+      .then(getVotingPromisesResponse => {
+        getVotingPromisesResponse.forEach(item => {
+          item[1] = this.parseBigNumber(item[1]);
+          item[2] = this.parseBigNumber(item[2]);
+        });
+        tasks.forEach((item, i) => {
+          tasks[i].fields.votingWasNotCreated = getVotingPromisesResponse[i][0].length <= 0;
+          tasks[i].fields.votesCount = getVotingPromisesResponse[i][1];
+          tasks[i].fields.votesSum = getVotingPromisesResponse[i][2];
+          tasks[i].fields.isOpen = getVotingPromisesResponse[i][3];
+          tasks[i].fields.awardPaid = getVotingPromisesResponse[i][4];
+          getVotePromises.push(this._planningPokerService.getVote(tasks[i].key));
+        });
+        return Promise.all(getVotePromises)
+      })
+      .then(getVotePromisesResponse => {
+        getVotePromisesResponse.forEach((item, i) => {
+          tasks[i].fields.votesUserChoice = this.parseBigNumber(item);
+          tasks[i].votingLoading = false;
+          tasks[i].storyPointsLoading = false;
+        });
+        this.constructLinksToJira(tasks);
+        this.sortOpenedAndClosedTasks(tasks);
+        this.readyToDisplay = true;
+      })
+      .catch(err => {
+        console.error('An error occurred on planning-poker.component in "OnInit" block:', err);
+      });
+  }
+
+  getIssues(): Promise<any> {
+    const issues: boolean[] = [];
+    return this._jiraService.getBacklogIssueListFromApi()
+      .then(response => {
+        issues.push(...response);
+        return this._jiraService.getClosedIssueListFromApi();
+      })
+      .then(getClosedIssueListFromApiResponse => {
+        issues.push(...getClosedIssueListFromApiResponse);
+        return issues;
+      })
   }
 
   changeStoryPointsUserChoice(item: IPlanningPokerTask, id: string, val: number): void {

@@ -5,7 +5,6 @@ import {CrowdsaleAddBuyOrderErrorDialogComponent} from './crowdsale-add-buy-orde
 import {MdDialog} from '@angular/material';
 import {CrowdsaleService} from '../core/contract-calls/crowdsale.service'
 import {ProjectService} from '../core/contract-calls/project.service'
-import {OrderService} from '../core/order.service'
 import {parseBigNumber, countDecimals, formatOrder, transformOrderToObject} from '../shared/methods'
 import {ControlFlashAnimation, ControlFlashAnimationReversed, ShortEnterAnimation} from '../shared/animations'
 import * as _ from 'lodash'
@@ -40,8 +39,7 @@ export class CrowdsaleComponent implements OnInit {
     private _titleService: Title,
     private dialog: MdDialog,
     private _projectService: ProjectService,
-    private _crowdsaleService: CrowdsaleService,
-    private _orderService: OrderService
+    private _crowdsaleService: CrowdsaleService
   ) {
     const currentTitle = this._titleService.getTitle(),
           neededTitle = 'Scrum DAO - Crowdsale';
@@ -53,35 +51,70 @@ export class CrowdsaleComponent implements OnInit {
   ngOnInit() {
     const sellOrderPromises = [];
     const buyOrderPromises = [];
-    this._orderService.getOrders().subscribe(ordersFromService => {
-      if (ordersFromService) {
-        console.log("ordersFromService", ordersFromService);
-        this.orders = ordersFromService;
-        ordersFromService.forEach(item => {
+    this.getOrders()
+      .then(getOrdersResponse => {
+        this.orders = getOrdersResponse;
+        getOrdersResponse.forEach(item => {
           if (!item.isOpen) {
-            console.log(item);
             this.closedOrders.push(item);
           }
         });
-        console.log("this.closedOrders", this.closedOrders);
         this.sellOrdersLength = _.filter(this.orders, order => order.orderType === 'sell').length;
         this.buyOrdersLength = _.filter(this.orders, order => order.orderType === 'buy').length;
-        this._projectService.decimals()
-          .then(decimalsResponse => {
-            this.decimals = this.countDecimals(decimalsResponse);
-            return this._projectService.symbol();
-          })
-          .then(symbolResponse => {
-            this.tokenSymbol = symbolResponse;
-            this.countVisibleOrdersLengthForOrderBook();
-            this.countVisibleOrdersLengthForClosedOrders();
-            this.readyToDisplay = true;
-          })
-          .catch(err => {
-            console.error('An error occurred on crowdsale.component in "OnInit" block:', err);
-          });
-      }
-    });
+        return this._projectService.symbol();
+      })
+      .then(symbolResponse => {
+        this.tokenSymbol = symbolResponse;
+        this.countVisibleOrdersLengthForOrderBook();
+        this.countVisibleOrdersLengthForClosedOrders();
+        this.readyToDisplay = true;
+      })
+      .catch(err => {
+        console.error('An error occurred on crowdsale.component in "OnInit" block:', err);
+      });
+  }
+
+  getOrders(): Promise<any> {
+    let sellOrdersLength: number,
+      buyOrdersLength: number;
+    const sellOrderPromises = [],
+      buyOrderPromises = [],
+      orders = [];
+    return this._projectService.decimals()
+      .then(decimalsResponse => {
+        this.decimals = this.countDecimals(decimalsResponse);
+        return this._crowdsaleService.getSellOrderLength();
+      })
+      .then(sellOrdersLengthResponse => {
+        sellOrdersLength = this.parseBigNumber(sellOrdersLengthResponse);
+        for (let i = 0; i < sellOrdersLength; i++) {
+          sellOrderPromises.push(this._crowdsaleService.getSellOrder(i));
+        }
+        return Promise.all(sellOrderPromises)
+      })
+      .then(sellOrders => {
+        sellOrders.forEach(item => {
+          item = this.formatOrder(item, 'sell', this.decimals);
+          item.value /= this.decimals;
+          orders.push(item);
+        });
+        return this._crowdsaleService.getBuyOrderLength();
+      })
+      .then(buyOrdersLengthResponse => {
+        buyOrdersLength = this.parseBigNumber(buyOrdersLengthResponse);
+        for (let i = 0; i < buyOrdersLength; i++) {
+          buyOrderPromises.push(this._crowdsaleService.getBuyOrder(i));
+        }
+        return Promise.all(buyOrderPromises)
+      })
+      .then(buyOrders => {
+        buyOrders.forEach(item => {
+          item = this.formatOrder(item, 'buy', this.decimals);
+          item.value /= this.decimals;
+          orders.push(item);
+        });
+        return orders;
+      })
   }
 
   openAddOrderDialog(): void {
@@ -298,7 +331,7 @@ export class CrowdsaleComponent implements OnInit {
   calculateFirstVisibleItemIndexForClosedOrders(): number {
     let index;
     let flag = true;
-    this.orders.forEach((item, i) => {
+    this.closedOrders.forEach((item, i) => {
       if (!item.isOpen && flag) {
         index = i;
         flag = !flag;

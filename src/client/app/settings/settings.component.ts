@@ -3,7 +3,7 @@ import {Title} from '@angular/platform-browser';
 import {WorkerService} from '../core/worker.service'
 import {ProjectService} from '../core/contract-calls/project.service'
 import {countDecimals, parseBigNumber} from '../shared/methods'
-import { ISettingsWorker } from "../shared/interfaces";
+import { ISettingsWorker, IContributor } from "../shared/interfaces";
 import {
   ShortEnterAnimation,
   FlashAnimation,
@@ -44,6 +44,9 @@ export class SettingsComponent implements OnInit {
   showWorkerWithSuchEthAddressExists = false;
   showCrowdsaleExists = false;
 
+  /* Helpers */
+  public workersFinal = [];
+
   constructor(
     private _titleService: Title,
     private _workerService: WorkerService,
@@ -72,11 +75,10 @@ export class SettingsComponent implements OnInit {
       })
       .then(decimalsResponse => {
         this.decimals = this.countDecimals(decimalsResponse);
-        this._workerService.getWorkers().subscribe(getWorkersResponse => {
-          if (getWorkersResponse) {
-            this.workers = this.formatWorkers(getWorkersResponse);
-          }
-        });
+        return this.getWorkers();
+      })
+      .then(getWorkersResponse => {
+        this.workers = this.formatWorkers(getWorkersResponse);
         web3.eth.getBalance(this.currentOracleAddress, (err, data) => {
           if (err) {
             console.error(err);
@@ -89,6 +91,33 @@ export class SettingsComponent implements OnInit {
       .catch(err => {
         console.error('An error occurred on settings.component in "OnInit" block:', err);
       });
+  }
+
+  getWorkers(): Promise<any> {
+    let workersLength;
+    return this._projectService.getWorkersLength()
+      .then(data => {
+        workersLength = this.parseBigNumber(data);
+        const workersPromises = [];
+        for (let i = 0; i < workersLength; i++) {
+          workersPromises.push(this._projectService.getWorker(i));
+        }
+        return Promise.all(workersPromises);
+      })
+      .then(value => {
+        this.workersFinal = value;
+        const balancePromises = [];
+        for (let i = 0; i < workersLength; i++) {
+          balancePromises.push(this._projectService.balanceOf(value[i][0]));
+        }
+        return Promise.all(balancePromises);
+      })
+      .then(response => {
+        this.workersFinal.forEach((item, i) => {
+          item.push(this.parseBigNumber(response[i]));
+        });
+        return this.workersFinal;
+      })
   }
 
   addWorker(address: string): void {

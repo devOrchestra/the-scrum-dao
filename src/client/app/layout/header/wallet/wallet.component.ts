@@ -24,7 +24,6 @@ export class WalletComponent implements OnInit {
   tokenSymbol: string;
   readyToDisplay = false;
   sendTokensObj: { address: string, value: string, fadeAnimation: string } = {address: "", value: "", fadeAnimation: ""};
-  workersAddresses: string[] = [];
   walletTokensAmountChange: number;
   decimals: number;
   showNegativeBalanceChange = false;
@@ -40,52 +39,45 @@ export class WalletComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    let addressesWereSet = false;
-    this._workerService.getWorkers().subscribe(workers => {
-      if (!addressesWereSet && workers) {
-        this.workersAddresses = workers.map(worker => worker[0]);
-        addressesWereSet = true;
-        this._projectService.balanceOf(web3.eth.accounts[0])
-          .then(balanceResponse => {
-            this.currentBalance.balance = this.parseBigNumber(balanceResponse);
-            return this._projectService.symbol();
-          })
-          .then(symbol => {
-            this.tokenSymbol = symbol;
-            return this._projectService.decimals();
-          })
-          .then(decimalsResponse => {
-            this.decimals = this.countDecimals(decimalsResponse);
-            this._walletStateService.getLastAndCurrentBalances().subscribe(currentBalances => {
-              this._web3Service.getNeedToShowAccountChange().subscribe(needToShowAccountChange => {
-                const balanceDifference = currentBalances.currentBalance - currentBalances.lastBalanceFromStorage;
-                if (balanceDifference && balanceDifference !== 0) {
-                  if (currentBalances.accountWasNotChanged) {
-                    this.currentBalance.balance = currentBalances.lastBalanceFromStorage;
-                  } else {
-                    this.currentBalance.balance = this.currentBalance.balance / this.decimals;
-                  }
-                  this.readyToDisplay = true;
-                  if (needToShowAccountChange) { this.displayAccountChange() }
-                  this.showBalanceChange(
-                    currentBalances.currentBalance,
-                    balanceDifference,
-                    false,
-                    balanceDifference > 0
-                  );
-                } else {
-                  this.currentBalance.balance = this.currentBalance.balance / this.decimals;
-                  this.readyToDisplay = true;
-                  if (needToShowAccountChange) { this.displayAccountChange() }
-                }
-              });
-            })
-          })
-          .catch(err => {
-            console.error('An error occurred on wallet.component in "OnInit" block:', err);
+    this._projectService.balanceOf(web3.eth.accounts[0])
+      .then(balanceResponse => {
+        this.currentBalance.balance = this.parseBigNumber(balanceResponse);
+        return this._projectService.symbol();
+      })
+      .then(symbol => {
+        this.tokenSymbol = symbol;
+        return this._projectService.decimals();
+      })
+      .then(decimalsResponse => {
+        this.decimals = this.countDecimals(decimalsResponse);
+        this._walletStateService.getLastAndCurrentBalances().subscribe(currentBalances => {
+          this._web3Service.getNeedToShowAccountChange().subscribe(needToShowAccountChange => {
+            const balanceDifference = currentBalances.currentBalance - currentBalances.lastBalanceFromStorage;
+            if (balanceDifference && balanceDifference !== 0) {
+              if (currentBalances.accountWasNotChanged) {
+                this.currentBalance.balance = currentBalances.lastBalanceFromStorage;
+              } else {
+                this.currentBalance.balance = this.currentBalance.balance / this.decimals;
+              }
+              this.readyToDisplay = true;
+              if (needToShowAccountChange) { this.displayAccountChange() }
+              this.showBalanceChange(
+                currentBalances.currentBalance,
+                balanceDifference,
+                false,
+                balanceDifference > 0
+              );
+            } else {
+              this.currentBalance.balance = this.currentBalance.balance / this.decimals;
+              this.readyToDisplay = true;
+              if (needToShowAccountChange) { this.displayAccountChange() }
+            }
           });
-      }
-    });
+        })
+      })
+      .catch(err => {
+        console.error('An error occurred on wallet.component in "OnInit" block:', err);
+      });
   }
 
   sendTokens(): void {

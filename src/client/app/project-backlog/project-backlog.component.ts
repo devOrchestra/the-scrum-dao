@@ -46,60 +46,73 @@ export class ProjectBacklogComponent implements OnInit {
 
 
   ngOnInit() {
-    this._jiraService.getIssues().subscribe(data => {
-      if (data) {
-        const getVotingBacklogPromises = [],
-              getVotingPlanningPokerPromises = [],
-              tasks: IBacklogTask[] = _.cloneDeep(_.filter(data, (o) => o.fields.status.name === "Backlog"));
-        this._projectService.decimals()
-          .then(decimalsResponse => {
-            this.decimals = this.countDecimals(decimalsResponse);
-            tasks.forEach(item => {
-              getVotingBacklogPromises.push(this._projectBacklogService.getVoting(item.key));
-              getVotingPlanningPokerPromises.push(this._planningPokerService.getVoting(item.key));
-              item.storyPointsLoading = true;
-              item.totalPercentsLoading = true;
-            });
-            const getVoteBacklog = [];
-            tasks.forEach(item => {
-              getVoteBacklog.push(this._projectBacklogService.getVote(item.key));
-            });
-            return Promise.all(getVoteBacklog);
-          })
-          .then(getVoteResponse => {
-            getVoteResponse.forEach((item, i) => {
-              tasks[i].userHasAlreadyVoted = this.parseBigNumber(item[0]) / this.decimals;
-            });
-            return Promise.all(getVotingBacklogPromises)
-          })
-          .then(getVotingBacklogResponse => {
-            for (let i = 0; i < getVotingBacklogResponse.length; i++) {
-              tasks[i].fields.votingWasNotCreated = getVotingBacklogResponse[i][0].length <= 0;
-              tasks[i].fields.totalSupply = this.parseBigNumber(getVotingBacklogResponse[i][1]);
-              tasks[i].fields.votingCount = this.parseBigNumber(getVotingBacklogResponse[i][2]);
-              tasks[i].fields.isOpen = getVotingBacklogResponse[i][3];
-            }
-            return Promise.all(getVotingPlanningPokerPromises)
-          })
-          .then(getVotingPlanningPokerResponse => {
-            for (let i = 0; i < getVotingPlanningPokerResponse.length; i++) {
-              tasks[i].fields.storyPoints = this.countStoryPoints(
-                getVotingPlanningPokerResponse[i][1],
-                getVotingPlanningPokerResponse[i][2]
-              );
-              tasks[i].storyPointsLoading = false;
-              tasks[i].totalPercentsLoading = false;
-              tasks[i].bgcEasingApplied = true;
-            }
-            this.constructLinksToJira(tasks);
-            this.sortOpenedAndClosedTasks(tasks);
-            this.readyToDisplay = true;
-          })
-          .catch(err => {
-            console.error('An error occurred on project-backlog.component in "OnInit" block:', err);
-          });
-      }
-    })
+    const getVotingBacklogPromises = [],
+      getVotingPlanningPokerPromises = [];
+    let tasks: IBacklogTask[];
+    this.getIssues()
+      .then(getIssuesResponse => {
+        tasks = _.cloneDeep(_.filter(getIssuesResponse, (o) => o.fields.status.name === "Backlog"));
+        return this._projectService.decimals();
+      })
+      .then(decimalsResponse => {
+        this.decimals = this.countDecimals(decimalsResponse);
+        tasks.forEach(item => {
+          getVotingBacklogPromises.push(this._projectBacklogService.getVoting(item.key));
+          getVotingPlanningPokerPromises.push(this._planningPokerService.getVoting(item.key));
+          item.storyPointsLoading = true;
+          item.totalPercentsLoading = true;
+        });
+        const getVoteBacklog = [];
+        tasks.forEach(item => {
+          getVoteBacklog.push(this._projectBacklogService.getVote(item.key));
+        });
+        return Promise.all(getVoteBacklog);
+      })
+      .then(getVoteResponse => {
+        getVoteResponse.forEach((item, i) => {
+          tasks[i].userHasAlreadyVoted = this.parseBigNumber(item[0]) / this.decimals;
+        });
+        return Promise.all(getVotingBacklogPromises)
+      })
+      .then(getVotingBacklogResponse => {
+        for (let i = 0; i < getVotingBacklogResponse.length; i++) {
+          tasks[i].fields.votingWasNotCreated = getVotingBacklogResponse[i][0].length <= 0;
+          tasks[i].fields.totalSupply = this.parseBigNumber(getVotingBacklogResponse[i][1]);
+          tasks[i].fields.votingCount = this.parseBigNumber(getVotingBacklogResponse[i][2]);
+          tasks[i].fields.isOpen = getVotingBacklogResponse[i][3];
+        }
+        return Promise.all(getVotingPlanningPokerPromises)
+      })
+      .then(getVotingPlanningPokerResponse => {
+        for (let i = 0; i < getVotingPlanningPokerResponse.length; i++) {
+          tasks[i].fields.storyPoints = this.countStoryPoints(
+            getVotingPlanningPokerResponse[i][1],
+            getVotingPlanningPokerResponse[i][2]
+          );
+          tasks[i].storyPointsLoading = false;
+          tasks[i].totalPercentsLoading = false;
+          tasks[i].bgcEasingApplied = true;
+        }
+        this.constructLinksToJira(tasks);
+        this.sortOpenedAndClosedTasks(tasks);
+        this.readyToDisplay = true;
+      })
+      .catch(err => {
+        console.error('An error occurred on project-backlog.component in "OnInit" block:', err);
+      });
+  }
+
+  getIssues(): Promise<any> {
+    const issues: boolean[] = [];
+    return this._jiraService.getBacklogIssueListFromApi()
+      .then(response => {
+        issues.push(...response);
+        return this._jiraService.getClosedIssueListFromApi();
+      })
+      .then(getClosedIssueListFromApiResponse => {
+        issues.push(...getClosedIssueListFromApiResponse);
+        return issues;
+      })
   }
 
   voteFor(item: IBacklogTask, id: string, index: number, isOpenForVote: boolean): void {

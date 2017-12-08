@@ -12,17 +12,8 @@ export class JiraService {
     private http: Http
   ) { }
 
-  setIssues(issues: any[]): void {
-    this.issues = issues;
-    this.issues$.next(issues);
-  }
-
-  getIssues(): Observable<any[]> {
-    return this.issues$.asObservable();
-  }
-
-  getIssueListFromApi(): Promise<any> {
-    return this.http.get(`/api/issues`)
+  getBacklogIssueListFromApi(): Promise<any> {
+    return this.http.get(`/api/issues?status=Backlog`)
       .toPromise()
       .then(this.sendResponse)
       .catch(this.handleError);
