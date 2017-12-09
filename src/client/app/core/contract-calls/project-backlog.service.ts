@@ -6,79 +6,53 @@ import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export class ProjectBacklogService {
-  ProjectBacklog;
-  projectBacklogContractInstance;
   gasPrice = gas_price;
+  getProjectBacklogContractInstance: Promise<any>;
 
-  constructor(
-    private _http: Http
-  ) { }
+  constructor(private _http: Http) {
+    this.getProjectBacklogContractInstance = this.deployProjectBacklogContract();
+  }
 
   addVoting(track: string): Promise<any> {
-    if (this.projectBacklogContractInstance) {
-      return this.projectBacklogContractInstance.addVoting(track, {
-        gas: this.gasPrice.productBacklogContract.addVoting * 2,
-        from: web3.eth.accounts[0]
-      });
-    } else {
-      return this.deployProjectBacklogContract()
-        .then(() => {
-          return this.projectBacklogContractInstance.addVoting(track, {
-            gas: this.gasPrice.productBacklogContract.addVoting * 2,
-            from: web3.eth.accounts[0]
-          });
+    return this.getProjectBacklogContractInstance
+      .then(instance => {
+        return instance.addVoting(track, {
+          gas: this.gasPrice.productBacklogContract.addVoting * 2,
+          from: web3.eth.accounts[0]
         });
-    }
+      });
   }
 
   vote(issue: string): Promise<any> {
-    if (this.projectBacklogContractInstance) {
-      return this.projectBacklogContractInstance.vote(issue, {
-        gas: this.gasPrice.productBacklogContract.vote * 2,
-        from: web3.eth.accounts[0]
-      });
-    } else {
-      return this.deployProjectBacklogContract()
-        .then(() => {
-          return this.projectBacklogContractInstance.vote(issue, {
-            gas: this.gasPrice.productBacklogContract.vote * 2,
-            from: web3.eth.accounts[0]
-          });
+    return this.getProjectBacklogContractInstance
+      .then(instance => {
+        return instance.vote(issue, {
+          gas: this.gasPrice.productBacklogContract.vote * 2,
+          from: web3.eth.accounts[0]
         });
-    }
+      });
   }
 
   getVote(issue: string): Promise<any> {
-    if (this.projectBacklogContractInstance) {
-      return this.projectBacklogContractInstance.getVote(issue, {from: web3.eth.accounts[0]});
-    } else {
-      return this.deployProjectBacklogContract()
-        .then(() => {
-          return this.projectBacklogContractInstance.getVote(issue, {from: web3.eth.accounts[0]});
-        });
-    }
+    return this.getProjectBacklogContractInstance
+      .then(instance => {
+        return instance.getVote(issue, {from: web3.eth.accounts[0]});
+      });
   }
 
   getVoting(issue: string): Promise<any> {
-    if (this.projectBacklogContractInstance) {
-      return this.projectBacklogContractInstance.getVoting(issue);
-    } else {
-      return this.deployProjectBacklogContract()
-        .then(() => {
-          return this.projectBacklogContractInstance.getVoting(issue);
-        });
-    }
+    return this.getProjectBacklogContractInstance
+      .then(instance => {
+        return instance.getVoting(issue);
+      });
   }
 
   deployProjectBacklogContract(): Promise<any> {
     return this.getArtifacts()
       .then(artifacts => {
-        this.ProjectBacklog = contract(artifacts);
-        this.ProjectBacklog.setProvider(web3.currentProvider);
-        return this.ProjectBacklog.deployed()
-      })
-      .then(projectBacklogContractInstanceResponse => {
-        this.projectBacklogContractInstance = projectBacklogContractInstanceResponse;
+        const ProjectBacklog = contract(artifacts);
+        ProjectBacklog.setProvider(web3.currentProvider);
+        return ProjectBacklog.deployed()
       })
       .catch(err => {
         console.error("An error occurred in crowdsale.service while trying to deployProjectBacklogContract", err);

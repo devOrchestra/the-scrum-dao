@@ -6,62 +6,43 @@ import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export class PlanningPokerService {
-  PlanningPoker;
-  planningPokerContractInstance;
   gasPrice = gas_price;
+  getPlanningPokerContractInstance: Promise<any>;
 
-  constructor(
-    private _http: Http
-  ) { }
+  constructor(private _http: Http) {
+    this.getPlanningPokerContractInstance = this.deployPlanningPokerContract();
+  }
 
   vote(issue: string, points: number): Promise<any> {
-    if (this.planningPokerContractInstance) {
-      return this.planningPokerContractInstance.vote(issue, points, {
-        from: web3.eth.accounts[0],
-        gas: this.gasPrice.planningPokerContract.vote * 2
-      });
-    } else {
-      return this.deployPlanningPokerContract()
-        .then(() => {
-          return this.planningPokerContractInstance.vote(issue, points, {
-            from: web3.eth.accounts[0],
-            gas: this.gasPrice.planningPokerContract.vote * 2
-          });
+    return this.getPlanningPokerContractInstance
+      .then(instance => {
+        return instance.vote(issue, points, {
+          from: web3.eth.accounts[0],
+          gas: this.gasPrice.planningPokerContract.vote * 2
         });
-    }
+      });
   }
 
   getVote(issue: string): Promise<any> {
-    if (this.planningPokerContractInstance) {
-      return this.planningPokerContractInstance.getVote(issue, {from: web3.eth.accounts[0]})
-    } else {
-      return this.deployPlanningPokerContract()
-        .then(() => {
-          return this.planningPokerContractInstance.getVote(issue, {from: web3.eth.accounts[0]})
-        });
-    }
+    return this.getPlanningPokerContractInstance
+      .then(instance => {
+        return instance.getVote(issue, {from: web3.eth.accounts[0]});
+      })
   }
 
   getVoting(issue: string): Promise<any> {
-    if (this.planningPokerContractInstance) {
-      return this.planningPokerContractInstance.getVoting(issue);
-    } else {
-      return this.deployPlanningPokerContract()
-        .then(() => {
-          return this.planningPokerContractInstance.getVoting(issue);
-        });
-    }
+    return this.getPlanningPokerContractInstance
+      .then(instance => {
+        return instance.getVoting(issue);
+      })
   }
 
   deployPlanningPokerContract(): Promise<any> {
     return this.getArtifacts()
       .then(artifacts => {
-        this.PlanningPoker = contract(artifacts);
-        this.PlanningPoker.setProvider(web3.currentProvider);
-        return this.PlanningPoker.deployed();
-      })
-      .then(planningPokerContractInstanceResponse => {
-        this.planningPokerContractInstance = planningPokerContractInstanceResponse;
+        const PlanningPoker = contract(artifacts);
+        PlanningPoker.setProvider(web3.currentProvider);
+        return PlanningPoker.deployed();
       })
       .catch(err => {
         console.error("An error occurred in planning-poker.service while trying to deployPlanningPokerContract", err);

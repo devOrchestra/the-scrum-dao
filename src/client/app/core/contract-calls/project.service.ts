@@ -6,195 +6,126 @@ import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export class ProjectService {
-  Project;
-  projectContractInstance;
   gasPrice = gas_price;
+  getProjectContractInstance: Promise<any>;
 
-  constructor(
-    private _http: Http
-  ) { }
+  constructor(private _http: Http) {
+    this.getProjectContractInstance = this.deployProjectContract();
+  }
 
   decimals(): Promise<any> {
-    if (this.projectContractInstance) {
-      return this.projectContractInstance.decimals();
-    } else {
-      return this.deployProjectContract()
-        .then(() => {
-          return this.projectContractInstance.decimals();
-        });
-    }
+    return this.getProjectContractInstance
+      .then(instance => {
+        return instance.decimals();
+      });
   }
 
   symbol(): Promise<any> {
-    if (this.projectContractInstance) {
-      return this.projectContractInstance.symbol();
-    } else {
-      return this.deployProjectContract()
-        .then(() => {
-          return this.projectContractInstance.symbol();
-        });
-    }
+    return this.getProjectContractInstance
+      .then(instance => {
+        return instance.symbol();
+      });
   }
 
   totalSupply(): Promise<any> {
-    if (this.projectContractInstance) {
-      return this.projectContractInstance.totalSupply();
-    } else {
-      return this.deployProjectContract()
-        .then(() => {
-          return this.projectContractInstance.totalSupply();
-        });
-    }
+    return this.getProjectContractInstance
+      .then(instance => {
+        return instance.totalSupply();
+      });
   }
 
   trustedOracle(): Promise<any> {
-    if (this.projectContractInstance) {
-      return this.projectContractInstance.trustedOracle();
-    } else {
-      return this.deployProjectContract()
-        .then(() => {
-          return this.projectContractInstance.trustedOracle();
-        });
-    }
+    return this.getProjectContractInstance
+      .then(instance => {
+        return instance.trustedOracle();
+      });
   }
 
   crowdsale(): Promise<any> {
-    if (this.projectContractInstance) {
-      return this.projectContractInstance.crowdsale();
-    } else {
-      return this.deployProjectContract()
-        .then(() => {
-          return this.projectContractInstance.crowdsale();
-        });
-    }
+    return this.getProjectContractInstance
+      .then(instance => {
+        return instance.crowdsale();
+      });
   }
 
   balanceOf(address?: string): Promise<any> {
-    if (this.projectContractInstance) {
-      return address ? this.projectContractInstance.balanceOf(address) : this.projectContractInstance.balanceOf(web3.eth.accounts[0]);
-    } else {
-      return this.deployProjectContract()
-        .then(() => {
-          return address ? this.projectContractInstance.balanceOf(address) : this.projectContractInstance.balanceOf(web3.eth.accounts[0]);
-        });
-    }
+    return this.getProjectContractInstance
+      .then(instance => {
+        return address ? instance.balanceOf(address) : instance.balanceOf(web3.eth.accounts[0]);
+      });
   }
 
   transfer(toAddress: string, value: number): Promise<any> {
-    if (this.projectContractInstance) {
-      return this.projectContractInstance.transfer(toAddress, value, {
-        gas: this.gasPrice.projectContract.transfer * 2,
-        from: web3.eth.accounts[0]
-      });
-    } else {
-      return this.deployProjectContract()
-        .then(() => {
-          return this.projectContractInstance.transfer(toAddress, value, {
-            gas: this.gasPrice.projectContract.transfer * 2,
-            from: web3.eth.accounts[0]
-          });
+    return this.getProjectContractInstance
+      .then(instance => {
+        return instance.transfer(toAddress, value, {
+          gas: this.gasPrice.projectContract.transfer * 2,
+          from: web3.eth.accounts[0]
         });
-    }
+      });
   }
 
   addWorker(address: string, login: string): Promise<any> {
-    if (this.projectContractInstance) {
-      return this.projectContractInstance.addWorker(address, login, {from: web3.eth.accounts[0]});
-    } else {
-      return this.deployProjectContract()
-        .then(() => {
-          return this.projectContractInstance.addWorker(address, login, {from: web3.eth.accounts[0]});
-        });
-    }
+    return this.getProjectContractInstance
+      .then(instance => {
+        return instance.addWorker(address, login, {from: web3.eth.accounts[0]});
+      });
   }
 
   getWorkersLength(): Promise<any> {
-    if (this.projectContractInstance) {
-      return this.projectContractInstance.getWorkersLength.call();
-    } else {
-      return this.deployProjectContract()
-        .then(() => {
-          return this.projectContractInstance.getWorkersLength.call();
-        });
-    }
+    return this.getProjectContractInstance
+      .then(instance => {
+        return instance.getWorkersLength.call();
+      });
   }
 
   getHoldersLength(): Promise<any> {
-    if (this.projectContractInstance) {
-      return this.projectContractInstance.getHoldersLength();
-    } else {
-      return this.deployProjectContract()
-        .then(() => {
-          return this.projectContractInstance.getHoldersLength();
-        });
-    }
+    return this.getProjectContractInstance
+      .then(instance => {
+        return instance.getHoldersLength();
+      });
   }
 
   holders(index: number): Promise<any> {
-    if (this.projectContractInstance) {
-      return this.projectContractInstance.holders(index);
-    } else {
-      return this.deployProjectContract()
-        .then(() => {
-          return this.projectContractInstance.holders(index);
-        });
-    }
+    return this.getProjectContractInstance
+      .then(instance => {
+        return instance.holders(index);
+      });
   }
 
   getWorker(index: number): Promise<any> {
-    if (this.projectContractInstance) {
-      return this.projectContractInstance.getWorker.call(index);
-    } else {
-      return this.deployProjectContract()
-        .then(() => {
-          return this.projectContractInstance.getWorker.call(index);
-        });
-    }
+    return this.getProjectContractInstance
+      .then(instance => {
+        return instance.getWorker.call(index);
+      });
   }
 
   initCrowdsale(crowdsaleAddress: string): Promise<any> {
-    if (this.projectContractInstance) {
-      return this.projectContractInstance.initCrowdsale(crowdsaleAddress, {
-        from: web3.eth.accounts[0],
-        gas: this.gasPrice.projectContract.initCrowdsale * 2
-      });
-    } else {
-      return this.deployProjectContract()
-        .then(() => {
-          return this.projectContractInstance.initCrowdsale(crowdsaleAddress, {
-            from: web3.eth.accounts[0],
-            gas: this.gasPrice.projectContract.initCrowdsale * 2
-          });
+    return this.getProjectContractInstance
+      .then(instance => {
+        return instance.initCrowdsale(crowdsaleAddress, {
+          from: web3.eth.accounts[0],
+          gas: this.gasPrice.projectContract.initCrowdsale * 2
         });
-    }
+      });
   }
 
   initPlanningPoker(planningPokerAddress: string): Promise<any> {
-    if (this.projectContractInstance) {
-      return this.projectContractInstance.initPlanningPoker(planningPokerAddress, {
-        from: web3.eth.accounts[0],
-        gas: this.gasPrice.projectContract.initPlanningPoker * 2
-      });
-    } else {
-      return this.deployProjectContract()
-        .then(() => {
-          return this.projectContractInstance.initPlanningPoker(planningPokerAddress, {
-            from: web3.eth.accounts[0],
-            gas: this.gasPrice.projectContract.initPlanningPoker * 2
-          });
+    return this.getProjectContractInstance
+      .then(instance => {
+        return instance.initPlanningPoker(planningPokerAddress, {
+          from: web3.eth.accounts[0],
+          gas: this.gasPrice.projectContract.initPlanningPoker * 2
         });
-    }
+      });
   }
 
   deployProjectContract(): Promise<any> {
     return this.getArtifacts()
       .then(artifacts => {
-        this.Project = contract(artifacts);
-        this.Project.setProvider(web3.currentProvider);
-        return this.Project.deployed();
-      })
-      .then(projectContractInstanceResponse => {
-        this.projectContractInstance = projectContractInstanceResponse;
+        const Project = contract(artifacts);
+        Project.setProvider(web3.currentProvider);
+        return Project.deployed();
       })
       .catch(err => {
         console.error("An error occurred in project.service while trying to deployProjectContract", err);

@@ -13,7 +13,7 @@ export class Web3ResolverService {
   ) { }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): void {
-    if (!web3.isConnected() || (!web3 || !web3.eth.accounts.length)) {
+    if (!web3.isConnected()) {
       sessionStorage.setItem("connectionStateIsSet", JSON.stringify({connectionStateIsSet: false}));
       this._web3Service.setConnectionState("not connected");
       this.connectionStateAfterInit = "not connected";
