@@ -120,6 +120,10 @@ export class ProjectService {
       });
   }
 
+  initWatchingEvents() {
+    return this.getProjectContractInstance;
+  }
+
   deployProjectContract(): Promise<any> {
     return this.getArtifacts()
       .then(artifacts => {

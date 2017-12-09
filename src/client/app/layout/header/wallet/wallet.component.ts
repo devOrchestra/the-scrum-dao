@@ -1,11 +1,10 @@
 import { Component, OnInit, ViewChild, QueryList } from '@angular/core';
 import { MdMenuTrigger } from '@angular/material'
-import { WorkerService } from '../../../core/worker.service'
 import { ProjectService } from '../../../core/contract-calls/project.service'
 import { Web3Service } from '../../../core/web3.service'
 import { WalletStateService } from '../../../core/wallet-state.service'
 import { parseBigNumber, countDecimals } from '../../../shared/methods'
-import {MediumEnterLeaveAnimation, MediumControlledEnterLeaveAnimation} from '../../../shared/animations'
+import { MediumEnterLeaveAnimation, MediumControlledEnterLeaveAnimation } from '../../../shared/animations'
 import anime from 'animejs'
 
 @Component({
@@ -30,9 +29,9 @@ export class WalletComponent implements OnInit {
   showPositiveBalanceChange = false;
   showAccountChange = false;
   sendTokensLoading = false;
+  accountChangeWasShown = false;
 
   constructor(
-    private _workerService: WorkerService,
     private _walletStateService: WalletStateService,
     private _projectService: ProjectService,
     private _web3Service: Web3Service
@@ -60,7 +59,10 @@ export class WalletComponent implements OnInit {
                 this.currentBalance.balance = this.currentBalance.balance / this.decimals;
               }
               this.readyToDisplay = true;
-              if (needToShowAccountChange) { this.displayAccountChange() }
+              if (needToShowAccountChange && !this.accountChangeWasShown) {
+                this.accountChangeWasShown = true;
+                this.displayAccountChange()
+              }
               this.showBalanceChange(
                 currentBalances.currentBalance,
                 balanceDifference,
@@ -70,7 +72,10 @@ export class WalletComponent implements OnInit {
             } else {
               this.currentBalance.balance = this.currentBalance.balance / this.decimals;
               this.readyToDisplay = true;
-              if (needToShowAccountChange) { this.displayAccountChange() }
+              if (needToShowAccountChange && !this.accountChangeWasShown) {
+                this.accountChangeWasShown = true;
+                this.displayAccountChange()
+              }
             }
           });
         })
@@ -92,7 +97,10 @@ export class WalletComponent implements OnInit {
           const balanceDifference = Number(this.sendTokensObj.value);
           this.walletTokensAmountChange = balanceDifference;
           const newBalance = this.currentBalance.balance - balanceDifference;
-          this.showBalanceChange(newBalance, balanceDifference, true, false);
+          this.sendTokensObj.address = "";
+          this.sendTokensObj.value = "";
+          this.sendTokensMenuTrigger.closeMenu();
+          this.sendTokensLoading = false;
         })
         .catch(err => {
           console.error('An error occurred on wallet.component in "sendTokens":', err);
@@ -103,12 +111,6 @@ export class WalletComponent implements OnInit {
 
   showBalanceChange(newBalance: number, balanceDifference: number, isAfterSend: boolean, positive: boolean): void {
     this.walletTokensAmountChange = balanceDifference < 0 ? balanceDifference * -1 : balanceDifference;
-    if (isAfterSend) {
-      this.sendTokensObj.address = "";
-      this.sendTokensObj.value = "";
-      this.sendTokensMenuTrigger.closeMenu();
-      this.sendTokensLoading = false;
-    }
     this.sendTokensObj.fadeAnimation = "animate";
     setTimeout(() => {
       this.sendTokensObj.fadeAnimation = "";
@@ -133,12 +135,12 @@ export class WalletComponent implements OnInit {
       setTimeout(() => {
         this.showNegativeBalanceChange = false;
       }, 10000);
-      sessionStorage.setItem("lastBalance", JSON.stringify({lastBalance: newBalance}));
+      localStorage.setItem("lastBalance", JSON.stringify({lastBalance: newBalance, lastAccount: web3.eth.accounts[0]}));
     }
   }
 
   displayAccountChange(): void {
-    if (web3.eth.accounts[0]) {sessionStorage.setItem("lastAddress", JSON.stringify({lastAddress: web3.eth.accounts[0]}))}
+    sessionStorage.setItem("lastAddress", JSON.stringify({lastAddress: web3.eth.accounts[0]}));
     setTimeout(() => {
       this.showAccountChange = true;
     }, 1000);
