@@ -1,13 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
-import { BehaviorSubject, Observable } from "rxjs";
 import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export class JiraService {
-  public issues;
-  public issues$: BehaviorSubject<any[]> = new BehaviorSubject<any[]>(null);
-
   constructor(
     private http: Http
   ) { }
@@ -21,6 +17,13 @@ export class JiraService {
 
   getClosedIssueListFromApi(): Promise<any> {
     return this.http.get(`/api/issues?status=Closed`)
+      .toPromise()
+      .then(this.sendResponse)
+      .catch(this.handleError);
+  }
+
+  getProjectInfo(): Promise<any> {
+    return this.http.get(`/api/info`)
       .toPromise()
       .then(this.sendResponse)
       .catch(this.handleError);

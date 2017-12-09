@@ -1,7 +1,7 @@
 <div fxLayout="column" fxLayoutAlign="start start" *ngIf="readyToDisplay">
   <div fxLayout="row" fxLayoutAlign="center center" class="jira-container">
     <a fxLayout="row" fxLayoutAlign="center end" class="jira unselectable" target="_blank"
-       href="https://devorchestra.atlassian.net/projects/SD/issues/">
+       href="{{linkToJiraProject}}">
       <div class="inner-jira-logo"></div>
       <h2 class="unselectable jira-text">Browse in JIRA</h2>
     </a>
