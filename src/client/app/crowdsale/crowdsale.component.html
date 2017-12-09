@@ -16,7 +16,7 @@
     <div fxLayout="column" class="orders">
       <div fxLayout="row" fxFlex="100" class="item-wrapper unselectable pointer transition-fast"
            *ngFor="let order of orders | sortBuyAndSellOrdersByTypeAndPriceDescendingPipe; let index = index;"
-           (click)="tradeOrder(order.orderType, order.id, order.value * order.price)">
+           (click)="tradeOrder(order.orderType, order.id, order.value * order.price, currentOwner === order.owner)">
         <div fxLayout="row" fxFlex="100" class="item unselectable pointer item-background-transition-fast"
              *ngIf="order.isOpen && !order.isLocked" (mouseenter)="styleRow($event)" (mouseleave)="styleRow($event)"
              [@controlFlashAnimation]="order.flashAnimation"

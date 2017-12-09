@@ -13,6 +13,7 @@ import { ContributorListComponent } from '../contributor-list/contributor-list.c
 import { CrowdsaleComponent } from '../crowdsale/crowdsale.component';
 import { CrowdsaleAddOrderDialogComponent } from '../crowdsale/crowdsale-add-order-dialog/crowdsale-add-order-dialog.component';
 import { CrowdsaleAddBuyOrderErrorDialogComponent } from '../crowdsale/crowdsale-add-buy-order-error-dialog/crowdsale-add-buy-order-error-dialog.component';
+import { CrowdsaleCanNotTradeOrderDialogComponent } from '../crowdsale/crowdsale-can-not-trade-order-dialog/crowdsale-can-not-trade-order-dialog.component';
 import { ChatbroComponent } from './header/chatbro/chatbro.component';
 import { WalletComponent } from './header/wallet/wallet.component'
 import { LinkToJiraComponent } from './header/link-to-jira/link-to-jira.component';
@@ -39,6 +40,7 @@ import { RouterModule } from '@angular/router';
     CrowdsaleComponent,
     CrowdsaleAddOrderDialogComponent,
     CrowdsaleAddBuyOrderErrorDialogComponent,
+    CrowdsaleCanNotTradeOrderDialogComponent,
     WalletComponent,
     TotalSupplyComponent,
     ConnectionStateComponent,
@@ -48,7 +50,8 @@ import { RouterModule } from '@angular/router';
   entryComponents: [
     ProjectBacklogAddTrackDialogComponent,
     CrowdsaleAddOrderDialogComponent,
-    CrowdsaleAddBuyOrderErrorDialogComponent
+    CrowdsaleAddBuyOrderErrorDialogComponent,
+    CrowdsaleCanNotTradeOrderDialogComponent
   ]
 })
 export class LayoutModule { }

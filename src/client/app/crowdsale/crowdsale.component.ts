@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import {CrowdsaleAddOrderDialogComponent} from './crowdsale-add-order-dialog/crowdsale-add-order-dialog.component'
 import {CrowdsaleAddBuyOrderErrorDialogComponent} from './crowdsale-add-buy-order-error-dialog/crowdsale-add-buy-order-error-dialog.component'
+import {CrowdsaleCanNotTradeOrderDialogComponent} from './crowdsale-can-not-trade-order-dialog/crowdsale-can-not-trade-order-dialog.component'
 import {MdDialog} from '@angular/material';
 import {CrowdsaleService} from '../core/contract-calls/crowdsale.service'
 import {ProjectService} from '../core/contract-calls/project.service'
@@ -184,12 +185,16 @@ export class CrowdsaleComponent implements OnInit {
       })
   }
 
-  tradeOrder(type: string, id: number, value: number): void {
-    value *= this.decimals;
-    if (type === 'sell') {
-      this.buy(id, value);
-    } else if (type === 'buy') {
-      this.sell(id);
+  tradeOrder(type: string, id: number, value: number, isOwnersOrder: boolean): void {
+    if (isOwnersOrder) {
+      this.dialog.open(CrowdsaleCanNotTradeOrderDialogComponent);
+    } else {
+      value *= this.decimals;
+      if (type === 'sell') {
+        this.buy(id, value);
+      } else if (type === 'buy') {
+        this.sell(id);
+      }
     }
   }
 
@@ -309,9 +314,11 @@ export class CrowdsaleComponent implements OnInit {
       if (type === "sell") {
         this.visibleSellOrdersLengthForOrderBook = this.visibleSellOrdersLengthForOrderBook === 0 ?
           0 : this.visibleSellOrdersLengthForOrderBook - 1;
+        this.visibleSellOrdersLengthForClosedOrders += 1;
       } else if (type === "buy") {
         this.visibleBuyOrdersLengthForOrderBook = this.visibleBuyOrdersLengthForOrderBook === 0 ?
           0 : this.visibleBuyOrdersLengthForOrderBook - 1;
+        this.visibleBuyOrdersLengthForClosedOrders += 1;
       }
     }, 1000);
   }
