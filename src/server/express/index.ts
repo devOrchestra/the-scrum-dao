@@ -2,6 +2,7 @@ import express = require('express');
 import morganLogger = require('morgan');
 import bodyParser = require('body-parser');
 import path = require('path');
+import fs = require('fs');
 
 import issueRouter from './issues';
 import contributorRouter from './contributors';
@@ -20,6 +21,13 @@ let webAppPath: string = path.resolve('./', 'build/client');
 app.use(express.static(webAppPath));
 let artifactsPath: string = path.resolve('./', 'build/contracts');
 app.use('/static/artifacts/', express.static(artifactsPath));
+app.use('/static/chatbro-id.json', (req, res) => {
+  let filePath = path.resolve('./', 'credentials/chatbro-id.json');
+  fs.access(filePath, (error) => {
+    if (error) return res.sendStatus(404);
+    res.sendFile(filePath);
+  });
+});
 
 /**
  * Routes configure
