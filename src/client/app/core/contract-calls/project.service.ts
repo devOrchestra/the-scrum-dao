@@ -120,6 +120,13 @@ export class ProjectService {
       });
   }
 
+  owner(): Promise<any> {
+    return this.getProjectContractInstance
+      .then(instance => {
+        return instance.owner();
+      })
+  }
+
   initWatchingEvents() {
     return this.getProjectContractInstance;
   }

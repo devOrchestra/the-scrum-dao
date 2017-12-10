@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import project_artifacts from '../../../../../build/contracts/Project.json'
-import {default as contract} from 'truffle-contract'
+import { ProjectService } from '../../core/contract-calls/project.service'
 
 @Component({
   selector: 'app-sidenav',
@@ -9,21 +8,16 @@ import {default as contract} from 'truffle-contract'
   styleUrls: ['./sidenav.component.css']
 })
 export class SidenavComponent implements OnInit {
-  Project = contract(project_artifacts);
-
   showSettingsLink: boolean;
   readyToRender = false;
 
   constructor(
-    private _titleService: Title
+    private _titleService: Title,
+    private _projectService: ProjectService
   ) { }
 
   ngOnInit() {
-    this.Project.setProvider(web3.currentProvider);
-    this.Project.deployed()
-      .then(contractInstance => {
-        return contractInstance.owner();
-      })
+    this._projectService.owner()
       .then(ownerResponse => {
         this.showSettingsLink = ownerResponse === web3.eth.accounts[0];
         this.readyToRender = true;
