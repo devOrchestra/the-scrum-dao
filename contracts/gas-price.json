@@ -1,0 +1,35 @@
+{
+  "contractDeployment": {
+    "crowdsale": 1716665,
+    "migrations": 269607,
+    "planningPoker": 1613396,
+    "productBacklog": 1398455,
+    "project": 3001382
+  },
+  "projectContract": {
+    "addTrustedOracle": 43437,
+    "addWorker": 106889,
+    "initCrowdsale": 63814,
+    "initPlanningPoker": 43965,
+    "payAward": 80881,
+    "transfer": 93010
+  },
+  "planningPokerContract": {
+    "addVoting": 84651,
+    "closeVoting": 28568,
+    "vote": 92645
+  },
+  "productBacklogContract": {
+    "addVoting": 54286,
+    "closeVoting": 28502,
+    "vote": 151383
+  },
+  "crowdsaleContract": {
+    "addBuyOrder": 129224,
+    "addSellOrder": 161318,
+    "buy": 37106,
+    "closeBuyOrder": 21512,
+    "closeSellOrder": 28699,
+    "sell": 57381
+  }
+}
