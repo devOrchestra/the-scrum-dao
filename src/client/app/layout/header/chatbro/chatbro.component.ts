@@ -1,4 +1,5 @@
 import { Component, AfterViewInit, ElementRef } from '@angular/core';
+import { ChatbroService } from '../../../core/chatbro.service'
 
 @Component({
   selector: 'app-chatbro',
@@ -7,17 +8,12 @@ import { Component, AfterViewInit, ElementRef } from '@angular/core';
 })
 export class ChatbroComponent implements AfterViewInit {
   constructor(
-    private _elementRef: ElementRef
+    private _elementRef: ElementRef,
+    private _chatbroService: ChatbroService
   ) { }
 
   ngAfterViewInit() {
-    fetch('assets/chatbro-id.json')
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        }
-        throw new Error('There is no "chatbro-id.json" file in "credentials" folder. Chat will not be loaded');
-      })
+    this._chatbroService.getChatbroId()
       .then(data => {
         if (data.encodedChatId) {
           const s = document.createElement("script");
@@ -34,7 +30,11 @@ export class ChatbroComponent implements AfterViewInit {
         }
       })
       .catch(err => {
-        console.warn(err);
+        if (err.status === 404) {
+          console.warn("Chatbro ID is not specified. Chat will not be loaded")
+        } else {
+          console.error(err);
+        }
       });
   }
 }
