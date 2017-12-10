@@ -9,7 +9,7 @@ export class OwnerGuardService {
   ) { }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    this._projectService.owner()
+    return this._projectService.owner()
       .then(ownerResponse => {
         return ownerResponse === web3.eth.accounts[0];
       });
