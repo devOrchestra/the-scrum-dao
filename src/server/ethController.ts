@@ -38,7 +38,7 @@ class EthController {
       artifacts.planningPoker = require(path.resolve('./build/contracts/PlanningPoker.json'));
       artifacts.crowdsale = require(path.resolve('./build/contracts/Crowdsale.json'));
       artifacts.productBacklog = require(path.resolve('./build/contracts/ProductBacklog.json'));
-      this.gasLimitsTable = require(path.resolve('./credentials/gas-price.json'));
+      this.gasLimitsTable = require(path.resolve('./contracts/gas-price.json'));
     } catch (error) {
       return process.nextTick(()=>{done(error)});
     }

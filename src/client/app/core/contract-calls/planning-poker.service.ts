@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
-import gas_price from '../../../../../credentials/gas-price.json'
+import gas_price from '../../../../../contracts/gas-price.json'
 import {default as contract} from 'truffle-contract'
 import 'rxjs/add/operator/toPromise';
 
