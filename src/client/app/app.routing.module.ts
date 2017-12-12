@@ -6,6 +6,7 @@ import {ProjectBacklogComponent} from './project-backlog/project-backlog.compone
 import {PlanningPokerComponent} from './planning-poker/planning-poker.component';
 import {ContributorListComponent} from './contributor-list/contributor-list.component';
 import {CrowdsaleComponent} from './crowdsale/crowdsale.component';
+import {InfoComponent} from './info/info.component';
 
 import {Web3ResolverService} from './core/resolvers/web3-resolver.service';
 import {WalletStateResolverService} from './core/resolvers/wallet-state-resolver.service';
@@ -41,6 +42,10 @@ const routes: Routes = [
       {
         path: 'crowdsale',
         component: CrowdsaleComponent
+      },
+      {
+        path: 'info',
+        component: InfoComponent
       }
     ],
   },

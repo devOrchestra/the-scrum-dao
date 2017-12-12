@@ -11,6 +11,7 @@ import { ProjectBacklogAddTrackDialogComponent } from '../project-backlog/projec
 import { PlanningPokerComponent } from '../planning-poker/planning-poker.component';
 import { ContributorListComponent } from '../contributor-list/contributor-list.component';
 import { CrowdsaleComponent } from '../crowdsale/crowdsale.component';
+import { InfoComponent } from '../info/info.component'
 import { CrowdsaleAddOrderDialogComponent } from '../crowdsale/crowdsale-add-order-dialog/crowdsale-add-order-dialog.component';
 import { CrowdsaleAddBuyOrderErrorDialogComponent } from '../crowdsale/crowdsale-add-buy-order-error-dialog/crowdsale-add-buy-order-error-dialog.component';
 import { CrowdsaleCanNotTradeOrderDialogComponent } from '../crowdsale/crowdsale-can-not-trade-order-dialog/crowdsale-can-not-trade-order-dialog.component';
@@ -38,6 +39,7 @@ import { RouterModule } from '@angular/router';
     PlanningPokerComponent,
     ContributorListComponent,
     CrowdsaleComponent,
+    InfoComponent,
     CrowdsaleAddOrderDialogComponent,
     CrowdsaleAddBuyOrderErrorDialogComponent,
     CrowdsaleCanNotTradeOrderDialogComponent,

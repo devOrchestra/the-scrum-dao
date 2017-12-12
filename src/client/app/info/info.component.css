@@ -1,0 +1,31 @@
+.logo {
+  width: 100px;
+  height: 100px;
+  margin-right: 8px;
+}
+
+.logo-row {
+  margin-bottom: 16px;
+}
+
+h2:not(:first-child) {
+  margin-top: 16px;
+}
+
+.heading-after-ul {
+  margin-top: 16px;
+}
+
+section {
+  padding-top: 8px;
+}
+
+a,
+a:link,
+a:hover,
+a:visited,
+a:active,
+a:focus {
+  color: royalblue;
+  text-decoration: underline;
+}
