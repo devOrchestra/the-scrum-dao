@@ -20,8 +20,14 @@
   border-top: 1px #e1e1e1 solid;
 }
 
-.qwe {
-  border-top: 1px #e1e1e1 solid;
+.item .assignee-cloud {
+  font-size: 12px;
+  border-radius: 10px;
+  padding: 5px 10px;
+  background-color: royalblue;
+  font-weight: bold;
+  color: white;
+  margin-left: 16px;
 }
 
 .orders .buy-cloud i,

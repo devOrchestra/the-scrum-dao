@@ -22,6 +22,7 @@ export class CrowdsaleComponent implements OnInit {
   countDecimals = countDecimals;
   formatOrder = formatOrder;
 
+  workers: string[];
   orders: IOrder[] = [];
   closedOrders: IOrder[] = [];
   tokenSymbol: string;
@@ -52,9 +53,13 @@ export class CrowdsaleComponent implements OnInit {
   ngOnInit() {
     const sellOrderPromises = [];
     const buyOrderPromises = [];
-    this.getOrders()
+    this.getWorkers()
+      .then(() => {
+        return this.getOrders();
+      })
       .then(getOrdersResponse => {
         this.orders = getOrdersResponse;
+        this.bindWorkersNamesToOrders();
         getOrdersResponse.forEach(item => {
           if (!item.isOpen) {
             this.closedOrders.push(item);
@@ -118,6 +123,29 @@ export class CrowdsaleComponent implements OnInit {
       })
   }
 
+  getWorkers(): Promise<any> {
+    let workersLength;
+    return this._projectService.getWorkersLength()
+      .then(data => {
+        workersLength = this.parseBigNumber(data);
+        const workersPromises = [];
+        for (let i = 0; i < workersLength; i++) {
+          workersPromises.push(this._projectService.getWorker(i));
+        }
+        return Promise.all(workersPromises);
+      })
+      .then(value => {
+        this.workers = value;
+      })
+  }
+
+  bindWorkersNamesToOrders() {
+    this.orders.forEach(item => {
+      const result = _.find(this.workers, o => o[0] === item.owner);
+      item.ownerName = result ? result[1] : null
+    });
+  }
+
   openAddOrderDialog(): void {
     const addOrderDialogRef = this.dialog.open(CrowdsaleAddOrderDialogComponent);
     addOrderDialogRef.afterClosed().subscribe(addOrderDialogResult => {
@@ -161,6 +189,7 @@ export class CrowdsaleComponent implements OnInit {
           buyOrder.value /= this.decimals;
           buyOrder.flashAnimation = "animate";
           this.orders.push(buyOrder);
+          this.bindWorkersNamesToOrders();
           this.buyOrdersLength += 1;
           this.countVisibleOrdersLengthForOrderBook();
         }
@@ -179,6 +208,7 @@ export class CrowdsaleComponent implements OnInit {
           sellOrder.value /= this.decimals;
           sellOrder.flashAnimation = "animate";
           this.orders.push(sellOrder);
+          this.bindWorkersNamesToOrders();
           this.sellOrdersLength += 1;
           this.countVisibleOrdersLengthForOrderBook();
         }

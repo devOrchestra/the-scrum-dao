@@ -26,6 +26,7 @@ export interface IOrder {
   price: number
   value: number
   index?: number
+  ownerName?: string
 }
 
 export interface IPlanningPokerTask {

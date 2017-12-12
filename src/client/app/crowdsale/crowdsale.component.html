@@ -37,6 +37,10 @@
               <div fxLayout="column" fxLayoutAlign="center">
                 {{order.value}} {{tokenSymbol}} ({{(order.value * order.price).toFixed(4)}} ETH)
               </div>
+              <div class="assignee-cloud">
+                <span *ngIf="order.ownerName">{{order.ownerName}}</span>
+                <span *ngIf="!order.ownerName">holder</span>
+              </div>
             </div>
             <div fxLayout="row">
               <div *ngIf="currentOwner === order.owner" class="lock-button transition-fast" (mouseenter)="styleRow($event)"
@@ -77,6 +81,10 @@
               </div>
               <div fxLayout="column" fxLayoutAlign="center">
                 {{order.value}} {{tokenSymbol}} ({{(order.value * order.price).toFixed(4)}} ETH)
+              </div>
+              <div class="assignee-cloud">
+                <span *ngIf="order.ownerName">{{order.ownerName}}</span>
+                <span *ngIf="!order.ownerName">holder</span>
               </div>
             </div>
             <div fxLayout="row">
