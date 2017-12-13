@@ -12,7 +12,7 @@ export class SortBacklogTasksByPriorityDescendingPipe implements PipeTransform {
         return -1;
       } else if (!a.fields.votingCount && !a.fields.totalSupply && !b.fields.votingCount && !b.fields.totalSupply) {
         return 0;
-      } if (this.countTotalPercents(a.fields.votingCount, a.fields.totalSupply) >= this.countTotalPercents(b.fields.votingCount, b.fields.totalSupply)) {
+      } else if (this.countTotalPercents(a.fields.votingCount, a.fields.totalSupply) >= this.countTotalPercents(b.fields.votingCount, b.fields.totalSupply)) {
         return -1;
       } else if (this.countTotalPercents(a.fields.votingCount, a.fields.totalSupply) < this.countTotalPercents(b.fields.votingCount, b.fields.totalSupply)) {
         return 1;

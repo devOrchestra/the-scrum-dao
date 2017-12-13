@@ -10,7 +10,7 @@
 <div fxFlex *ngIf="readyToDisplay" [@shortEnterAnimation]>
   <h2 class="heading" *ngIf="openedTasks && openedTasks.length > 0">Opened tasks</h2>
   <div id="planning-poker" fxLayout="column" [ngClass]="{'bottom-margin': openedTasks && openedTasks.length > 0}">
-    <div class="item-wrapper" *ngFor="let task of openedTasks; let index = index">
+    <div class="item-wrapper" *ngFor="let task of openedTasks | sortPlanningPokerTasksByStoryPointsDescendingPipe; let index = index">
       <div class="item" fxLayout="row" *ngIf="task.fields.votingWasNotCreated || task.fields.isOpen"
            [ngClass]="{'item-border-top': index === 0}">
         <div fxLayout="row" fxLayoutAlign="space-between" fxFlex="100">

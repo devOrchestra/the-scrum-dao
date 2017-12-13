@@ -97,16 +97,20 @@ export class WalletComponent implements OnInit {
           const balanceDifference = Number(this.sendTokensObj.value);
           this.walletTokensAmountChange = balanceDifference;
           const newBalance = this.currentBalance.balance - balanceDifference;
-          this.sendTokensObj.address = "";
-          this.sendTokensObj.value = "";
-          this.sendTokensMenuTrigger.closeMenu();
-          this.sendTokensLoading = false;
+          this.clearFormAfterTokensSend();
         })
         .catch(err => {
           console.error('An error occurred on wallet.component in "sendTokens":', err);
-          this.sendTokensLoading = false;
+          this.clearFormAfterTokensSend();
         });
     }
+  }
+
+  clearFormAfterTokensSend(): void {
+    this.sendTokensObj.address = "";
+    this.sendTokensObj.value = "";
+    this.sendTokensMenuTrigger.closeMenu();
+    this.sendTokensLoading = false;
   }
 
   showBalanceChange(newBalance: number, balanceDifference: number, isAfterSend: boolean, positive: boolean): void {

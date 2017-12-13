@@ -15,6 +15,7 @@ import {SortContributorsAndHoldersByBalanceDescendingPipe} from './pipes/sortCon
 import {SortBuyAndSellOrdersByTypeAndPriceDescendingPipe} from './pipes/sortBuyAndSellOrdersByTypeAndPriceDescendingPipe';
 import {SortClosedOrdersByIdDescendingPipe} from './pipes/sortClosedOrdersByIdDescendingPipe';
 import {SortBacklogTasksByPriorityDescendingPipe} from './pipes/sortBacklogTasksByPriorityDescendingPipe';
+import {SortPlanningPokerTasksByStoryPointsDescendingPipe} from './pipes/sortPlanningPokerTasksByStoryPointsDescendingPipe';
 
 @NgModule({
   imports: [
@@ -43,7 +44,8 @@ import {SortBacklogTasksByPriorityDescendingPipe} from './pipes/sortBacklogTasks
     SortContributorsAndHoldersByBalanceDescendingPipe,
     SortBuyAndSellOrdersByTypeAndPriceDescendingPipe,
     SortClosedOrdersByIdDescendingPipe,
-    SortBacklogTasksByPriorityDescendingPipe
+    SortBacklogTasksByPriorityDescendingPipe,
+    SortPlanningPokerTasksByStoryPointsDescendingPipe
   ],
   exports: [
     CommonModule,
@@ -70,7 +72,8 @@ import {SortBacklogTasksByPriorityDescendingPipe} from './pipes/sortBacklogTasks
     SortContributorsAndHoldersByBalanceDescendingPipe,
     SortBuyAndSellOrdersByTypeAndPriceDescendingPipe,
     SortClosedOrdersByIdDescendingPipe,
-    SortBacklogTasksByPriorityDescendingPipe
+    SortBacklogTasksByPriorityDescendingPipe,
+    SortPlanningPokerTasksByStoryPointsDescendingPipe
   ]
 })
 export class SharedModule {
