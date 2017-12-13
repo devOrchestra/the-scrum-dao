@@ -1,0 +1,52 @@
+h2 {
+  font-size: 20px;
+}
+
+h4 {
+  font-size: 13px;
+}
+
+.main-content {
+  margin-top: 24px;
+  padding: 12px 24px 0 24px;
+}
+
+.main-content .info {
+  margin-top: 16px;
+}
+
+.main-content img.avatar {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+}
+
+.main-content .fake-avatar {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background-color: #f5a963;
+  font-size: 24px;
+  font-weight: 300;
+}
+
+.main-content .wallet-address {
+  margin-top: 8px;
+  font-size: 13px;
+  word-break: break-all;
+  text-align: center;
+}
+
+.caption {
+  margin-top: 36px;
+  font-size: 10px;
+  font-weight: bold;
+  padding-bottom: 6px;
+  font-family: Roboto, 'Helvetica Neue', sans-serif !important;
+  text-align: center;
+}
+
+.bottom-line {
+  background-color: #f5a963;
+  height: 4px;
+}

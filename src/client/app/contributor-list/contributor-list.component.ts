@@ -201,10 +201,6 @@ export class ContributorListComponent implements OnInit {
   countBalance(contributorBalance: number): number {
     const calcVal = (contributorBalance * 100 / this.totalBalance).toFixed(2);
     const finalPercentsVal = parseInt(calcVal.toString(), 10);
-    if (isNaN(finalPercentsVal)) {
-      return 0;
-    } else {
-      return finalPercentsVal;
-    }
+    return isNaN(finalPercentsVal) ? 0 : finalPercentsVal;
   }
 }
