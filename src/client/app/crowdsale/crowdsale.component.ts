@@ -6,7 +6,7 @@ import {CrowdsaleCanNotTradeOrderDialogComponent} from './crowdsale-can-not-trad
 import {MdDialog} from '@angular/material';
 import {CrowdsaleService} from '../core/contract-calls/crowdsale.service'
 import {ProjectService} from '../core/contract-calls/project.service'
-import {parseBigNumber, countDecimals, formatOrder, transformOrderToObject} from '../shared/methods'
+import {parseBigNumber, countDecimals, formatOrder} from '../shared/methods'
 import {ControlFlashAnimation, ControlFlashAnimationReversed, ShortEnterAnimation} from '../shared/animations'
 import * as _ from 'lodash'
 import { IOrder } from "../shared/interfaces";
