@@ -45,3 +45,6 @@ testem.log
 Thumbs.db
 
 credentials/
+coverage/
+coverageEnv/
+coverage.json

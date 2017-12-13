@@ -1,3 +1,4 @@
+<img src="https://user-images.githubusercontent.com/17112242/33902590-85f62ea6-df86-11e7-96c2-06cfa21756f4.png" alt="The Scrum DAO logo">
 
 #The Scrum DAO
 
