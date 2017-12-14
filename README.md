@@ -1,7 +1,7 @@
 
-#The Scrum DAO
+# The Scrum DAO
+[![Travis](https://img.shields.io/travis/devOrchestra/the-scrum-dao.svg)](https://travis-ci.org/devOrchestra/the-scrum-dao)
 
-[TOC]
 
 ## Concept
 -------------
