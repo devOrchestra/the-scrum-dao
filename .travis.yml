@@ -9,9 +9,10 @@ install:
 script:
   - npm run build-app
   - npm run build-server
-  - npm test-contracts
+  - npm run test-contracts
 
 before_script:
+  - npm run compile-contracts
   - testrpc > /dev/null &
   - sleep 10
 

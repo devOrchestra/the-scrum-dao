@@ -7,7 +7,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "test-contracts": "export NODE_ENV=development && truffle test",
-    "coverage-contracts": "./node_modules/.bin/solidity-coverage",
+    "coverage-contracts": "export NODE_ENV=development && solidity-coverage",
     "copy-data": "cpx \"src/server/*.ini\" \"build/server\"",
     "compile-contracts": "export NODE_ENV=stub && truffle compile --network stub",
     "dev-migrate": "export NODE_ENV=development && truffle migrate --network development",
