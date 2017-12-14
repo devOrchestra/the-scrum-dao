@@ -1,9 +1,8 @@
 
 # The Scrum DAO
 [![Travis](https://img.shields.io/travis/devOrchestra/the-scrum-dao.svg)](https://travis-ci.org/devOrchestra/the-scrum-dao)
-[![GitHub release](https://img.shields.io/github/release/devOrchestra/the-scrum-dao.svg)](https://github.com/devOrchestra/the-scrum-dao/releases)
-
-
+[![GitHub Release](https://img.shields.io/github/release/devOrchestra/the-scrum-dao.svg)](https://github.com/devOrchestra/the-scrum-dao/releases)
+[![Contracts Coverage Status](https://coveralls.io/repos/github/devOrchestra/the-scrum-dao/badge.svg?branch=master)](https://coveralls.io/github/devOrchestra/the-scrum-dao?branch=master)
 ## Concept
 -------------
 
