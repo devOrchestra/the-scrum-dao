@@ -36,7 +36,7 @@ class TaskHandler {
   }
 
   private createHandler(eventName: string, handler: (job, done) => void): void {
-    this.handler.process(eventName, handler);
+    this.handler.process(eventName, this.config.handler.maxParallelJobs, handler);
     logger.info(`Handler for ${eventName} has been added`);
   }
 }
