@@ -1,0 +1,20 @@
+language: node_js
+node_js:
+  - "8"
+install:
+  - npm install
+  - npm install -g ethereumjs-testrpc
+  - npm install -g truffle
+
+script:
+  - npm run build-app
+  - npm run build-server
+  - npm run test-contracts
+
+before_script:
+  - npm run compile-contracts
+  - testrpc > /dev/null &
+  - sleep 10
+
+after_script:
+  - npm run coverage-contracts && cat coverage/lcov.info | coveralls

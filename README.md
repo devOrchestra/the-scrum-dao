@@ -1,9 +1,9 @@
 <img src="https://user-images.githubusercontent.com/17112242/33902590-85f62ea6-df86-11e7-96c2-06cfa21756f4.png" alt="The Scrum DAO logo">
 
-#The Scrum DAO
-
-[TOC]
-
+# The Scrum DAO
+[![Travis](https://img.shields.io/travis/devOrchestra/the-scrum-dao.svg)](https://travis-ci.org/devOrchestra/the-scrum-dao)
+[![GitHub Release](https://img.shields.io/github/release/devOrchestra/the-scrum-dao.svg)](https://github.com/devOrchestra/the-scrum-dao/releases)
+[![Contracts Coverage Status](https://coveralls.io/repos/github/devOrchestra/the-scrum-dao/badge.svg?branch=master)](https://coveralls.io/github/devOrchestra/the-scrum-dao?branch=master)
 ## Concept
 -------------
 
