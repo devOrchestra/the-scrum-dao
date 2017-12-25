@@ -1,0 +1,52 @@
+<div class="item" fxLayout="row" *ngIf="!componentForOpenedTask || (task.fields.votingWasNotCreated || task.fields.isOpen)"
+     [ngClass]="{'item-border-top': index === 0}">
+  <div fxLayout="row" fxLayoutAlign="space-between" fxFlex="100">
+    <div class="left-side" fxLayout="row" fxLayoutAlign="center center">
+      <div class="first unselectable task-logo" [ngClass]="{
+        'jira-task-bug-logo': task.fields.issuetype.name === 'Bug',
+        'jira-task-task-logo': task.fields.issuetype.name === 'Task',
+        'jira-task-subtask-logo': task.fields.issuetype.name === 'Subtask',
+        'jira-task-story-logo': task.fields.issuetype.name === 'Story',
+        'jira-task-epic-logo': task.fields.issuetype.name === 'Epic'
+      }"></div>
+      <p>{{task.fields.summary}}</p>
+      <div class="assignee-cloud" fxLayout="row" fxLayoutAlign="center center"
+           *ngIf="task.fields.assignee && task.fields.assignee.displayName">
+        {{task.fields.assignee.name}}
+      </div>
+    </div>
+    <div class="right-side" fxLayout="row" fxLayoutAlign="center center">
+      <a class="task-key unselectable" href="{{task.link}}" target="_blank">{{task.key}}</a>
+      <div class="story-points-cloud" fxLayout="row" fxLayoutAlign="center center">
+        <md-spinner *ngIf="task.storyPointsLoading"></md-spinner>
+        <span *ngIf="!task.storyPointsLoading" [@alternativeControlFlashAnimation]="task.flashAnimation"
+              class="default-cursor unselectable">
+          {{countStoryPoints(task.fields.votesCount, task.fields.votesSum)}}
+        </span>
+      </div>
+      <div class="story-points-user-choice-cloud unselectable" fxLayout="row" fxLayoutAlign="center center"
+           [ngClass]="{'pointer': componentForOpenedTask, 'default-cursor voted': !componentForOpenedTask}"
+           (click)="openStoryPointsMenu()">
+        <md-spinner *ngIf="task.votingLoading"></md-spinner>
+        <span *ngIf="componentForOpenedTask && !task.fields.votesUserChoice && !task.votingLoading"
+              [@alternativeControlFlashAnimation]="task.flashAnimation">Vote</span>
+        <span *ngIf="!componentForOpenedTask && !task.fields.votesUserChoice && !task.votingLoading"
+              [@alternativeControlFlashAnimation]="task.flashAnimation"
+              class="unselectable default-cursor">-</span>
+        <span *ngIf="componentForOpenedTask && task.fields.votesUserChoice && !task.votingLoading"
+              [@alternativeControlFlashAnimation]="task.flashAnimation">{{task.fields.votesUserChoice}}</span>
+        <span *ngIf="!componentForOpenedTask && task.fields.votesUserChoice && !task.votingLoading"
+              [@alternativeControlFlashAnimation]="task.flashAnimation"
+              class="unselectable default-cursor">{{task.fields.votesUserChoice}}</span>
+        <i *ngIf="componentForOpenedTask && !task.votingLoading" class="fa fa-caret-down" aria-hidden="true"
+           [@alternativeControlFlashAnimation]="task.flashAnimation"></i>
+      </div>
+      <md-menu #storyPointsUserChoiceMenu="mdMenu">
+        <button md-menu-item *ngFor="let option of storyPointsOptions" (click)="changeStoryPointsUserChoice(task, task.key, option)">
+          {{option}}
+        </button>
+      </md-menu>
+      <div [mdMenuTriggerFor]="storyPointsUserChoiceMenu" class="shadow-trigger"></div>
+    </div>
+  </div>
+</div>

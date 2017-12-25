@@ -10,6 +10,7 @@ import { IHolder } from "../../shared/interfaces";
 export class ContributorListHolderItemComponent {
   @Input() holder: IHolder;
   @Input() tokenSymbol: string;
+  @Input() totalBalance: number;
 
   public countBalance = this._parent.countBalance;
 

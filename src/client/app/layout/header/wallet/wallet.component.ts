@@ -89,6 +89,7 @@ export class WalletComponent implements OnInit {
     if (this.sendTokensObj.address && this.sendTokensObj.value && Number(this.sendTokensObj.value) > 0) {
       this.sendTokensLoading = true;
       this.sendTokensObj.fadeAnimation = "void";
+      console.log("tokens to send:", Number(this.sendTokensObj.value) * this.decimals);
       this._projectService.transfer(this.sendTokensObj.address, Number(this.sendTokensObj.value) * this.decimals)
         .then(transferResponse => {
           return this._projectService.balanceOf(web3.eth.accounts[0]);

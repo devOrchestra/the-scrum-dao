@@ -1,0 +1,39 @@
+<div class="item" fxLayout="row" *ngIf="item.fields.votingWasNotCreated || item.fields.isOpen"
+     [ngClass]="{'item-border-top': index === 0}">
+  <div fxLayout="row" fxLayoutAlign="space-between" fxFlex="100">
+    <div class="left-side" fxLayout="row" fxLayoutAlign="center center">
+      <div class="first unselectable task-logo" [ngClass]="{
+        'jira-task-bug-logo': item.fields.issuetype.name === 'Bug',
+        'jira-task-task-logo': item.fields.issuetype.name === 'Task',
+        'jira-task-subtask-logo': item.fields.issuetype.name === 'Subtask',
+        'jira-task-story-logo': item.fields.issuetype.name === 'Story',
+        'jira-task-epic-logo': item.fields.issuetype.name === 'Epic'
+      }"></div>
+      <p>{{item.fields.summary}}</p>
+      <div class="assignee-cloud" fxLayout="row" fxLayoutAlign="center center"
+           *ngIf="item.fields.assignee && item.fields.assignee.displayName">
+        {{item.fields.assignee.name}}
+      </div>
+    </div>
+    <div class="right-side" fxLayout="row" fxLayoutAlign="center center">
+      <a class="task-key unselectable" href="{{item.link}}" target="_blank">{{item.key}}</a>
+      <div class="story-points-cloud unselectable default-cursor" fxLayout="row" fxLayoutAlign="center center">
+        <md-spinner *ngIf="item.storyPointsLoading"></md-spinner>
+        <span *ngIf="!item.storyPointsLoading" [@alternativeControlFlashAnimation]="item.flashAnimation">
+          {{item.fields.storyPoints}}
+        </span>
+      </div>
+      <div [mdTooltip]="item.userHasAlreadyVoted <= 0 ? 'Vote for issue' : null" mdTooltipPosition="after"
+           class="vote-cloud unselectable pointer"
+           (click)="voteFor(item, item.key, index, item.userHasAlreadyVoted <= 0)" fxLayout="row" fxLayoutAlign="center center"
+           [ngClass]="{'already-voted': item.userHasAlreadyVoted > 0, 'background-transition-fast': item.bgcEasingApplied}">
+        <md-spinner *ngIf="item.totalPercentsLoading"></md-spinner>
+        <span *ngIf="!item.totalPercentsLoading" [@alternativeControlFlashAnimation]="item.flashAnimation">
+          {{countTotalPercents(item.fields.votingCount, item.fields.totalSupply)}}%
+        </span>
+        <i *ngIf="!item.totalPercentsLoading" [@alternativeControlFlashAnimation]="item.flashAnimation"
+           class="fa fa-angle-double-up first" aria-hidden="true"></i>
+      </div>
+    </div>
+  </div>
+</div>

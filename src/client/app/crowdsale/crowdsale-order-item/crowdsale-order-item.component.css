@@ -1,0 +1,83 @@
+.item {
+  padding: 8px 16px;
+  margin: 0 8px;
+  border-left: 1px #e1e1e1 solid;
+  border-bottom: 1px #e1e1e1 solid;
+  border-right: 1px #e1e1e1 solid;
+}
+
+.item-border-top {
+  border-top: 1px #e1e1e1 solid;
+}
+
+.item .assignee-cloud {
+  font-size: 12px;
+  border-radius: 10px;
+  padding: 5px 10px;
+  background-color: royalblue;
+  font-weight: bold;
+  color: white;
+  margin-left: 16px;
+}
+
+.buy-cloud i,
+.sell-cloud i {
+  color: white;
+}
+
+.buy-cloud span,
+.sell-cloud span {
+  margin-left: 4px;
+}
+
+.item .buy-cloud {
+  font-size: 12px;
+  border-radius: 10px;
+  padding: 5px 10px;
+  background-color: #239b23;
+  font-weight: bold;
+  width: 56px;
+  min-width: 56px;
+  color: white;
+  margin-right: 12px;
+}
+
+.item .sell-cloud {
+  font-size: 12px;
+  border-radius: 10px;
+  padding: 5px 10px;
+  background-color: #f30000;
+  font-weight: bold;
+  width: 56px;
+  min-width: 56px;
+  color: white;
+  margin-right: 12px;
+}
+
+.fat-border-bottom {
+  border-bottom: 3px #e1e1e1 solid !important;
+}
+
+.lock-button {
+  line-height: 22px;
+  letter-spacing: 1px;
+  padding: 0 10px;
+  margin-right: 8px;
+  color: royalblue;
+  border: 1px royalblue solid;
+  font-size: 12px;
+  border-radius: 3px;
+  font-weight: bold;
+}
+
+.lock-button:hover {
+  background-color: royalblue;
+  color: white;
+}
+
+.item-background-transition-fast {
+  -webkit-transition: background-color .2s ease-in-out !important;
+  -moz-transition: background-color .2s ease-in-out !important;
+  -o-transition: background-color .2s ease-in-out !important;
+  transition: background-color .2s ease-in-out !important;
+}

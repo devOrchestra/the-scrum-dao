@@ -1,0 +1,108 @@
+a.task-key,
+a.task-key:link,
+a.task-key:visited,
+a.task-key:active,
+a.task-key:focus {
+  font-size: 16px;
+  color: #333333;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+a.task-key:hover {
+  color: royalblue;
+}
+
+.item {
+  width: calc(100% - 16px);
+  min-width: calc(100% - 16px);
+  max-width: calc(100% - 16px);
+  margin: 0 8px;
+  border-left: 1px #e1e1e1 solid;
+  border-right: 1px #e1e1e1 solid;
+  border-bottom: 1px #e1e1e1 solid;
+}
+
+.item-border-top {
+  border-top: 1px #e1e1e1 solid;
+}
+
+.item .left-side {
+  margin: 8px 0 8px 16px;
+}
+
+.item .right-side {
+  margin: 8px 0 8px 8px;
+}
+
+.item .right-side * {
+  margin-left: 8px;
+}
+
+.item .left-side * {
+  margin-left: 16px;
+}
+
+.item .left-side .first {
+  margin-left: 0;
+}
+
+.item .left-side .task-logo {
+  width: 16px;
+  height: 16px;
+}
+
+.item .storyPointsUserChoiceBtn * {
+  margin-left: 0;
+}
+
+.item .story-points-user-choice-cloud {
+  font-size: 12px;
+  border-radius: 10px;
+  padding: 5px 10px;
+  background-color: #239b23;
+  font-weight: bold;
+  width: 54px;
+  color: white;
+}
+
+.item .assignee-cloud {
+  font-size: 12px;
+  border-radius: 10px;
+  padding: 5px 10px;
+  background-color: royalblue;
+  font-weight: bold;
+  color: white;
+}
+
+.item .story-points-user-choice-cloud i {
+  margin-left: 4px;
+}
+
+.item .story-points-user-choice-cloud span,
+.item .story-points-user-choice-cloud div,
+.item .story-points-cloud span {
+  margin-left: 0;
+}
+
+.item .story-points-user-choice-cloud md-spinner,
+.item .story-points-cloud md-spinner {
+  margin-left: 0 !important;
+  height: 14px;
+}
+
+.voted {
+  background-color: #769b74 !important;
+}
+
+.shadow-trigger {
+  margin-left: 0;
+}
+
+/deep/ .item .story-points-user-choice-cloud md-spinner path {
+  stroke: white !important;
+}
+
+/deep/ .item .story-points-cloud md-spinner path {
+  stroke: #333333 !important;
+}

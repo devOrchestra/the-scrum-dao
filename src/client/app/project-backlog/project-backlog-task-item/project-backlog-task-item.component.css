@@ -1,0 +1,111 @@
+a.task-key,
+a.task-key:link,
+a.task-key:visited,
+a.task-key:active,
+a.task-key:focus {
+  font-size: 16px;
+  color: #333333;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+a.task-key:hover {
+  color: royalblue;
+}
+
+.item-border-top {
+  border-top: 1px #e1e1e1 solid;
+}
+
+.item {
+  width: calc(100% - 16px);
+  min-width: calc(100% - 16px);
+  max-width: calc(100% - 16px);
+  margin: 0 8px;
+  border-left: 1px #e1e1e1 solid;
+  border-right: 1px #e1e1e1 solid;
+  border-bottom: 1px #e1e1e1 solid;
+}
+
+.item .left-side {
+  margin: 8px 0 8px 16px;
+}
+
+.item .right-side {
+  margin: 8px 16px 8px 0;
+}
+
+.item .left-side * {
+  margin-left: 16px;
+}
+
+.item .right-side * {
+  margin-left: 8px;
+}
+
+.item .left-side .first,
+.item .vote-cloud span {
+  margin-left: 0;
+}
+
+.item .left-side .task-logo {
+  width: 16px;
+  height: 16px;
+}
+
+.item .vote-cloud {
+  font-size: 12px;
+  border-radius: 10px;
+  padding: 5px 10px;
+  background-color: #239b23;
+  font-weight: bold;
+  min-width: 70px;
+  width: 70px;
+  color: white;
+}
+
+.item .vote-cloud.already-voted {
+  background-color: #769b74;
+  cursor: default;
+}
+
+.item .assignee-cloud {
+  font-size: 12px;
+  border-radius: 10px;
+  padding: 5px 10px;
+  background-color: royalblue;
+  font-weight: bold;
+  color: white;
+}
+
+.item .story-points-cloud span,
+.item .story-points-cloud md-spinner,
+.item .vote-cloud md-spinner {
+  margin-left: 0;
+}
+
+.item .story-points-cloud md-spinner,
+.item .vote-cloud md-spinner {
+  height: 14px;
+}
+
+.background-transition-fast {
+  -webkit-transition: background-color .2s ease-in-out !important;
+  -moz-transition: background-color .2s ease-in-out !important;
+  -o-transition: background-color .2s ease-in-out !important;
+  transition: background-color .2s ease-in-out !important;
+}
+
+/deep/ .item .vote-cloud md-spinner path {
+  stroke: white !important;
+}
+
+/deep/ .item .story-points-cloud md-spinner path {
+  stroke: #333333 !important;
+}
+
+/deep/ .story-points-dropdown .mat-select-trigger {
+  width: 50px;
+  min-width: 50px;
+  max-width: 50px;
+}

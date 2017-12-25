@@ -24,6 +24,7 @@ import { CrowdsaleCanNotTradeOrderDialogComponent } from '../crowdsale/crowdsale
 
 import { ContributorListWorkerItemComponent } from '../contributor-list/contributor-list-worker-item/contributor-list-worker-item.component'
 import { ContributorListHolderItemComponent } from '../contributor-list/contributor-list-holder-item/contributor-list-holder-item.component'
+import { CrowdsaleOrderItemComponent } from '../crowdsale/crowdsale-order-item/crowdsale-order-item.component'
 
 import { RouterModule } from '@angular/router';
 
@@ -55,7 +56,8 @@ import { RouterModule } from '@angular/router';
     CrowdsaleCanNotTradeOrderDialogComponent,
 
     ContributorListWorkerItemComponent,
-    ContributorListHolderItemComponent
+    ContributorListHolderItemComponent,
+    CrowdsaleOrderItemComponent
   ],
   entryComponents: [
     ProjectBacklogAddTrackDialogComponent,
@@ -64,7 +66,8 @@ import { RouterModule } from '@angular/router';
     CrowdsaleCanNotTradeOrderDialogComponent,
 
     ContributorListWorkerItemComponent,
-    ContributorListHolderItemComponent
+    ContributorListHolderItemComponent,
+    CrowdsaleOrderItemComponent
   ]
 })
 export class LayoutModule { }

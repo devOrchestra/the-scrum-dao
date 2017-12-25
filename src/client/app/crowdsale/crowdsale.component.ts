@@ -10,6 +10,7 @@ import {parseBigNumber, countDecimals, formatOrder} from '../shared/methods'
 import {ControlFlashAnimation, ControlFlashAnimationReversed, ShortEnterAnimation} from '../shared/animations'
 import * as _ from 'lodash'
 import { IOrder } from "../shared/interfaces";
+import { Alert } from "selenium-webdriver";
 
 @Component({
   selector: 'app-crowdsale',
@@ -262,7 +263,9 @@ export class CrowdsaleComponent implements OnInit {
         this.excludeItemFromList(id, type, 'close');
       })
       .catch(err => {
-        console.error('An error occurred on crowdsale.component in "closeOrder":', err);
+        if (err.toString().indexOf("User denied transaction signature") < 0) {
+          console.error('An error occurred on crowdsale.component in "closeOrder":', err);
+        }
       });
   }
 
@@ -294,23 +297,23 @@ export class CrowdsaleComponent implements OnInit {
     });
   }
 
-  countIndexOfTheLastVisibleSellOrderForOrderBook(index: number, order: IOrder): number {
-    let allSellOrdersHaveIndexProperty = true;
-    order.index = index;
-    const visibleSellOrders = _.filter(this.orders, {
-      isOpen: true,
-      isLocked: false,
-      orderType: 'sell'
-    });
-    visibleSellOrders.forEach(item => {
-      if (!item.hasOwnProperty('index')) { allSellOrdersHaveIndexProperty = false; }
-    });
-    if (allSellOrdersHaveIndexProperty) {
-      const max = _.maxBy(visibleSellOrders, item => item.index);
-      this.maxIndexOfVisibleSellOrders = max && max.hasOwnProperty('index') && max.index >= 0 ? max.index : -1;
-      return this.maxIndexOfVisibleSellOrders;
-    }
-  }
+  // countIndexOfTheLastVisibleSellOrderForOrderBook(index: number, order: IOrder): number {
+  //   let allSellOrdersHaveIndexProperty = true;
+  //   order.index = index;
+  //   const visibleSellOrders = _.filter(this.orders, {
+  //     isOpen: true,
+  //     isLocked: false,
+  //     orderType: 'sell'
+  //   });
+  //   visibleSellOrders.forEach(item => {
+  //     if (!item.hasOwnProperty('index')) { allSellOrdersHaveIndexProperty = false; }
+  //   });
+  //   if (allSellOrdersHaveIndexProperty) {
+  //     const max = _.maxBy(visibleSellOrders, item => item.index);
+  //     this.maxIndexOfVisibleSellOrders = max && max.hasOwnProperty('index') && max.index >= 0 ? max.index : -1;
+  //     return this.maxIndexOfVisibleSellOrders;
+  //   }
+  // }
 
   countIndexOfTheLastVisibleSellOrderForClosedOrders(index: number, order: IOrder): number {
     let allSellOrdersHaveIndexProperty = true;
@@ -329,53 +332,54 @@ export class CrowdsaleComponent implements OnInit {
     }
   }
 
-  excludeItemFromList(id: number, type: string, operationType: string): void {
-    const itemToExcludeFromList = _.find(this.orders, {id: id, orderType: type});
-    itemToExcludeFromList.isOpen = false;
-    itemToExcludeFromList.flashAnimation = "animate";
-    const index = _.findIndex(this.orders, itemToExcludeFromList);
-    if (operationType === 'trade') {
-      this.orders[index].isOpen = false;
-    } else if (operationType === 'close') {
-      this.orders[index].isLocked = true;
-    }
-    this.closedOrders.unshift(itemToExcludeFromList);
-    setTimeout(() => {
-      if (type === "sell") {
-        this.visibleSellOrdersLengthForOrderBook = this.visibleSellOrdersLengthForOrderBook === 0 ?
-          0 : this.visibleSellOrdersLengthForOrderBook - 1;
-        this.visibleSellOrdersLengthForClosedOrders += 1;
-      } else if (type === "buy") {
-        this.visibleBuyOrdersLengthForOrderBook = this.visibleBuyOrdersLengthForOrderBook === 0 ?
-          0 : this.visibleBuyOrdersLengthForOrderBook - 1;
-        this.visibleBuyOrdersLengthForClosedOrders += 1;
-      }
-    }, 1000);
-  }
+  // excludeItemFromList(id: number, type: string, operationType: string): void {
+  //   console.log("this.orders", this.orders);
+  //   const itemToExcludeFromList = _.find(this.orders, {id: id, orderType: type});
+  //   itemToExcludeFromList.isOpen = false;
+  //   itemToExcludeFromList.flashAnimation = "animate";
+  //   const index = _.findIndex(this.orders, itemToExcludeFromList);
+  //   if (operationType === 'trade') {
+  //     this.orders[index].isOpen = false;
+  //   } else if (operationType === 'close') {
+  //     this.orders[index].isLocked = true;
+  //   }
+  //   this.closedOrders.unshift(itemToExcludeFromList);
+  //   setTimeout(() => {
+  //     if (type === "sell") {
+  //       this.visibleSellOrdersLengthForOrderBook = this.visibleSellOrdersLengthForOrderBook === 0 ?
+  //         0 : this.visibleSellOrdersLengthForOrderBook - 1;
+  //       this.visibleSellOrdersLengthForClosedOrders += 1;
+  //     } else if (type === "buy") {
+  //       this.visibleBuyOrdersLengthForOrderBook = this.visibleBuyOrdersLengthForOrderBook === 0 ?
+  //         0 : this.visibleBuyOrdersLengthForOrderBook - 1;
+  //       this.visibleBuyOrdersLengthForClosedOrders += 1;
+  //     }
+  //   }, 1000);
+  // }
 
-  calculateFirstVisibleItemIndexForOrderBook(): number {
-    let index;
-    let flag = true;
-    this.orders.forEach((item, i) => {
-      if (!item.isLocked && item.isOpen && flag) {
-        index = i;
-        flag = !flag;
-      }
-    });
-    return index;
-  }
+  // calculateFirstVisibleItemIndexForOrderBook(): number {
+  //   let index;
+  //   let flag = true;
+  //   this.orders.forEach((item, i) => {
+  //     if (!item.isLocked && item.isOpen && flag) {
+  //       index = i;
+  //       flag = !flag;
+  //     }
+  //   });
+  //   return index;
+  // }
 
-  calculateFirstVisibleItemIndexForClosedOrders(): number {
-    let index;
-    let flag = true;
-    this.closedOrders.forEach((item, i) => {
-      if (!item.isOpen && flag) {
-        index = i;
-        flag = !flag;
-      }
-    });
-    return index;
-  }
+  // calculateFirstVisibleItemIndexForClosedOrders(): number {
+  //   let index;
+  //   let flag = true;
+  //   this.closedOrders.forEach((item, i) => {
+  //     if (!item.isOpen && flag) {
+  //       index = i;
+  //       flag = !flag;
+  //     }
+  //   });
+  //   return index;
+  // }
 
   findTheSmallestPriceOfOpenedSellOrders(): void {
     const sellOrders = _.filter(this.orders, {
@@ -394,23 +398,23 @@ export class CrowdsaleComponent implements OnInit {
     return minPriceOfSellOrders;
   }
 
-  styleRow(e: any): void {
-    let isRow = false;
-    e.target.classList.forEach(i => {
-      if (i === "item") { isRow = true }
-    });
-    if (e.type === 'mouseenter') {
-      if (isRow) {
-        e.target.style.backgroundColor = '#e1e1e1'
-      } else {
-        e.target.parentNode.parentNode.parentNode.style.backgroundColor = 'transparent'
-      }
-    } else if (e.type === 'mouseleave') {
-      if (isRow) {
-        e.target.style.backgroundColor = 'transparent'
-      } else {
-        e.target.parentNode.parentNode.parentNode.style.backgroundColor = '#e1e1e1'
-      }
-    }
-  }
+  // styleRow(e: any): void {
+  //   let isRow = false;
+  //   e.target.classList.forEach(i => {
+  //     if (i === "item") { isRow = true }
+  //   });
+  //   if (e.type === 'mouseenter') {
+  //     if (isRow) {
+  //       e.target.style.backgroundColor = '#e1e1e1'
+  //     } else {
+  //       e.target.parentNode.parentNode.parentNode.style.backgroundColor = 'transparent'
+  //     }
+  //   } else if (e.type === 'mouseleave') {
+  //     if (isRow) {
+  //       e.target.style.backgroundColor = 'transparent'
+  //     } else {
+  //       e.target.parentNode.parentNode.parentNode.style.backgroundColor = '#e1e1e1'
+  //     }
+  //   }
+  // }
 }

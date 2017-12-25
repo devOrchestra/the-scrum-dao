@@ -73,6 +73,7 @@ export class ContributorListComponent implements OnInit {
       })
       .then(totalSupplyResponse => {
         this.totalBalance = this.parseBigNumber(totalSupplyResponse);
+        console.log("this.totalBalance1", this.totalBalance);
         return this._projectService.symbol()
       })
       .then(symbol => {
@@ -82,6 +83,7 @@ export class ContributorListComponent implements OnInit {
       .then(decimalsResponse => {
         this.decimals = this.countDecimals(decimalsResponse);
         this.totalBalance = this.totalBalance / this.decimals;
+        console.log("this.totalBalance2", this.totalBalance);
         this._workerService.setTotalBalance(this.totalBalance);
         this.contributors.forEach(item => {
           item.balance = item.balance / this.decimals;
@@ -90,6 +92,8 @@ export class ContributorListComponent implements OnInit {
           item[2] = item[2] / this.decimals;
         });
         this.readyToRenderPage = true;
+        console.log("contributors", this.contributors);
+        console.log("holders", this.holders);
       })
       .catch(err => {
         console.error('An error occurred on contributor-list.component in "OnInit" block:', err);
@@ -123,9 +127,10 @@ export class ContributorListComponent implements OnInit {
   }
 
   getHolders(): Promise<any> {
-    let decimals;
-    let holdersAddresses = [];
-    let holdersLength;
+    let decimals: number,
+        holdersLength: number,
+        holdersAddresses: string[] = [],
+        indexesOfHoldersInBlockChain: number[] = [];
     return this._projectService.decimals()
       .then(decimalsResponse => {
         decimals = this.countDecimals(decimalsResponse);
@@ -143,7 +148,7 @@ export class ContributorListComponent implements OnInit {
         const balancePromises = [];
         holdersAddresses = _.remove(_.cloneDeep(holdersResponse), holder => {
           let isNotInWorkers = true;
-          this.workersFinal.forEach(worker => {
+          this.workersFinal.forEach((worker, i) => {
             if (holder === worker[0]) {
               isNotInWorkers = false;
             }
@@ -153,13 +158,24 @@ export class ContributorListComponent implements OnInit {
         for (let i = 0; i < holdersLength; i++) {
           balancePromises.push(this._projectService.balanceOf(holdersResponse[i]))
         }
+        indexesOfHoldersInBlockChain = this.findHoldersIndexesInBlockChain(holdersResponse, holdersAddresses);
         return Promise.all(balancePromises);
       })
       .then(balancePromisesResponse => {
         holdersAddresses.forEach((item, i) => {
-          this.holdersFinal.push([item, this.parseBigNumber(balancePromisesResponse[i]) / decimals]);
+          this.holdersFinal.push([item, this.parseBigNumber(balancePromisesResponse[indexesOfHoldersInBlockChain[i]]) / decimals]);
         });
       })
+  }
+
+  findHoldersIndexesInBlockChain(parentArr: string[], childArr: string[]): number[] {
+    const indexes: number[] = [];
+    childArr.forEach((item, i) => {
+      if (parentArr.indexOf(item) >= 0) {
+        indexes.push(parentArr.indexOf(item));
+      }
+    });
+    return indexes;
   }
 
   formatWorkers(itemArr: string | number[]): IContributor {

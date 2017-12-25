@@ -14,44 +14,11 @@
     </div>
 
     <div fxLayout="column" class="orders">
-      <div fxLayout="row" fxFlex="100" class="item-wrapper unselectable pointer transition-fast"
-           *ngFor="let order of orders | sortBuyAndSellOrdersByTypeAndPriceDescendingPipe; let index = index;"
-           (click)="tradeOrder(order.orderType, order.id, order.value * order.price, currentOwner === order.owner)">
-        <div fxLayout="row" fxFlex="100" class="item unselectable pointer item-background-transition-fast"
-             *ngIf="order.isOpen && !order.isLocked" (mouseenter)="styleRow($event)" (mouseleave)="styleRow($event)"
-             [@controlFlashAnimation]="order.flashAnimation"
-             [ngClass]="{'fat-border-bottom': visibleBuyOrdersLengthForOrderBook &&
-                        visibleBuyOrdersLengthForOrderBook > 0 &&
-                        index === countIndexOfTheLastVisibleSellOrderForOrderBook(index, order),
-                        'item-border-top': index === calculateFirstVisibleItemIndexForOrderBook(index)}">
-          <div fxLayout="row" fxLayoutAlign="space-between" fxFlex="100">
-            <div fxLayout="row" class="break-long-words">
-              <div class="buy-cloud" *ngIf="order.orderType === 'buy'" fxLayout="row">
-                <i class="fa fa-long-arrow-up buy-arrow" aria-hidden="true"></i>
-                <span>BUY</span>
-              </div>
-              <div class="sell-cloud" *ngIf="order.orderType === 'sell'" fxLayout="row">
-                <i class="fa fa-long-arrow-down sell-arrow" aria-hidden="true"></i>
-                <span>SELL</span>
-              </div>
-              <div fxLayout="column" fxLayoutAlign="center">
-                {{order.value}} {{tokenSymbol}} ({{(order.value * order.price).toFixed(4)}} ETH)
-              </div>
-              <div class="assignee-cloud">
-                <span *ngIf="order.ownerName">{{order.ownerName}}</span>
-                <span *ngIf="!order.ownerName">holder</span>
-              </div>
-            </div>
-            <div fxLayout="row">
-              <div *ngIf="currentOwner === order.owner" class="lock-button transition-fast" (mouseenter)="styleRow($event)"
-                      (mouseleave)="styleRow($event)" (click)="closeOrder($event, order.orderType, order.id)">
-                CLOSE
-              </div>
-              <span fxLayout="column" fxLayoutAlign="center">{{order.price}} {{tokenSymbol}}/ETH</span>
-            </div>
-          </div>
-        </div>
-      </div>
+      <app-crowdsale-order-item fxLayout="row" fxFlex="100" class="item-wrapper unselectable pointer transition-fast"
+          *ngFor="let order of orders | sortBuyAndSellOrdersByTypeAndPriceDescendingPipe; let index = index;"
+          (click)="tradeOrder(order.orderType, order.id, order.value * order.price, currentOwner === order.owner)"
+          [order]="order" [index]="index" [type]="'order book'">
+      </app-crowdsale-order-item>
     </div>
 
     <div class="heading-row" fxLayout="row" fxLayoutAlign="space-between"
@@ -63,36 +30,37 @@
     </div>
 
     <div fxLayout="column" class="orders">
-      <div fxLayout="row" fxFlex="100" class="item-wrapper unselectable default-cursor transition-fast"
-           *ngFor="let order of closedOrders | sortClosedOrdersByIdDescendingPipe; let index = index;">
-        <div fxLayout="row" fxFlex="100" class="item unselectable default-cursor item-background-transition-fast"
-             *ngIf="!order.isOpen" (mouseenter)="styleRow($event)" (mouseleave)="styleRow($event)"
-             [@controlFlashAnimationReversed]="order.flashAnimation"
-             [ngClass]="{'item-border-top': index === calculateFirstVisibleItemIndexForClosedOrders(index)}">
-          <div fxLayout="row" fxLayoutAlign="space-between" fxFlex="100">
-            <div fxLayout="row" class="break-long-words">
-              <div class="buy-cloud" *ngIf="order.orderType === 'buy'" fxLayout="row">
-                <i class="fa fa-long-arrow-up buy-arrow" aria-hidden="true"></i>
-                <span>BUY</span>
-              </div>
-              <div class="sell-cloud" *ngIf="order.orderType === 'sell'" fxLayout="row">
-                <i class="fa fa-long-arrow-down sell-arrow" aria-hidden="true"></i>
-                <span>SELL</span>
-              </div>
-              <div fxLayout="column" fxLayoutAlign="center">
-                {{order.value}} {{tokenSymbol}} ({{(order.value * order.price).toFixed(4)}} ETH)
-              </div>
-              <div class="assignee-cloud">
-                <span *ngIf="order.ownerName">{{order.ownerName}}</span>
-                <span *ngIf="!order.ownerName">holder</span>
-              </div>
-            </div>
-            <div fxLayout="row">
-              <span fxLayout="column" fxLayoutAlign="center">{{order.price}} {{tokenSymbol}}/ETH</span>
-            </div>
-          </div>
-        </div>
-      </div>
+      <app-crowdsale-order-item fxLayout="row" fxFlex="100" class="item-wrapper unselectable default-cursor transition-fast"
+           *ngFor="let order of closedOrders | sortClosedOrdersByIdDescendingPipe; let index = index;"
+           [order]="order" [index]="index" [type]="'closed order'">
+        <!--<div fxLayout="row" fxFlex="100" class="item unselectable default-cursor item-background-transition-fast"-->
+             <!--*ngIf="!order.isOpen" (mouseenter)="styleRow($event)" (mouseleave)="styleRow($event)"-->
+             <!--[@controlFlashAnimationReversed]="order.flashAnimation"-->
+             <!--[ngClass]="{'item-border-top': index === calculateFirstVisibleItemIndexForClosedOrders(index)}">-->
+          <!--<div fxLayout="row" fxLayoutAlign="space-between" fxFlex="100">-->
+            <!--<div fxLayout="row" class="break-long-words">-->
+              <!--<div class="buy-cloud" *ngIf="order.orderType === 'buy'" fxLayout="row">-->
+                <!--<i class="fa fa-long-arrow-up buy-arrow" aria-hidden="true"></i>-->
+                <!--<span>BUY</span>-->
+              <!--</div>-->
+              <!--<div class="sell-cloud" *ngIf="order.orderType === 'sell'" fxLayout="row">-->
+                <!--<i class="fa fa-long-arrow-down sell-arrow" aria-hidden="true"></i>-->
+                <!--<span>SELL</span>-->
+              <!--</div>-->
+              <!--<div fxLayout="column" fxLayoutAlign="center">-->
+                <!--{{order.value}} {{tokenSymbol}} ({{(order.value * order.price).toFixed(4)}} ETH)-->
+              <!--</div>-->
+              <!--<div class="assignee-cloud">-->
+                <!--<span *ngIf="order.ownerName">{{order.ownerName}}</span>-->
+                <!--<span *ngIf="!order.ownerName">holder</span>-->
+              <!--</div>-->
+            <!--</div>-->
+            <!--<div fxLayout="row">-->
+              <!--<span fxLayout="column" fxLayoutAlign="center">{{order.price}} {{tokenSymbol}}/ETH</span>-->
+            <!--</div>-->
+          <!--</div>-->
+        <!--</div>-->
+      </app-crowdsale-order-item>
     </div>
   </div>
 

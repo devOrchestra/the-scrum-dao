@@ -10,6 +10,7 @@ import { ContributorListComponent } from "../contributor-list.component";
 export class ContributorListWorkerItemComponent {
   @Input() contributor: IContributor;
   @Input() tokenSymbol: string;
+  @Input() totalBalance: number;
 
   public countBalance = this._parent.countBalance;
 

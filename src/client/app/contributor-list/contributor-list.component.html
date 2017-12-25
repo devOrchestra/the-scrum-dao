@@ -11,7 +11,8 @@
          fxLayout="column" fxLayoutAlign="space-between" fxFlex>
       <app-contributor-list-worker-item fxLayout="column" fxLayoutAlign="space-between" fxFlex
         [contributor]="contributor"
-        [tokenSymbol]="tokenSymbol">
+        [tokenSymbol]="tokenSymbol"
+        [totalBalance]="totalBalance">
       </app-contributor-list-worker-item>
     </div>
   </div>
@@ -21,7 +22,8 @@
       <div class="item" fxLayout="column" fxLayoutAlign="space-between" fxFlex *ngIf="holder.balance > 0">
         <app-contributor-list-holder-item fxLayout="column" fxLayoutAlign="space-between" fxFlex
           [holder]="holder"
-          [tokenSymbol]="tokenSymbol">
+          [tokenSymbol]="tokenSymbol"
+          [totalBalance]="totalBalance">
         </app-contributor-list-holder-item>
       </div>
     </div>
