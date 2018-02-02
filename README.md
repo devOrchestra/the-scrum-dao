@@ -1,3 +1,4 @@
+<img src="https://user-images.githubusercontent.com/17112242/33902590-85f62ea6-df86-11e7-96c2-06cfa21756f4.png" alt="The Scrum DAO logo">
 
 # The Scrum DAO
 [![Travis](https://img.shields.io/travis/devOrchestra/the-scrum-dao.svg)](https://travis-ci.org/devOrchestra/the-scrum-dao)
@@ -16,6 +17,22 @@ The project capitalisation grows smoothly in parallel with features implementati
 -------------
 In our plans do integration with most popular project management systems, eg JIRA, Github. In our projects we use JIRA and very like it, so we started with it.
 
+
+# Run your instance
+The Scrum DAO is an open source project and free to use. 
+You can run an instance of the Scrum DAO for your own Jira project following this steps:
+* Create Jira project, generate credentials for OAuth authentication to the Jira REST API.
+* Generate two Ethereum wallets in V3 format (owner and oracle)
+* Install on your server docker and docker-compose
+* Add Jira credentials and Ethereum wallets to the docker volume `credentials`
+* Deploy the Scrum DAO contracts to the Ethereum network:
+    ```
+    docker-compose run --rm scrum-dao migrate
+    ```
+* Run the Scrum DAO instance:
+    ```
+    docker-compose run
+    ```
 
 # Project Structure
 -------------
@@ -81,8 +98,6 @@ This contract allows Workers to sell earned Tokens to anyone. It works like usua
 - You should fully fill existing order
 - You can fill only one order per transaction
 
-## Diman's temporary unit
-docker-compose run --rm scrum-dao migrate 
 
 # Gas price
 -------------
